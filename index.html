@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -6,7 +7,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' blob:; img-src 'self' blob: data:; font-src 'self' blob: data:; media-src 'self' blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiByeD0iMTQ0IiBmaWxsPSIjMjAyMTI0Ii8+CjxwYXRoIGQ9Ik0xMTEuMTExIDU0Mi44NDVDMTExLjExMSA1NjYuNDE5IDEyMC40NzYgNTg5LjAyOSAxMzcuMTQ2IDYwNS42OThDMTUzLjgxNiA2MjIuMzY4IDE3Ni40MjUgNjMxLjczMyAyMDAgNjMxLjczM0gzNzkuMzc4VjMxMS4xMTFDMzc5LjM3OCAyNzUuNzQ5IDM2NS4zMyAyNDEuODM1IDM0MC4zMjUgMjE2LjgzQzMxNS4zMiAxOTEuODI1IDI4MS40MDcgMTc3Ljc3OCAyNDYuMDQ0IDE3Ny43NzhIMjAwQzE3Ni40MjUgMTc3Ljc3OCAxNTMuODE2IDE4Ny4xNDMgMTM3LjE0NiAyMDMuODEzQzEyMC40NzYgMjIwLjQ4MyAxMTEuMTExIDI0My4wOTIgMTExLjExMSAyNjYuNjY3VjU0Mi44NDVaTTQyMC42MjIgNjMxLjczM0g2MDBDNjIzLjU3NSA2MzEuNzMzIDY0Ni4xODQgNjIyLjM2OCA2NjIuODU0IDYwNS42OThDNjc5LjUyNCA1ODkuMDI5IDY4OC44ODkgNTY2LjQxOSA2ODguODg5IDU0Mi44NDVWMjY2LjY2N0M2ODguODg5IDI0My4wOTIgNjc5LjUyNCAyMjAuNDgzIDY2Mi44NTQgMjAzLjgxM0M2NDYuMTg0IDE4Ny4xNDMgNjIzLjU3NSAxNzcuNzc4IDYwMCAxNzcuNzc4SDU1My45NTZDNTE4LjU5MyAxNzcuNzc4IDQ4NC42NzkgMTkxLjgyNSA0NTkuNjc1IDIxNi44M0M0MzQuNjcgMjQxLjgzNSA0MjAuNjIyIDI3NS43NDkgNDIwLjYyMiAzMTEuMTExVjYzMS43MzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
-    <title>本地阅读器</title>
+    <title>阅读器</title>
     <style>
 /* ==================== CSS Variables ==================== */
 :root {
@@ -715,19 +716,34 @@ main {
 }
 
 .drawer-quick button {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--muted);
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
   transition: all 0.15s;
 }
 
-.drawer-quick button:hover {
-  background: var(--bg);
-  color: var(--accent);
+.drawer-quick button:hover,
+.drawer-quick button:focus-visible {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
+.drawer-quick button .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-solid {
+  fill: currentColor;
+  stroke: none !important;
 }
 
 .sidebar-tabs {
@@ -1137,10 +1153,6 @@ main {
   white-space: nowrap;
 }
 
-.chapter-cue {
-  bottom: 64px;
-}
-
 /* ==================== Dialogs ==================== */
 dialog {
   border: 0;
@@ -1422,8 +1434,28 @@ dialog::backdrop {
 
 /* ==================== Responsive ==================== */
 @media (max-width: 640px) {
-  .topbar {
-    padding: 0 12px;
+  .selection-bar {
+    position: fixed;
+    left: 12px !important;
+    right: 12px;
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    transform: none;
+    width: auto;
+    max-width: none;
+    justify-content: center;
+    white-space: normal;
+    z-index: 500;
+  }
+
+  .selection-bar button {
+    flex: 1;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  .selection-bar button + button {
+    margin-left: 2px;
   }
 
   .brand span:last-child {
@@ -1555,7 +1587,6 @@ dialog::backdrop {
         <img class="brand-mark" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiByeD0iMTQ0IiBmaWxsPSIjMjAyMTI0Ii8+CjxwYXRoIGQ9Ik0xMTEuMTExIDU0Mi44NDVDMTExLjExMSA1NjYuNDE5IDEyMC40NzYgNTg5LjAyOSAxMzcuMTQ2IDYwNS42OThDMTUzLjgxNiA2MjIuMzY4IDE3Ni40MjUgNjMxLjczMyAyMDAgNjMxLjczM0gzNzkuMzc4VjMxMS4xMTFDMzc5LjM3OCAyNzUuNzQ5IDM2NS4zMyAyNDEuODM1IDM0MC4zMjUgMjE2LjgzQzMxNS4zMiAxOTEuODI1IDI4MS40MDcgMTc3Ljc3OCAyNDYuMDQ0IDE3Ny43NzhIMjAwQzE3Ni40MjUgMTc3Ljc3OCAxNTMuODE2IDE4Ny4xNDMgMTM3LjE0NiAyMDMuODEzQzEyMC40NzYgMjIwLjQ4MyAxMTEuMTExIDI0My4wOTIgMTExLjExMSAyNjYuNjY3VjU0Mi44NDVaTTQyMC42MjIgNjMxLjczM0g2MDBDNjIzLjU3NSA2MzEuNzMzIDY0Ni4xODQgNjIyLjM2OCA2NjIuODU0IDYwNS42OThDNjc5LjUyNCA1ODkuMDI5IDY4OC44ODkgNTY2LjQxOSA2ODguODg5IDU0Mi44NDVWMjY2LjY2N0M2ODguODg5IDI0My4wOTIgNjc5LjUyNCAyMjAuNDgzIDY2Mi44NTQgMjAzLjgxM0M2NDYuMTg0IDE4Ny4xNDMgNjIzLjU3NSAxNzcuNzc4IDYwMCAxNzcuNzc4SDU1My45NTZDNTE4LjU5MyAxNzcuNzc4IDQ4NC42NzkgMTkxLjgyNSA0NTkuNjc1IDIxNi44M0M0MzQuNjcgMjQxLjgzNSA0MjAuNjIyIDI3NS43NDkgNDIwLjYyMiAzMTEuMTExVjYzMS43MzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
         <span>本地阅读</span>
       </button>
-      <div id="bookTitle" class="book-title">我的书架</div>
       <button id="dataStatusBtn" class="top-status" title="数据与备份">
         <span class="local-dot"></span>
         <span id="dataStatusText">数据保存在本机</span>
@@ -1568,7 +1599,6 @@ dialog::backdrop {
         <div class="library-head">
           <div>
             <h1>我的书架</h1>
-            <p>安静阅读，所有内容只保存在这台设备</p>
           </div>
           <div class="library-head-actions">
             <button id="libraryMoreBtn" class="icon-button" type="button" title="数据与备份" aria-label="数据与备份">
@@ -1660,20 +1690,20 @@ dialog::backdrop {
           <div class="drawer-head">
             <strong id="drawerTitle">目录</strong>
             <div class="drawer-quick">
-              <button id="drawerSearchBtn" title="书内搜索" aria-label="书内搜索">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="7"/>
-                  <path d="m16 16 5 5"/>
+              <button id="drawerSearchBtn" title="书内搜索（Ctrl+F）" aria-label="书内搜索，快捷键 Ctrl+F">
+                <svg class="icon icon-sm icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" stroke="none" d="M10.75 3a7.75 7.75 0 1 0 4.86 13.79l3.8 3.8a1.35 1.35 0 0 0 1.91-1.91l-3.8-3.8A7.75 7.75 0 0 0 10.75 3Zm0 2.7a5.05 5.05 0 1 1 0 10.1 5.05 5.05 0 0 1 0-10.1Z"/>
                 </svg>
               </button>
-              <button id="drawerExportBtn" title="导出笔记" aria-label="导出笔记">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              <button id="drawerExportBtn" title="导出笔记（Ctrl+E）" aria-label="导出笔记，快捷键 Ctrl+E">
+                <svg class="icon icon-sm icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" stroke="none" d="M5 20.5A2.5 2.5 0 0 1 2.5 18v-2.25a1.25 1.25 0 0 1 2.5 0V18c0 .0 0 .0 0 0h14v-2.25a1.25 1.25 0 0 1 2.5 0V18a2.5 2.5 0 0 1-2.5 2.5H5ZM12 2.5a1.25 1.25 0 0 1 1.25 1.25v8.74l2.4-2.4a1.25 1.25 0 0 1 1.77 1.77l-4.53 4.53a1.25 1.25 0 0 1-1.77 0L6.59 11.86a1.25 1.25 0 0 1 1.77-1.77l2.39 2.4V3.75A1.25 1.25 0 0 1 12 2.5Z"/>
                 </svg>
               </button>
-              <button id="closeSidebar" title="收起" aria-label="收起抽屉">
+              <button id="closeSidebar" title="收起（Esc）" aria-label="收起抽屉，快捷键 Esc">
                 <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m15 18-6-6 6-6"/>
+                  <rect x="3.5" y="4" width="17" height="16" rx="2"/>
+                  <path d="M9 4v16M14 9l-3 3 3 3"/>
                 </svg>
               </button>
             </div>
@@ -1802,24 +1832,11 @@ dialog::backdrop {
           
           <!-- Selection Bar -->
           <div id="selectionBar" class="selection-bar hidden">
-            <button id="markerBtn" type="button" aria-label="添加马克笔">
+            <button id="noteBtn" type="button" aria-label="添加笔记">
               <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m15 5 4 4M13 7 3 17v4h4L17 11"/>
+                <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm3 5h8M8 12h8M8 16h5" fill="currentColor" stroke="none"/>
               </svg>
-              马克笔
-            </button>
-            <button id="underlineBtn" type="button" aria-label="添加直线">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 4v7a6 6 0 0 0 12 0V4M4 21h16"/>
-              </svg>
-              直线
-            </button>
-            <button id="noteBtn" type="button" aria-label="写想法">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-              </svg>
-              写想法
+              添加笔记
             </button>
           </div>
 
@@ -1830,10 +1847,7 @@ dialog::backdrop {
             <span id="readingStatusProgress"></span>
           </div>
           
-          <div id="chapterCue" class="reading-status chapter-cue">
-            <strong>继续滚动进入下一章</strong>
-          </div>
-
+        
         </div>
       </section>
     </main>
@@ -1979,15 +1993,20 @@ const state = {
   navigating: false,
   noteFilter: 'all',
   searchIndex: null,
-  lastChapterCue: 0,
   renderToken: 0,
   externalChange: false
 }
 
 // ==================== IndexedDB ====================
+const DB_VERSION = 2
 const dbp = new Promise((resolve, reject) => {
-  const request = indexedDB.open('local-reader', 1)
-  request.onupgradeneeded = () => request.result.createObjectStore('books', { keyPath: 'id' })
+  const request = indexedDB.open('local-reader', DB_VERSION)
+  request.onupgradeneeded = () => {
+    const db = request.result
+    if (!db.objectStoreNames.contains('books')) {
+      db.createObjectStore('books', { keyPath: 'id' })
+    }
+  }
   request.onsuccess = () => resolve(request.result)
   request.onerror = () => reject(request.error)
 })
@@ -2019,18 +2038,29 @@ async function fileHash(buffer) {
 }
 
 function normalizeBook(book) {
+  if (!book || typeof book !== 'object') return null
   book.title = String(book.title || book.name || '未命名书籍')
   book.author = String(book.author || '未知作者')
-  book.notes = Array.isArray(book.notes) ? book.notes.filter(n => n && typeof n === 'object' && typeof n.quote === 'string') : []
+  if (typeof book.cover !== 'string' || !/^data:image\/(png|jpeg|jpg|gif|webp|svg\+xml);base64,/i.test(book.cover)) {
+    book.cover = null
+  }
+  book.notes = Array.isArray(book.notes)
+    ? book.notes
+        .filter(n => n && typeof n === 'object' && typeof n.quote === 'string')
+        .map(n => ({ ...n, kind: 'marker' }))
+    : []
   book.settings = book.settings && typeof book.settings === 'object' ? book.settings : {}
   book.locator = book.locator && typeof book.locator === 'object' ? book.locator : { chapter: book.chapter || 0, offset: 0, ratio: Number.isFinite(book.page) ? 0 : book.progress || 0 }
   book.lastRead ||= book.added || Date.now()
   book.size ||= book.data?.byteLength || 0
   book.progress = Math.max(0, Math.min(1, +book.progress || 0))
+  book.revision = Math.max(0, Number(book.revision) || 0)
+  book.deletedAt = Number(book.deletedAt) || 0
   return book
 }
 
 const channel = 'BroadcastChannel' in window ? new BroadcastChannel('local-reader-sync') : null
+const saveQueues = new Map()
 
 channel?.addEventListener('message', (e) => {
   if (!e.data?.id) return
@@ -2072,8 +2102,27 @@ async function saveCurrentBook() {
   }
   
   book.updatedAt = Date.now()
-  await saveBook(book)
-  channel?.postMessage({ id: book.id, updatedAt: book.updatedAt })
+  book.revision = (book.revision || 0) + 1
+  const id = book.id
+  const previous = saveQueues.get(id) || Promise.resolve()
+  const next = previous.catch(() => {}).then(async () => {
+    const latest = (await getBooks()).find(b => b.id === id)
+    if (!latest || latest.deletedAt) return
+    await saveBook(book)
+    channel?.postMessage({ id, updatedAt: book.updatedAt, revision: book.revision })
+  })
+  saveQueues.set(id, next)
+  await next.finally(() => {
+    if (saveQueues.get(id) === next) saveQueues.delete(id)
+  })
+}
+
+function safeLocalGet(key, fallback = '') {
+  try { return localStorage.getItem(key) ?? fallback } catch { return fallback }
+}
+
+function safeLocalSet(key, value) {
+  try { localStorage.setItem(key, value); return true } catch { return false }
 }
 
 function escapeHtml(s = '') {
@@ -2157,7 +2206,9 @@ function resolvePath(base, rel) {
   if (rel.startsWith('#')) return `${base.split('#')[0]}${rel}`
   
   const cleanBase = base.split(/[?#]/)[0]
-  const cleanRel = rel.trim().replace(/\\/g, '/').split(/[?#]/)[0]
+  const match = rel.trim().match(/^([^?#]*)([?#].*)?$/)
+  const cleanRel = (match?.[1] || '').replace(/\\/g, '/')
+  const suffix = match?.[2] || ''
   const parts = (cleanRel.startsWith('/') ? cleanRel.slice(1) : `${pathDir(cleanBase)}/${cleanRel}`).split('/')
   const out = []
   
@@ -2166,7 +2217,7 @@ function resolvePath(base, rel) {
     else if (p !== '.' && p) out.push(p)
   }
   
-  return out.join('/')
+  return out.join('/') + suffix
 }
 
 const mime = (name) => ({
@@ -2210,12 +2261,16 @@ class ZipReader {
   }
 
   async index() {
+    if (this.data.length < 22) throw new Error('不是有效的 EPUB/ZIP 文件')
     let end = this.data.length - 22
     while (end > Math.max(0, this.data.length - 65557) && this.u32(end) !== 0x06054b50) end--
     if (end <= 0) throw new Error('不是有效的 EPUB/ZIP 文件')
     
     const total = this.u16(end + 10)
     const offset = this.u32(end + 16)
+    if (offset < 0 || offset >= this.data.length || total > 100000) {
+      throw new Error('EPUB ZIP 目录无效')
+    }
     let p = offset
     
     for (let i = 0; i < total; i++) {
@@ -2228,6 +2283,9 @@ class ZipReader {
       const el = this.u16(p + 30)
       const cl = this.u16(p + 32)
       const local = this.u32(p + 42)
+      if (p + 46 + nl + el + cl > this.data.length || local + 30 > this.data.length) {
+        throw new Error('EPUB ZIP 条目越界')
+      }
       const name = dec.decode(this.data.slice(p + 46, p + 46 + nl)).replace(/^\.\//, '')
       
       this.files.set(name, { method, size, rawSize, local })
@@ -2256,6 +2314,9 @@ class ZipReader {
     
     const nl = this.u16(f.local + 26)
     const el = this.u16(f.local + 28)
+    if (f.local + 30 + nl + el + f.size > this.data.length || f.size > 512 * 1024 * 1024) {
+      throw new Error('EPUB 资源大小或偏移无效')
+    }
     const body = this.data.slice(f.local + 30 + nl + el, f.local + 30 + nl + el + f.size)
     
     if (f.method === 0) return body
@@ -2321,7 +2382,9 @@ async function parseEpub(buffer) {
     .map((n) => manifest.get(n.getAttribute('idref')))
     .filter(Boolean)
     .map((x) => resolvePath(opfPath, x.href))
-  
+
+  if (!spine.length) throw new Error('EPUB 没有可阅读的正文')
+
   let toc = []
   const navItem = [...manifest.values()].find((x) => x.properties.includes('nav'))
   
@@ -2379,7 +2442,28 @@ async function parseEpub(buffer) {
   }
 }
 
-// ==================== Asset Management ====================
+function sanitizeEpubDocument(doc) {
+  doc.querySelectorAll('script, iframe, form, object, embed, portal').forEach(el => el.remove())
+  doc.querySelectorAll('*').forEach(el => {
+    for (const attr of [...el.attributes]) {
+      if (/^on/i.test(attr.name) || attr.name === 'srcdoc') el.removeAttribute(attr.name)
+    }
+  })
+  doc.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href') || ''
+    if (/^(https?:|javascript:|data:|mailto:)/i.test(href)) {
+      a.removeAttribute('href')
+      a.removeAttribute('data-epub-href')
+    }
+  })
+  const meta = doc.createElement('meta')
+  meta.httpEquiv = 'Content-Security-Policy'
+  meta.content = "default-src 'none'; img-src blob: data:; style-src 'unsafe-inline'; font-src blob: data:; media-src blob: data:"
+  doc.head?.prepend(meta)
+  return doc
+}
+
+
 function clearUrls() {
   state.urls.forEach(URL.revokeObjectURL)
   state.urls = []
@@ -2755,21 +2839,29 @@ function renderLibrary() {
     const card = document.createElement('article')
     card.className = 'book-card'
     
-    const coverContent = book.cover 
-      ? `<img src="${book.cover}" alt="">` 
-      : `<div class="cover-fallback">${escapeHtml(book.title)}</div>`
-    
     card.innerHTML = `
       <button class="delete-book" title="删除" aria-label="删除《${escapeHtml(book.title)}》">
         <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
           <path d="m18 6-12 12M6 6l12 12"/>
         </svg>
       </button>
-      <div class="cover">${coverContent}</div>
+      <div class="cover"></div>
       <div class="card-title" title="${escapeHtml(book.title)}">${escapeHtml(book.title)}</div>
       <div class="card-meta">${escapeHtml(book.author)} · ${Math.round((book.progress || 0) * 100)}%</div>
       <div class="card-progress"><i style="width:${Math.round((book.progress || 0) * 100)}%"></i></div>
     `
+    const cover = card.querySelector('.cover')
+    if (book.cover) {
+      const img = document.createElement('img')
+      img.src = book.cover
+      img.alt = ''
+      cover.append(img)
+    } else {
+      const fallback = document.createElement('div')
+      fallback.className = 'cover-fallback'
+      fallback.textContent = book.title
+      cover.append(fallback)
+    }
     
     card.querySelector('.cover').onclick = () => openBook(book.id)
     card.querySelector('.cover').oncontextmenu = (e) => {
@@ -2813,7 +2905,7 @@ async function exportData() {
       }, null, 2),
       'application/json'
     )
-    localStorage.readerLastBackup = now.toISOString()
+    safeLocalSet('readerLastBackup', now.toISOString())
     syncBackupStatus()
     toast(`已导出 ${books.length} 本图书的完整备份`)
   } catch (e) {
@@ -2848,11 +2940,27 @@ async function importBackup(file) {
     
     if (!incoming.length) throw new Error('empty')
     
+    const existing = await getBooks()
     const db = await dbp
     await new Promise((resolve, reject) => {
       const tx = db.transaction('books', 'readwrite')
       const s = tx.objectStore('books')
-      for (const book of incoming) s.put(book)
+      for (const book of incoming) {
+        const same = existing.find(x => x.hash && book.hash && x.hash === book.hash)
+        if (same) {
+          const notes = new Map([...(same.notes || []), ...(book.notes || [])].map(n => [n.id, n]))
+          s.put(normalizeBook({
+            ...same,
+            ...book,
+            id: same.id,
+            notes: [...notes.values()],
+            lastRead: Math.max(same.lastRead || 0, book.lastRead || 0),
+            revision: Math.max(same.revision || 0, book.revision || 0) + 1
+          }))
+        } else {
+          s.put(book)
+        }
+      }
       tx.oncomplete = resolve
       tx.onerror = () => reject(tx.error)
       tx.onabort = () => reject(tx.error)
@@ -2866,7 +2974,7 @@ async function importBackup(file) {
 }
 
 function syncBackupStatus() {
-  const iso = localStorage.readerLastBackup
+  const iso = safeLocalGet('readerLastBackup', '')
   const text = iso 
     ? `上次备份：${new Date(iso).toLocaleDateString('zh-CN')}` 
     : '尚未导出完整备份'
@@ -2952,7 +3060,9 @@ async function resetManagedProgress() {
   book.scrollTop = 0
   book.progress = 0
   book.locator = { chapter: 0, offset: 0, ratio: 0 }
-  
+  book.lastRead = 0
+  book.locatorAt = 0
+  book.updatedAt = Date.now()
   await saveBook(book)
   $('#bookManageDialog').close()
   await loadLibrary()
@@ -2986,6 +3096,9 @@ async function openBook(id) {
       state.epub.spine.length - 1
     ))
     state.page = state.book.page || 0
+    state.continuousStartChapter = state.chapter
+    state.continuousLastChapter = state.chapter
+    state.continuousLoading = false
     state.searchIndex = null
     state.returnLocator = null
     
@@ -3031,6 +3144,7 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
   if (doc.querySelector('parsererror') || !doc.body) {
     throw new Error('章节内容损坏或格式不受支持')
   }
+  sanitizeEpubDocument(doc)
   
   state.chapterDirection = (
     doc.body.getAttribute('dir') || 
@@ -3054,6 +3168,12 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
   }
   
   await rewriteDocumentResources(doc, path)
+
+  const chapterMarker = doc.createElement('div')
+  chapterMarker.className = 'continuous-chapter'
+  chapterMarker.dataset.chapterIndex = String(index)
+  chapterMarker.dataset.chapterPath = path
+  doc.body.prepend(chapterMarker)
   
   for (const el of [...doc.querySelectorAll('a[href]')]) {
     const href = el.getAttribute('href')
@@ -3129,18 +3249,11 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
         }
       })
       
-      let touchX = 0
-      idoc.addEventListener('touchstart', (e) => {
-        touchX = e.touches[0]?.clientX || 0
-      }, { passive: true })
-      
       idoc.addEventListener('touchend', (e) => {
         if (state.epub.fixedLayout) return
-        const dx = (e.changedTouches[0]?.clientX || 0) - touchX
-        if (Math.abs(dx) > 55) {
-          const delta = dx < 0 ? 1 : -1
-          navigateReading(state.epub.direction === 'rtl' ? -delta : delta)
-        }
+        // Reflowable books use the browser's native vertical scroll. Do not turn
+        // horizontal gestures into chapter jumps on phones.
+        ensureContinuousContent().catch(() => {})
       }, { passive: true })
       
       idoc.addEventListener('wheel', (e) => {
@@ -3154,10 +3267,7 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
         }
         
         if (isScrollMode() && e.deltaY > 0) {
-          const max = Math.max(0, idoc.documentElement.scrollHeight - frame.clientHeight)
-          if (win.scrollY >= max - 8 && Date.now() > (state.autoChapterReadyAt || 0)) {
-            handleChapterEndWheel()
-          }
+          ensureContinuousContent().catch(() => {})
         }
       }, { passive: false })
       
@@ -3221,13 +3331,106 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
 function handleReaderScroll() {
   const win = $('#readerFrame').contentWindow
   state.book.scrollTop = win.scrollY
+  updateContinuousChapter()
   updateReadingProgress()
-  
+  ensureContinuousContent().catch(e => toast(`下一章加载失败：${e.message}`, 3500))
+
   clearTimeout(handleReaderScroll.timer)
   handleReaderScroll.timer = setTimeout(() => {
     state.book.locator = captureReadingLocator()
     saveCurrentBook()
   }, 250)
+}
+function currentContinuousChapter(doc = $('#readerFrame').contentDocument) {
+  const win = $('#readerFrame').contentWindow
+  const markers = [...doc.querySelectorAll('[data-chapter-index]')]
+  const y = (win?.scrollY || 0) + Math.max(24, $('#readerFrame').clientHeight * 0.18)
+  let current = state.continuousStartChapter ?? state.chapter
+  for (const marker of markers) {
+    if (marker.offsetTop <= y) current = Number(marker.dataset.chapterIndex) || current
+  }
+  return Math.max(0, Math.min(state.epub.spine.length - 1, current))
+}
+
+async function appendNextChapter() {
+  if (!state.epub || state.epub.fixedLayout || state.continuousLoading) return false
+  const nextIndex = (state.continuousLastChapter ?? state.chapter) + 1
+  if (nextIndex >= state.epub.spine.length) return false
+
+  state.continuousLoading = true
+  try {
+    const path = state.epub.spine[nextIndex]
+    const text = await state.epub.zip.text(path)
+    if (!text) throw new Error('章节文件缺失')
+    const doc = new DOMParser().parseFromString(text, 'application/xhtml+xml')
+    if (doc.querySelector('parsererror') || !doc.body) throw new Error('章节内容损坏')
+    sanitizeEpubDocument(doc)
+    await rewriteDocumentResources(doc, path)
+    for (const el of [...doc.querySelectorAll('a[href]')]) {
+      const href = el.getAttribute('href')
+      if (!href || /^(https?:|mailto:)/i.test(href)) {
+        el.removeAttribute('href')
+        continue
+      }
+      el.setAttribute('href', '#')
+      el.setAttribute('data-epub-href', resolvePath(path, href))
+      el.setAttribute('data-epub-type', el.getAttribute('epub:type') || el.getAttribute('role') || '')
+    }
+
+    const idoc = $('#readerFrame').contentDocument
+    for (const sourceStyle of doc.head?.querySelectorAll('style') || []) {
+      const style = idoc.createElement('style')
+      style.textContent = sourceStyle.textContent
+      idoc.head.append(style)
+    }
+    const section = idoc.createElement('section')
+    section.className = 'continuous-chapter'
+    section.dataset.chapterIndex = String(nextIndex)
+    section.dataset.chapterPath = path
+    for (const child of [...doc.body.childNodes]) {
+      section.append(idoc.importNode(child, true))
+    }
+    idoc.body.append(section)
+    applyNotesToSection(section, nextIndex)
+    state.continuousLastChapter = nextIndex
+    return true
+  } finally {
+    state.continuousLoading = false
+  }
+}
+
+async function ensureContinuousContent() {
+  if (!state.epub || state.epub.fixedLayout) return
+  const frame = $('#readerFrame')
+  const win = frame.contentWindow
+  const doc = frame.contentDocument
+  const max = Math.max(0, doc.documentElement.scrollHeight - frame.clientHeight)
+  if (win.scrollY >= max - Math.max(180, frame.clientHeight * 0.7)) {
+    await appendNextChapter()
+  }
+}
+
+function continuousChapterRatio() {
+  if (!state.epub || state.epub.fixedLayout) return chapterRatio()
+  const doc = $('#readerFrame').contentDocument
+  const win = $('#readerFrame').contentWindow
+  const markers = [...doc.querySelectorAll('[data-chapter-index]')]
+  const current = state.chapter
+  const marker = markers.find(el => Number(el.dataset.chapterIndex) === current)
+  const next = markers.find(el => Number(el.dataset.chapterIndex) === current + 1)
+  if (!marker) return chapterRatio()
+  const start = marker.offsetTop
+  const end = next ? next.offsetTop : doc.documentElement.scrollHeight
+  return Math.max(0, Math.min(1, ((win.scrollY || 0) - start) / Math.max(1, end - start - $('#readerFrame').clientHeight)))
+}
+
+function updateContinuousChapter() {
+  if (!state.epub || state.epub.fixedLayout) return
+  state.chapter = currentContinuousChapter()
+  state.book.chapter = state.chapter
+  state.book.progress = Math.min(1, (state.chapter + continuousChapterRatio()) / state.epub.spine.length)
+  state.book.lastRead = Date.now()
+  markToc()
 }
 
 async function waitForDocumentImages(doc) {
@@ -3257,7 +3460,7 @@ function chapterRatio() {
 function updateReadingProgress() {
   if (!state.book || !state.epub) return
   
-  const ratio = chapterRatio()
+  const ratio = state.epub.fixedLayout ? chapterRatio() : continuousChapterRatio()
   const total = state.epub.spine.length
   state.book.progress = Math.min(1, (state.chapter + ratio) / total)
   
@@ -3293,46 +3496,27 @@ function showReadingStatus(ms = 1250) {
   state.statusTimer = setTimeout(() => box.classList.remove('visible'), ms)
 }
 
-function showChapterCue() {
-  const cue = $('#chapterCue')
-  cue.classList.add('visible')
-  
-  clearTimeout(state.chapterCueTimer)
-  state.chapterCueTimer = setTimeout(() => cue.classList.remove('visible'), 1500)
-}
-
-function handleChapterEndWheel() {
-  const now = Date.now()
-  
-  if (now - state.lastChapterCue > 1600) {
-    state.lastChapterCue = now
-    showChapterCue()
-    return
-  }
-  
-  state.lastChapterCue = 0
-  $('#chapterCue').classList.remove('visible')
-  navigateReading(1)
-}
-
 async function navigateReading(delta) {
   if (state.navigating || !state.book || !state.epub) return
   
   const frame = $('#readerFrame')
   const win = frame.contentWindow
   
-  if (state.epub.fixedLayout) {
+  if (state.epub?.fixedLayout) {
     // Fixed layout: go to next/prev chapter
   } else {
-    const doc = frame.contentDocument
-    const step = frame.clientHeight * 0.82
-    const max = doc.documentElement.scrollHeight - frame.clientHeight
-    const target = win.scrollY + delta * step
-    
-    if (target >= 0 && target <= max + 5) {
-      win.scrollTo({ top: Math.max(0, target), behavior: 'smooth' })
-      return
-    }
+    return ensureContinuousContent()
+      .then(() => {
+        const doc = frame.contentDocument
+        const step = frame.clientHeight * 0.82
+        const max = doc.documentElement.scrollHeight - frame.clientHeight
+        const target = win.scrollY + delta * step
+        if (target >= 0 && target <= max + 5) {
+          win.scrollTo({ top: Math.max(0, target), behavior: 'smooth' })
+          return true
+        }
+        return false
+      })
   }
   
   const chapter = state.chapter + delta
@@ -3356,7 +3540,7 @@ function saveReadingPosition() {
   if (!state.book || !state.epub) return
   state.book.locator = captureReadingLocator()
   state.book.lastRead = Date.now()
-  saveCurrentBook()
+  return saveCurrentBook()
 }
 // ==================== Locator System ====================
 function textMap(root) {
@@ -3617,11 +3801,8 @@ function closeImageViewer() {
   $('#imageViewerImg').removeAttribute('src')
 }
 
-function home() {
-  if (state.book) {
-    state.book.locator = captureReadingLocator()
-    saveCurrentBook()
-  }
+async function home() {
+  if (state.book) await saveReadingPosition()
   
   clearUrls()
   closeImageViewer()
@@ -3666,6 +3847,31 @@ function openSidebar(panel) {
 }
 
 function handleReadingKey(e) {
+  if ((e.ctrlKey || e.metaKey) && !e.altKey) {
+    const key = e.key.toLowerCase()
+    const target = e.target
+    const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName) || target?.isContentEditable
+
+    if (key === 'f' && state.book && !isTyping) {
+      e.preventDefault()
+      $('#searchDialog').showModal()
+      $('#searchInput').focus()
+      return
+    }
+
+    if (key === 'e' && state.book && !isTyping) {
+      e.preventDefault()
+      $('#exportDialog').showModal()
+      return
+    }
+
+    if (key === 's' && state.book && !isTyping) {
+      e.preventDefault()
+      saveReadingPosition().then(() => toast('阅读位置已保存')).catch(() => toast('保存失败，请重试', 3500))
+      return
+    }
+  }
+
   if (e.key === 'Escape') {
     const dialog = $('dialog[open]')
     if (dialog) {
@@ -3716,7 +3922,8 @@ function handleReadingKey(e) {
 }
 // ==================== Notes & Highlights ====================
 function captureSelection() {
-  setTimeout(() => {
+  clearTimeout(state.selectionTimer)
+  state.selectionTimer = setTimeout(() => {
     const frame = $('#readerFrame')
     const sel = frame.contentWindow.getSelection()
     const text = sel?.toString().trim()
@@ -3735,8 +3942,10 @@ function captureSelection() {
     const barHeight = bar.offsetHeight || 42
     const selectionTop = frameRect.top - stageRect.top + rect.top
     const selectionBottom = frameRect.top - stageRect.top + rect.bottom
-    const above = selectionTop - barHeight - 12 >= 10
-    
+    const spaceBelow = stageRect.height - selectionBottom
+    const spaceAbove = selectionTop
+    const preferBelow = spaceBelow >= barHeight + 16
+    const useBelow = preferBelow || spaceBelow >= spaceAbove
     const half = barWidth / 2 + 10
     const left = Math.max(
       half,
@@ -3745,15 +3954,17 @@ function captureSelection() {
         frameRect.left - stageRect.left + rect.left + rect.width / 2
       )
     )
-    const rawTop = above ? selectionTop - barHeight - 10 : selectionBottom + 10
+    const rawTop = useBelow
+      ? selectionBottom + 12
+      : selectionTop - barHeight - 12
     const top = Math.max(10, Math.min(stageRect.height - barHeight - 10, rawTop))
     
-    bar.dataset.placement = above ? 'above' : 'below'
+    bar.dataset.placement = useBelow ? 'below' : 'above'
     bar.style.left = `${left}px`
     bar.style.top = `${top}px`
     
     syncSelectionActions()
-  }, 20)
+  }, 280)
 }
 
 function selectedTextPosition() {
@@ -3801,46 +4012,32 @@ function matchingNote(kind, quote = state.selection) {
 }
 
 function syncSelectionActions() {
-  $('#markerBtn').classList.toggle('active', !!matchingNote('marker'))
-  $('#underlineBtn').classList.toggle('active', !!matchingNote('underline'))
+  $('#noteBtn').classList.toggle('active', !!matchingNote('marker'))
 }
 
 async function addNote(kind) {
   if (!state.selection) return
   
-  const duplicates = matchingNotes(kind)
-  const existing = duplicates[0]
-  
-  if (existing && (kind === 'marker' || kind === 'underline')) {
-    const ids = new Set(duplicates.map(n => n.id))
+  const existing = matchingNotes(kind)
+  if (existing.length) {
+    const ids = new Set(existing.map(n => n.id))
     state.book.notes = state.book.notes.filter(n => !ids.has(n.id))
-    await saveBook(state.book)
-    
+    await saveCurrentBook()
     for (const id of ids) {
-      const marked = $('#readerFrame').contentDocument.querySelectorAll(
-        `[data-note="${CSS.escape(id)}"]`
-      )
-      for (const el of marked) {
-        el.replaceWith(...el.childNodes)
-      }
+      const marked = $('#readerFrame').contentDocument.querySelectorAll(`[data-note="${CSS.escape(id)}"]`)
+      for (const el of marked) el.replaceWith(...el.childNodes)
     }
-    
     $('#readerFrame').contentWindow.getSelection()?.removeAllRanges()
     state.selection = ''
     state.selectionNoteId = ''
     $('#selectionBar').classList.add('hidden')
     renderNotes()
-    toast(kind === 'underline' ? '已删除直线' : '已删除马克笔')
+    toast('已删除笔记')
     return
   }
   
-  if (existing) {
-    toast('这段内容已存在相同标注')
-    return
-  }
-  
-  const thought = kind === 'thought' ? prompt('写下这一刻的想法：', '') : ''
-  if (kind === 'thought' && thought === null) return
+  const thought = kind === 'marker' ? prompt('添加备注（可选）：', '') : ''
+  if (kind === 'marker' && thought === null) return
   
   const position = selectedTextPosition()
   const bodyText = $('#readerFrame').contentDocument.body.textContent || ''
@@ -3864,7 +4061,7 @@ async function addNote(kind) {
   
   state.book.notes ||= []
   state.book.notes.push(item)
-  await saveBook(state.book)
+  await saveCurrentBook()
   
   const idoc = $('#readerFrame').contentDocument
   highlightFirst(idoc.body, item.quote, item.id, item.kind, item.position, item)
@@ -3875,10 +4072,7 @@ async function addNote(kind) {
   $('#selectionBar').classList.add('hidden')
   renderNotes()
   
-  toast(
-    kind === 'underline' ? '已添加直线' :
-    kind === 'thought' ? '想法已保存' : '已添加马克笔'
-  )
+  toast('笔记已保存')
 }
 
 function hideSelectionTools() {
@@ -3889,17 +4083,14 @@ function hideSelectionTools() {
   $('#selectionBar').classList.add('hidden')
 }
 
-function applyHighlights(doc) {
-  for (const note of (state.book.notes || []).filter(n => n.chapter === state.chapter)) {
-    highlightFirst(
-      doc.body,
-      note.quote,
-      note.id,
-      note.kind || 'marker',
-      note.position,
-      note
-    )
+function applyNotesToSection(section, chapter) {
+  const notes = (state.book.notes || []).filter(n => n.chapter === chapter)
+  for (const note of notes) {
+    highlightFirst(section, note.quote, note.id, note.kind || 'marker', note.position, note)
   }
+}
+function applyHighlights(doc) {
+  applyNotesToSection(doc.body, state.chapter)
 }
 
 function locateNoteText(all, note) {
@@ -4008,8 +4199,7 @@ function focusPendingNote() {
 }
 
 function noteKindLabel(kind) {
-  return kind === 'underline' ? '直线' :
-         kind === 'thought' ? '想法' : '马克笔'
+  return '笔记'
 }
 
 function renderNotes() {
@@ -4018,9 +4208,7 @@ function renderNotes() {
   p.innerHTML = `
     <div class="note-filters">
       <button data-note-filter="all">全部</button>
-      <button data-note-filter="marker">马克笔</button>
-      <button data-note-filter="underline">直线</button>
-      <button data-note-filter="thought">想法</button>
+      <button data-note-filter="marker">笔记</button>
       ${state.returnLocator ? '<button data-return-reading>返回原位置</button>' : ''}
     </div>
   `
@@ -4045,22 +4233,28 @@ function renderNotes() {
     .sort((a, b) => (a.chapter - b.chapter) || (a.position - b.position))
   
   for (const n of notes) {
-    const editable = (n.kind || 'marker') !== 'underline'
-    const editLabel = (n.kind || 'marker') === 'marker' ? '换颜色' : '编辑想法'
+    const editable = true
+    const editLabel = '编辑'
     
     const d = document.createElement('div')
     d.className = 'note-item'
     
-    d.innerHTML = `
-      <span class="note-kind">${noteKindLabel(n.kind)}</span>
-      "${escapeHtml(n.quote.slice(0, 90))}"
-      ${n.note ? `<small>${escapeHtml(n.note)}</small>` : ''}
-      <div class="note-actions">
-        <button data-action="locate">定位</button>
-        ${editable ? `<button data-action="edit">${editLabel}</button>` : ''}
-        <button data-action="delete">删除</button>
-      </div>
-    `
+    const kind = document.createElement('span')
+    kind.className = 'note-kind'
+    kind.textContent = noteKindLabel(n.kind)
+    d.append(kind)
+    const quote = document.createElement('span')
+    quote.textContent = `"${n.quote.slice(0, 90)}"`
+    d.append(quote)
+    if (n.note) {
+      const small = document.createElement('small')
+      small.textContent = n.note
+      d.append(small)
+    }
+    const actions = document.createElement('div')
+    actions.className = 'note-actions'
+    actions.innerHTML = '<button data-action="locate">定位</button><button data-action="edit">编辑</button><button data-action="delete">删除</button>'
+    d.append(actions)
     
     d.querySelector('[data-action="locate"]').onclick = () => {
       state.returnLocator = captureReadingLocator()
@@ -4075,7 +4269,7 @@ function renderNotes() {
           const colors = ['yellow', 'green', 'blue', 'pink']
           n.color = colors[(colors.indexOf(n.color || 'yellow') + 1) % colors.length]
           n.updated = Date.now()
-          await saveBook(state.book)
+          await saveCurrentBook()
           
           if (n.chapter === state.chapter) {
             renderChapter(state.chapter, '', state.page, { locator: captureReadingLocator() })
@@ -4085,7 +4279,7 @@ function renderNotes() {
           if (value === null) return
           n.note = value
           n.updated = Date.now()
-          await saveBook(state.book)
+          await saveCurrentBook()
         }
         renderNotes()
       }
@@ -4095,7 +4289,7 @@ function renderNotes() {
       if (!confirm('删除这条标注？')) return
       
       state.book.notes = state.book.notes.filter(x => x.id !== n.id)
-      await saveBook(state.book)
+      await saveCurrentBook()
       renderNotes()
       
       if (n.chapter === state.chapter) {
@@ -4280,14 +4474,14 @@ async function searchBook() {
 function legacySettings() {
   try {
     return {
-      size: +localStorage.readerSize || 18,
-      line: +localStorage.readerLine || 1.8,
-      paragraph: +localStorage.readerParagraph || 1,
-      width: +localStorage.readerWidth || 800,
-      font: localStorage.readerFont || DEFAULT_SETTINGS.font,
-      mode: localStorage.readerMode || 'scroll',
-      typography: localStorage.readerTypography || 'book',
-      theme: localStorage.readerTheme || 'light'
+      size: +safeLocalGet('readerSize', '') || 18,
+      line: +safeLocalGet('readerLine', '') || 1.8,
+      paragraph: +safeLocalGet('readerParagraph', '') || 1,
+      width: +safeLocalGet('readerWidth', '') || 800,
+      font: safeLocalGet('readerFont', '') || DEFAULT_SETTINGS.font,
+      mode: safeLocalGet('readerMode', '') || 'scroll',
+      typography: safeLocalGet('readerTypography', '') || 'book',
+      theme: safeLocalGet('readerTheme', '') || 'light'
     }
   } catch {
     return { ...DEFAULT_SETTINGS }
@@ -4478,7 +4672,7 @@ function setTheme(theme) {
   if (state.book) {
     persistBookSettings({ theme })
   } else {
-    localStorage.readerTheme = theme
+    safeLocalSet('readerTheme', theme)
   }
   
   syncThemeUI()
@@ -4534,7 +4728,7 @@ function buildReaderCss(settings = getSettings()) {
   
   const readingLayout = fixed
     ? `html{height:100%;overflow:hidden!important}body{position:absolute!important;left:50%!important;top:50%!important;width:${fixedViewport.width}px!important;height:${fixedViewport.height}px!important;min-width:${fixedViewport.width}px!important;min-height:${fixedViewport.height}px!important;margin:0!important;overflow:hidden!important;transform:translate(-50%,-50%) scale(${fixedScale})!important;transform-origin:center!important;}`
-    : `html{height:100%;overflow:auto!important}body{width:min(${settings.width}px,calc(100vw - ${outer * 2}px))!important;max-width:none!important;margin:0 auto!important;padding:52px ${Math.max(24, Math.round(outer * 0.45))}px 110px!important;transform:none!important;zoom:1!important;}`
+    : `html{height:100%;overflow:auto!important;scrollbar-width:auto!important}body{width:min(${settings.width}px,calc(100vw - ${outer * 2}px))!important;max-width:none!important;margin:0 auto!important;padding:52px ${Math.max(24, Math.round(outer * 0.45))}px 110px!important;transform:none!important;zoom:1!important;}`
   
   const align = settings.align === 'justify' 
     ? 'text-align:justify!important;' 
@@ -4670,9 +4864,7 @@ $('#closeSidebar').onclick = closeReaderDrawer
 $$('.tab').forEach(t => t.onclick = () => openSidebar(t.dataset.panel))
 
 // Selection events
-$('#markerBtn').onclick = () => addNote('marker')
-$('#underlineBtn').onclick = () => addNote('underline')
-$('#noteBtn').onclick = () => addNote('thought')
+$('#noteBtn').onclick = () => addNote('marker')
 
 // Settings events
 ;[
@@ -4783,9 +4975,9 @@ window.addEventListener('resize', () => {
 
 // ==================== Initialization ====================
 document.documentElement.dataset.theme = ['light', 'eink', 'dark'].includes(
-  localStorage.readerTheme
+  safeLocalGet('readerTheme', '')
 )
-  ? localStorage.readerTheme
+  ? safeLocalGet('readerTheme', '')
   : 'light'
 
 syncThemeUI()
