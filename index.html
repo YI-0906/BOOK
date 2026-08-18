@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="library-mode">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
@@ -135,132 +135,19 @@ svg.icon {
 }
 
 /* ==================== Layout ==================== */
-.topbar {
-  height: 56px;
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  position: relative;
-  z-index: 100;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 600;
-  font-size: 15px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color 0.15s;
-}
-
-.brand:hover {
-  background: var(--bg);
-}
-
-.brand-mark {
-  display: block;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  overflow: hidden;
-  object-fit: cover;
-}
-
-.book-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 50%;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.top-status {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: all 0.15s;
-}
-
-.top-status:hover {
-  background: var(--bg);
-  color: var(--ink);
-}
-
-.local-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-main {
-  height: calc(100% - 56px);
-  overflow: hidden;
-}
+main { height:100%; overflow:hidden; }
 
 /* ==================== Library View ==================== */
 .library-view {
   height: 100%;
   overflow: auto;
   padding: 32px 24px 64px;
+  scroll-behavior:auto;
+  overscroll-behavior-y:none;
+  overflow-anchor:none;
 }
 
-.library-head {
-  max-width: 1200px;
-  margin: 0 auto 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.library-head h1 {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 4px;
-  letter-spacing: -0.02em;
-}
-
-.library-head p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.library-head-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.icon-button {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-}
-
-.icon-button:hover {
-  background: var(--bg);
-  border-color: var(--accent);
-}
+html.library-mode .library-view { padding:0 0 72px; }
 
 .primary-btn {
   display: inline-flex;
@@ -279,6 +166,132 @@ main {
 
 .primary-btn:hover {
   background: var(--accent-hover);
+}
+
+.reading-hero {
+  position:relative;
+  width:100%;
+  height:100svh;
+  min-height:100svh;
+  margin:0;
+  padding:max(24px,4vh) 24px max(22px,env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-rows:minmax(300px,1fr) auto auto;
+  color:#f7f8fc;
+  background:#141922;
+  overflow:hidden;
+  isolation:isolate;
+  overflow-anchor:none;
+}
+.cover-flow-backdrop { position:absolute; inset:0; z-index:-2; overflow:hidden; background:#141922; pointer-events:none; }
+.cover-flow-bg { position:absolute; inset:-76px; opacity:0; overflow:hidden; transform:translate3d(var(--drift,0px),0,0) scale(1.1); transition:opacity 800ms ease,transform 1100ms cubic-bezier(.2,.75,.2,1); will-change:opacity,transform; }
+.cover-flow-bg.is-active { opacity:1; transform:translate3d(0,0,0) scale(1.06); }
+.cover-flow-bg img { position:absolute; inset:-5%; width:110%; height:110%; object-fit:cover; opacity:.22; filter:blur(76px) saturate(.82) brightness(.7); transform:scale(1.14); }
+.cover-flow-bg::before { content:''; position:absolute; inset:0; z-index:1; background:radial-gradient(circle at 28% 28%,rgb(var(--ambient-a,76 88 112)/.72),transparent 46%),radial-gradient(circle at 76% 58%,rgb(var(--ambient-b,58 77 96)/.58),transparent 49%),linear-gradient(180deg,rgb(12 16 24/.18),rgb(10 14 21/.68) 76%,rgb(9 12 18/.93)); }
+.cover-flow-vignette { position:absolute; inset:0; z-index:2; background:linear-gradient(90deg,rgba(7,10,16,.56),transparent 25%,transparent 75%,rgba(7,10,16,.56)),linear-gradient(180deg,rgba(7,10,16,.08),transparent 48%,rgba(7,10,16,.5)); }
+.cover-flow-grain { position:absolute; inset:0; z-index:3; opacity:.055; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E"); mix-blend-mode:soft-light; }
+.reading-hero-count { position:absolute; top:max(22px,4vh); right:clamp(20px,4vw,52px); z-index:12; padding:7px 11px; border:1px solid rgba(255,255,255,.15); border-radius:999px; color:rgba(240,243,251,.7); background:rgba(8,12,19,.2); backdrop-filter:blur(16px) saturate(1.35); font-size:11px; white-space:nowrap; }
+.cover-flow { position:relative; min-height:300px; touch-action:pan-y; user-select:none; }
+.cover-flow::before { content:''; position:absolute; z-index:2; left:50%; bottom:5%; width:min(620px,64vw); height:74px; transform:translateX(-50%); background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 68%); filter:blur(19px); pointer-events:none; }
+.cover-flow-stage { position:absolute; inset:0; z-index:5; overflow:hidden; outline:0; perspective:1450px; transform-style:preserve-3d; cursor:grab; }
+.cover-flow-stage.is-dragging { cursor:grabbing; }
+.cover-flow-card { position:absolute; left:50%; top:50%; width:clamp(188px,17vw,258px); aspect-ratio:2/3; padding:0; border:0; border-radius:clamp(13px,1.2vw,18px); overflow:hidden; color:#fff; background:#1b2030; box-shadow:0 20px 38px rgba(0,0,0,.32),0 0 0 1px rgba(255,255,255,.1); cursor:pointer; transform-origin:50% 88%; transition:transform 470ms cubic-bezier(.2,.8,.2,1),opacity 340ms ease,filter 340ms ease,box-shadow 380ms ease; will-change:transform,opacity; backface-visibility:hidden; }
+.cover-flow-stage.is-dragging .cover-flow-card,.cover-flow-stage.is-preparing .cover-flow-card { transition:none; }
+.cover-flow-card::after { content:''; position:absolute; inset:0; background:linear-gradient(118deg,rgba(255,255,255,.21),transparent 24%,transparent 68%,rgba(255,255,255,.07)); opacity:.72; pointer-events:none; transition:opacity .35s; }
+.cover-flow-card[aria-current=true] { box-shadow:0 34px 64px rgba(0,0,0,.48),0 0 0 1px rgba(255,255,255,.25),0 0 46px rgb(var(--active-glow,110 125 160)/.18); }
+.cover-flow-card[aria-current=true]::after { opacity:1; }
+.cover-flow-card img { width:100%; height:100%; display:block; object-fit:cover; pointer-events:none; }
+.cover-flow-fallback { height:100%; display:flex; flex-direction:column; justify-content:flex-end; padding:22px 18px; text-align:left; background:radial-gradient(circle at 75% 22%,#6876d8,transparent 30%),linear-gradient(145deg,#26345d,#101522 70%); }
+.cover-flow-fallback small { margin-bottom:8px; color:rgba(255,255,255,.58); font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
+.cover-flow-fallback strong { font-size:17px; line-height:1.35; }
+.cover-flow-empty { position:absolute; inset:0; display:grid; place-items:center; text-align:center; color:rgba(245,247,252,.76); }
+.cover-flow-empty > span { display:flex; flex-direction:column; align-items:center; gap:12px; padding:28px; }
+.cover-flow-empty .empty-icon { color:rgba(255,255,255,.78); background:rgba(255,255,255,.1); box-shadow:inset 0 1px rgba(255,255,255,.14); backdrop-filter:blur(16px); }
+.cover-flow-empty strong { font-size:18px; font-weight:600; }
+.cover-flow-empty small { color:rgba(235,239,249,.5); font-size:12px; }
+.cover-flow-info { position:relative; z-index:8; width:min(560px,82vw); min-height:100px; margin:-2px auto clamp(12px,2vh,22px); text-align:center; transition:opacity .2s ease,transform .28s ease; }
+.cover-flow-info.is-changing { opacity:0; transform:translateY(7px); }
+.cover-flow-info h2 { margin:0; overflow:hidden; color:#f8f9fc; font-size:clamp(18px,1.7vw,23px); line-height:1.35; font-weight:650; letter-spacing:-.01em; text-overflow:ellipsis; white-space:nowrap; text-shadow:0 3px 18px rgba(0,0,0,.42); }
+.cover-flow-meta { margin:5px 0 11px; overflow:hidden; color:rgba(235,239,249,.66); font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
+.cover-flow-progress { display:flex; align-items:center; gap:10px; width:min(320px,100%); margin:0 auto; }
+.cover-flow-progress-track { flex:1; height:3px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.16); }
+.cover-flow-progress-track i { display:block; width:0; height:100%; border-radius:inherit; background:rgba(255,255,255,.84); transition:width .46s cubic-bezier(.2,.8,.2,1); }
+.cover-flow-progress > span:last-child { width:34px; color:rgba(235,239,249,.72); font-size:11px; text-align:right; }
+.cover-flow-dots { position:relative; z-index:8; display:flex; justify-content:center; gap:7px; margin-top:12px; }
+.cover-flow-dot { width:5px; height:5px; padding:0; border-radius:50%; background:rgba(255,255,255,.28); transition:width .3s ease,background .3s ease,transform .2s; }
+.cover-flow-dot:hover { transform:scale(1.45); background:rgba(255,255,255,.62); }
+.cover-flow-dot.active { width:16px; border-radius:999px; background:rgba(255,255,255,.78); }
+.hero-bottom { position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.hero-scroll-hint { display:flex; align-items:center; gap:7px; color:rgba(239,242,249,.46); font-size:11px; letter-spacing:.02em; }
+.hero-scroll-hint svg { width:14px; height:14px; animation:coverFlowNudge 2.2s ease-in-out infinite; }
+.liquid-glass-filters { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
+.hero-actions {
+  --glass-x:50%;
+  --glass-y:30%;
+  --glass-angle:0deg;
+  position:relative;
+  width:min(520px,calc(100vw - 40px));
+  min-height:56px;
+  padding:5px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border:1px solid transparent;
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(25,31,42,.34),rgba(8,12,20,.22)) padding-box;
+  box-shadow:0 24px 58px rgba(0,0,0,.34),0 7px 20px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.18),inset 0 -1px rgba(255,255,255,.04);
+  -webkit-backdrop-filter:blur(15px) saturate(1.45) contrast(1.08);
+  backdrop-filter:blur(15px) saturate(1.45) contrast(1.08);
+  isolation:isolate;
+  overflow:hidden;
+}
+.hero-actions::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:-1px;
+  padding:1px;
+  border-radius:inherit;
+  background:conic-gradient(from var(--glass-angle),transparent 0 8%,rgba(104,224,255,.5) 12%,transparent 19% 38%,rgba(175,129,255,.42) 43%,transparent 51% 68%,rgba(255,210,114,.38) 73%,rgba(255,115,148,.38) 77%,transparent 83% 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.74;
+  animation:liquidGlassSpectrum 13s linear infinite;
+  pointer-events:none;
+}
+.hero-actions::after {
+  content:'';
+  position:absolute;
+  z-index:5;
+  inset:0;
+  border-radius:inherit;
+  background:radial-gradient(170px 58px at var(--glass-x) var(--glass-y),rgba(255,255,255,.21),rgba(255,255,255,.055) 34%,transparent 70%),linear-gradient(112deg,rgba(255,255,255,.14),transparent 19% 73%,rgba(143,202,255,.055));
+  mix-blend-mode:screen;
+  opacity:.68;
+  pointer-events:none;
+}
+.glass-refraction { position:absolute; z-index:-1; inset:2px; border-radius:19px; background:radial-gradient(ellipse at 50% -12%,rgba(255,255,255,.12),transparent 47%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015)); filter:url(#liquidGlassDistortion); opacity:.72; pointer-events:none; }
+.glass-edge { position:absolute; z-index:3; inset:1px; border-radius:21px; box-shadow:inset 1px 1px 0 rgba(255,255,255,.16),inset -1px -1px 0 rgba(3,7,14,.32),inset 0 0 0 4px rgba(255,255,255,.016),inset 0 -8px 18px rgba(0,0,0,.07); pointer-events:none; }
+.glass-edge::before { content:''; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(105deg,rgba(122,226,255,.09),transparent 20% 70%,rgba(214,142,255,.075)); filter:url(#liquidGlassEdge); opacity:.8; }
+.glass-caustic { position:absolute; z-index:2; left:8%; right:8%; bottom:-10px; height:26px; border-radius:50%; background:radial-gradient(ellipse,rgba(184,220,255,.2),rgba(108,151,255,.07) 37%,transparent 72%); filter:blur(7px); opacity:.68; pointer-events:none; }
+.hero-action { position:relative; z-index:4; min-width:0; min-height:44px; display:flex; align-items:center; justify-content:center; border:1px solid transparent; border-radius:17px; color:rgba(249,250,253,.84); font-size:12px; font-weight:680; cursor:pointer; text-shadow:0 1px 12px rgba(0,0,0,.22); transition:color .22s,transform .22s,background .22s,border-color .22s,box-shadow .22s; }
+.hero-action::after { content:''; position:absolute; inset:0; z-index:-1; border-radius:inherit; background:radial-gradient(110px 42px at 50% 0,rgba(255,255,255,.1),transparent 70%); opacity:0; transition:opacity .22s; }
+.hero-action + .hero-action::before { content:''; position:absolute; left:-1px; top:12px; bottom:12px; width:1px; background:linear-gradient(180deg,transparent,rgba(255,255,255,.13) 24% 76%,transparent); box-shadow:-1px 0 rgba(0,0,0,.08); }
+.hero-action:hover,.hero-action:focus-visible { color:#fff; border-color:rgba(255,255,255,.08); background:rgba(255,255,255,.055); box-shadow:inset 0 1px rgba(255,255,255,.08),0 7px 20px rgba(0,0,0,.08); transform:translateY(-1px); }
+.hero-action:hover::after,.hero-action:focus-visible::after { opacity:1; }
+.hero-action:active { transform:translateY(0) scale(.985); background:rgba(255,255,255,.08); }
+.hero-action.primary { color:#fff; border-color:rgba(255,255,255,.08); background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.045)); box-shadow:inset 0 1px rgba(255,255,255,.1),inset 0 -1px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.09); }
+@property --glass-angle { syntax:'<angle>'; inherits:false; initial-value:0deg; }
+@keyframes liquidGlassSpectrum { to { --glass-angle:360deg; } }
+@keyframes coverFlowNudge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
+
+html.library-mode .library-toolbar { width:min(1200px,calc(100% - 48px)); margin:0 auto 24px; padding-top:64px; }
+html.library-mode .drop-zone { width:min(1200px,calc(100% - 48px)); }
+
+@media (prefers-reduced-motion:reduce) {
+  .cover-flow-bg,.cover-flow-card,.cover-flow-info,.cover-flow-progress-track i,.cover-flow-dot { transition-duration:1ms !important; }
+  .hero-scroll-hint svg { animation:none; }
+  .hero-actions::before { animation:none; }
 }
 
 .library-toolbar {
@@ -354,72 +367,32 @@ main {
   border-radius: 8px;
   background: var(--surface) url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="%23737373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 10px center;
   appearance: none;
+  outline: none;
   cursor: pointer;
   transition: all 0.15s;
+}
+
+.library-controls select:focus,
+.library-controls select:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .library-controls select:hover {
   border-color: var(--accent);
 }
 
-.library-menu {
-  position: fixed;
-  right: 24px;
-  top: 64px;
-  z-index: 200;
-  width: 280px;
-  padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-lg);
-}
-
-.library-menu > div {
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-}
-
-.library-menu > div:last-of-type {
-  border-bottom: 0;
-}
-
-.library-menu strong {
-  display: block;
-  font-weight: 600;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-
-.library-menu small {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.library-menu .storage-info {
-  padding: 8px 12px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.library-menu button,
-.library-menu label {
-  width: 100%;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background-color 0.15s;
-}
-
-.library-menu button:hover,
-.library-menu label:hover {
-  background: var(--bg);
-}
+/* ==================== Library Selects ==================== */
+.library-controls select.native-select { display:none; }
+.library-select { position:relative; min-width:112px; }
+.library-select-trigger { width:100%; height:36px; padding:0 32px 0 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface); text-align:left; position:relative; transition:all .15s; }
+.library-select-trigger::after { content:''; position:absolute; top:50%; right:12px; width:7px; height:7px; border-right:1.5px solid var(--muted); border-bottom:1.5px solid var(--muted); transform:translateY(-65%) rotate(45deg); }
+.library-select.open .library-select-trigger, .library-select-trigger:hover { border-color:var(--accent); background:var(--bg); }
+.library-select-menu { position:absolute; z-index:240; top:calc(100% + 6px); left:0; right:0; padding:5px; border:1px solid var(--line); border-radius:10px; background:var(--surface); box-shadow:var(--shadow-lg); opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s,transform .15s,visibility .15s; }
+.library-select.open .library-select-menu { opacity:1; visibility:visible; transform:translateY(0); }
+.library-select-option { width:100%; min-height:32px; padding:0 9px; border-radius:6px; text-align:left; color:var(--ink); font-size:13px; }
+.library-select-option:hover, .library-select-option.active { background:var(--bg); color:var(--accent); }
+.library-select-option.active::after { content:'✓'; float:right; color:var(--accent); }
 
 /* ==================== Book Grid ==================== */
 .drop-zone {
@@ -524,6 +497,7 @@ main {
 
 .card-title {
   margin: 12px 0 4px;
+  height: 21px;
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
@@ -538,8 +512,12 @@ main {
 }
 
 .card-meta {
+  height: 18px;
   color: var(--muted);
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-progress {
@@ -1088,29 +1066,31 @@ main {
   border-radius: 8px;
   box-shadow: var(--shadow-lg);
   display: flex;
-  gap: 4px;
-}
-
-.selection-bar button {
-  padding: 8px 12px;
-  border-radius: 6px;
-  color: var(--paper);
-  font-size: 12px;
-  display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.15s;
+  gap: 0;
 }
+.selection-bar button { color: var(--paper); transition: all .15s; }
+.selection-bar button:hover { background: rgba(255,255,255,.1); }
+.selection-color-button { width:36px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
+.selection-color-dot { width:14px; height:14px; border-radius:50%; background:#fef08a; box-shadow:0 0 0 2px rgba(255,255,255,.75); }
+.selection-divider { width:1px; height:20px; margin:0 2px; background:rgba(255,255,255,.28); }
+.selection-action { min-width:58px; height:34px; padding:0 12px; border-radius:6px; font-size:12px; }
+.selection-color-menu { position:absolute; left:2px; top:calc(100% + 6px); display:flex; gap:6px; padding:7px; border:1px solid var(--line); border-radius:9px; background:var(--surface); box-shadow:var(--shadow-lg); }
+.selection-color-menu button { width:20px; height:20px; border-radius:50%; border:2px solid transparent; }
+.selection-color-menu button:hover { transform:scale(1.1); }
+.selection-color-menu button[data-selection-color="yellow"] { background:#fef08a; }
+.selection-color-menu button[data-selection-color="green"] { background:#86efac; }
+.selection-color-menu button[data-selection-color="blue"] { background:#7dd3fc; }
+.selection-color-menu button[data-selection-color="pink"] { background:#f9a8d4; }
 
-.selection-bar button:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
+.remark-card { width:min(440px,90vw); }
+.remark-textarea { width:100%; min-height:120px; padding:12px; border:0; border-radius:8px; resize:vertical; background:var(--bg); color:var(--ink); outline:none; box-shadow:none; }
+.remark-textarea:focus { border:0; outline:none; box-shadow:none; }
+.remark-actions { display:flex; justify-content:flex-end; gap:8px; }
+.remark-actions button { height:36px; padding:0 14px; border:1px solid var(--line); border-radius:8px; }
+.remark-actions .primary-btn { border-color:var(--accent); }
 
-.selection-bar button.active {
-  background: rgba(255, 255, 255, 0.15);
-}
 
-/* ==================== Reading Status ==================== */
 .reading-status {
   position: absolute;
   z-index: 120;
@@ -1457,42 +1437,28 @@ dialog::backdrop {
     margin-left: 2px;
   }
 
-  .brand span:last-child {
-    display: none;
-  }
-
-  .top-status span:last-child {
-    display: none;
-  }
-
-  .book-title {
-    max-width: calc(100vw - 120px);
-    font-size: 14px;
-  }
-
   .library-view {
     padding: 20px 16px 40px;
   }
 
-  .library-head {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
+  html.library-mode .library-view { padding:0 0 48px; }
 
-  .library-head h1 {
-    font-size: 20px;
-  }
-
-  .icon-button {
-    display: none;
-  }
-
-  .library-head-actions,
-  .import-button {
-    width: 100%;
-  }
+  .reading-hero { height:100svh; min-height:100svh; padding:20px 0 max(14px,env(safe-area-inset-bottom)); grid-template-rows:minmax(260px,1fr) auto auto; }
+  .reading-hero-count { top:18px; right:16px; font-size:10px; }
+  .cover-flow { min-height:260px; }
+  .cover-flow-card { width:clamp(144px,42vw,174px); border-radius:12px; }
+  .cover-flow-bg img { filter:blur(56px) saturate(.78) brightness(.68); }
+  .cover-flow-info { width:86vw; min-height:90px; margin-bottom:8px; }
+  .cover-flow-info h2 { font-size:17px; }
+  .cover-flow-meta { margin-bottom:9px; }
+  .cover-flow-dots { margin-top:9px; }
+  .hero-bottom { gap:9px; }
+  .hero-actions { width:min(360px,calc(100vw - 24px)); min-height:54px; padding:5px; border-radius:20px; }
+  .glass-edge { border-radius:19px; }
+  .glass-refraction { border-radius:17px; }
+  .hero-action { min-height:42px; border-radius:15px; font-size:11px; }
+  html.library-mode .library-toolbar { width:calc(100% - 32px); padding-top:44px; }
+  html.library-mode .drop-zone { width:calc(100% - 32px); }
 
   .library-toolbar {
     flex-direction: column;
@@ -1518,13 +1484,6 @@ dialog::backdrop {
 
   .library-controls select {
     width: 100%;
-  }
-
-  .library-menu {
-    left: 16px;
-    right: 16px;
-    top: 64px;
-    width: auto;
   }
 
   .book-grid {
@@ -1553,10 +1512,6 @@ dialog::backdrop {
 }
 
 /* ==================== Fullscreen Reading ==================== */
-.fullscreen-reading .topbar {
-  display: none;
-}
-
 .fullscreen-reading main {
   height: 100%;
 }
@@ -1581,43 +1536,63 @@ dialog::backdrop {
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <button id="homeBtn" class="brand" title="返回书架">
-        <img class="brand-mark" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiByeD0iMTQ0IiBmaWxsPSIjMjAyMTI0Ii8+CjxwYXRoIGQ9Ik0xMTEuMTExIDU0Mi44NDVDMTExLjExMSA1NjYuNDE5IDEyMC40NzYgNTg5LjAyOSAxMzcuMTQ2IDYwNS42OThDMTUzLjgxNiA2MjIuMzY4IDE3Ni40MjUgNjMxLjczMyAyMDAgNjMxLjczM0gzNzkuMzc4VjMxMS4xMTFDMzc5LjM3OCAyNzUuNzQ5IDM2NS4zMyAyNDEuODM1IDM0MC4zMjUgMjE2LjgzQzMxNS4zMiAxOTEuODI1IDI4MS40MDcgMTc3Ljc3OCAyNDYuMDQ0IDE3Ny43NzhIMjAwQzE3Ni40MjUgMTc3Ljc3OCAxNTMuODE2IDE4Ny4xNDMgMTM3LjE0NiAyMDMuODEzQzEyMC40NzYgMjIwLjQ4MyAxMTEuMTExIDI0My4wOTIgMTExLjExMSAyNjYuNjY3VjU0Mi44NDVaTTQyMC42MjIgNjMxLjczM0g2MDBDNjIzLjU3NSA2MzEuNzMzIDY0Ni4xODQgNjIyLjM2OCA2NjIuODU0IDYwNS42OThDNjc5LjUyNCA1ODkuMDI5IDY4OC44ODkgNTY2LjQxOSA2ODguODg5IDU0Mi44NDVWMjY2LjY2N0M2ODguODg5IDI0My4wOTIgNjc5LjUyNCAyMjAuNDgzIDY2Mi44NTQgMjAzLjgxM0M2NDYuMTg0IDE4Ny4xNDMgNjIzLjU3NSAxNzcuNzc4IDYwMCAxNzcuNzc4SDU1My45NTZDNTE4LjU5MyAxNzcuNzc4IDQ4NC42NzkgMTkxLjgyNSA0NTkuNjc1IDIxNi44M0M0MzQuNjcgMjQxLjgzNSA0MjAuNjIyIDI3NS43NDkgNDIwLjYyMiAzMTEuMTExVjYzMS43MzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
-        <span>本地阅读</span>
-      </button>
-      <div id="bookTitle" class="book-title">我的书架</div>
-      <button id="dataStatusBtn" class="top-status" title="数据与备份">
-        <span class="local-dot"></span>
-        <span id="dataStatusText">数据保存在本机</span>
-      </button>
-    </header>
-
     <main>
       <!-- Library View -->
       <section id="libraryView" class="library-view">
-        <div class="library-head">
-          <div>
-            <h1>我的书架</h1>
-            <p>安静阅读，所有内容只保存在这台设备</p>
+        <section id="readingHero" class="reading-hero hidden" aria-label="封面流">
+          <div class="cover-flow-backdrop" aria-hidden="true">
+            <div class="cover-flow-bg is-active"><img alt="" /></div>
+            <div class="cover-flow-bg"><img alt="" /></div>
+            <div class="cover-flow-vignette"></div>
+            <div class="cover-flow-grain"></div>
           </div>
-          <div class="library-head-actions">
-            <button id="libraryMoreBtn" class="icon-button" type="button" title="数据与备份" aria-label="数据与备份">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="1" fill="currentColor"/>
-                <circle cx="12" cy="5" r="1" fill="currentColor"/>
-                <circle cx="12" cy="19" r="1" fill="currentColor"/>
-              </svg>
-            </button>
-            <label class="primary-btn import-button">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 5v14M5 12h14"/>
-              </svg>
-              <span>导入图书</span>
-              <input id="fileInput" type="file" accept=".epub,application/epub+zip" multiple hidden />
-            </label>
+          <span id="readingHeroCount" class="reading-hero-count"></span>
+          <div class="cover-flow" id="coverFlow">
+            <div id="coverFlowStage" class="cover-flow-stage" tabindex="0" aria-label="封面流，可使用左右方向键切换"></div>
           </div>
-        </div>
+          <div id="coverFlowInfo" class="cover-flow-info" aria-live="polite">
+            <h2 id="coverFlowTitle"></h2>
+            <p id="coverFlowMeta" class="cover-flow-meta"></p>
+            <div class="cover-flow-progress" aria-label="阅读进度">
+              <span class="cover-flow-progress-track"><i id="coverFlowProgressBar"></i></span>
+              <span id="coverFlowProgressText">0%</span>
+            </div>
+            <div id="coverFlowDots" class="cover-flow-dots" aria-label="封面分页"></div>
+          </div>
+          <div class="hero-bottom">
+            <div class="hero-scroll-hint" aria-hidden="true">
+              <span>向下滚动查看全部图书</span>
+              <svg class="icon" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>
+            </div>
+            <svg class="liquid-glass-filters" aria-hidden="true">
+              <filter id="liquidGlassDistortion" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.055" numOctaves="2" seed="7" result="noise" />
+                <feGaussianBlur in="noise" stdDeviation="0.35" result="softNoise" />
+                <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="13" xChannelSelector="R" yChannelSelector="B" />
+              </filter>
+              <filter id="liquidGlassEdge" x="-15%" y="-45%" width="130%" height="190%" color-interpolation-filters="sRGB">
+                <feTurbulence type="turbulence" baseFrequency="0.009 0.07" numOctaves="1" seed="11" result="edgeNoise" />
+                <feDisplacementMap in="SourceGraphic" in2="edgeNoise" scale="8" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </svg>
+            <div class="hero-actions" aria-label="书库操作">
+              <span class="glass-refraction" aria-hidden="true"></span>
+              <span class="glass-edge" aria-hidden="true"></span>
+              <span class="glass-caustic" aria-hidden="true"></span>
+              <label class="hero-action">
+                <span>导入备份</span>
+                <input id="heroBackupInput" type="file" accept=".json" hidden />
+              </label>
+              <label class="hero-action primary">
+                <span>添加图书</span>
+                <input id="heroFileInput" type="file" accept=".epub,application/epub+zip" multiple hidden />
+              </label>
+              <button id="heroExportBtn" class="hero-action" type="button">
+                <span>导出备份</span>
+              </button>
+            </div>
+          </div>
+        </section>
 
         <div class="library-toolbar">
           <div class="library-section-title">
@@ -1632,40 +1607,31 @@ dialog::backdrop {
               </svg>
               <input id="librarySearch" type="search" placeholder="搜索书名或作者" />
             </div>
-            <select id="libraryFilter" aria-label="筛选图书">
-              <option value="all">全部</option>
-              <option value="reading">阅读中</option>
-              <option value="finished">已读完</option>
-              <option value="unread">未开始</option>
+            <div class="library-select" data-select="libraryFilter">
+              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">全部</button>
+              <div class="library-select-menu" role="listbox">
+                <button class="library-select-option active" type="button" data-value="all">全部</button>
+                <button class="library-select-option" type="button" data-value="reading">阅读中</button>
+                <button class="library-select-option" type="button" data-value="finished">已读完</button>
+                <button class="library-select-option" type="button" data-value="unread">未开始</button>
+              </div>
+            </div>
+            <div class="library-select" data-select="librarySort">
+              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">最近阅读</button>
+              <div class="library-select-menu" role="listbox">
+                <button class="library-select-option active" type="button" data-value="recent">最近阅读</button>
+                <button class="library-select-option" type="button" data-value="added">最近导入</button>
+                <button class="library-select-option" type="button" data-value="title">书名排序</button>
+                <button class="library-select-option" type="button" data-value="progress">阅读进度</button>
+              </div>
+            </div>
+            <select id="libraryFilter" class="native-select" aria-hidden="true" tabindex="-1">
+              <option value="all">全部</option><option value="reading">阅读中</option><option value="finished">已读完</option><option value="unread">未开始</option>
             </select>
-            <select id="librarySort" aria-label="图书排序">
-              <option value="recent">最近阅读</option>
-              <option value="added">最近导入</option>
-              <option value="title">书名排序</option>
-              <option value="progress">阅读进度</option>
+            <select id="librarySort" class="native-select" aria-hidden="true" tabindex="-1">
+              <option value="recent">最近阅读</option><option value="added">最近导入</option><option value="title">书名排序</option><option value="progress">阅读进度</option>
             </select>
           </div>
-        </div>
-
-        <div id="libraryMenu" class="library-menu hidden">
-          <div>
-            <strong>数据与备份</strong>
-            <small id="backupStatus">尚未导出完整备份</small>
-          </div>
-          <span id="storageInfo" class="storage-info"></span>
-          <button id="exportBtn" type="button">
-            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-            </svg>
-            导出完整备份
-          </button>
-          <label class="text-btn">
-            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-            </svg>
-            从备份恢复
-            <input id="backupInput" type="file" accept=".json" hidden />
-          </label>
         </div>
 
         <div id="dropZone" class="drop-zone">
@@ -1712,7 +1678,7 @@ dialog::backdrop {
           
           <div class="sidebar-tabs">
             <button class="tab active" data-panel="tocPanel">目录</button>
-            <button class="tab" data-panel="notesPanel">标注</button>
+            <button class="tab" data-panel="notesPanel">笔记</button>
             <button class="tab" data-panel="settingsPanel">设置</button>
           </div>
           
@@ -1802,15 +1768,6 @@ dialog::backdrop {
               <span>图片</span>
               <input id="imageWidth" type="range" min="40" max="100" step="10" value="100" />
             </div>
-            <div class="setting-row">
-              <span>马克笔</span>
-              <div class="theme-options">
-                <button type="button" data-highlight-color="yellow" class="highlight-swatch highlight-yellow" title="黄色" aria-label="黄色马克笔"></button>
-                <button type="button" data-highlight-color="green" class="highlight-swatch highlight-green" title="绿色" aria-label="绿色马克笔"></button>
-                <button type="button" data-highlight-color="blue" class="highlight-swatch highlight-blue" title="蓝色" aria-label="蓝色马克笔"></button>
-                <button type="button" data-highlight-color="pink" class="highlight-swatch highlight-pink" title="粉色" aria-label="粉色马克笔"></button>
-              </div>
-            </div>
           </div>
         </aside>
 
@@ -1833,12 +1790,19 @@ dialog::backdrop {
           
           <!-- Selection Bar -->
           <div id="selectionBar" class="selection-bar hidden">
-            <button id="noteBtn" type="button" aria-label="添加笔记">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm3 5h8M8 12h8M8 16h5" fill="currentColor" stroke="none"/>
-              </svg>
-              添加笔记
+            <button id="highlightColorBtn" class="selection-color-button" type="button" aria-label="调整笔记颜色" title="调整笔记颜色">
+              <span class="selection-color-dot"></span>
             </button>
+            <span class="selection-divider" aria-hidden="true"></span>
+            <button id="noteBtn" class="selection-action" type="button" aria-label="添加笔记">笔记</button>
+            <span class="selection-divider" aria-hidden="true"></span>
+            <button id="remarkBtn" class="selection-action" type="button" aria-label="添加备注">备注</button>
+            <div id="selectionColorMenu" class="selection-color-menu hidden" role="menu">
+              <button type="button" data-selection-color="yellow" aria-label="黄色"></button>
+              <button type="button" data-selection-color="green" aria-label="绿色"></button>
+              <button type="button" data-selection-color="blue" aria-label="蓝色"></button>
+              <button type="button" data-selection-color="pink" aria-label="粉色"></button>
+            </div>
           </div>
 
           <!-- Reading Status -->
@@ -1885,6 +1849,22 @@ dialog::backdrop {
           </button>
         </div>
         <div id="footnoteContent" class="footnote-content"></div>
+      </div>
+    </dialog>
+
+    <dialog id="remarkDialog">
+      <div class="dialog-card remark-card">
+        <div class="dialog-head">
+          <h2>添加备注</h2>
+          <button id="closeRemark" type="button" aria-label="关闭">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <textarea id="remarkInput" class="remark-textarea" placeholder="写下你的想法…"></textarea>
+        <div class="remark-actions">
+          <button id="cancelRemark" type="button">取消</button>
+          <button id="saveRemark" class="primary-btn" type="button">保存备注</button>
+        </div>
       </div>
     </dialog>
 
@@ -1992,9 +1972,9 @@ const state = {
   assetCache: new Map(),
   selection: '',
   navigating: false,
-  noteFilter: 'all',
   searchIndex: null,
   renderToken: 0,
+  openBookToken: 0,
   externalChange: false
 }
 
@@ -2019,6 +1999,7 @@ async function store(mode, fn) {
     const result = fn(tx.objectStore('books'))
     tx.oncomplete = () => resolve(result?.result)
     tx.onerror = () => reject(tx.error)
+    tx.onabort = () => reject(tx.error || new Error('本地数据库事务已中止'))
   })
 }
 
@@ -2048,11 +2029,19 @@ function normalizeBook(book) {
   book.notes = Array.isArray(book.notes)
     ? book.notes
         .filter(n => n && typeof n === 'object' && typeof n.quote === 'string')
-        .map(n => ({ ...n, kind: 'marker' }))
+        .map(n => ({
+          ...n,
+          id: n.id || uid(),
+          kind: n.note ? 'remark' : (['marker', 'underline', 'remark'].includes(n.kind) ? n.kind : 'marker'),
+          chapter: Math.max(0, Number(n.chapter) || 0),
+          position: Number.isFinite(Number(n.position)) ? Number(n.position) : -1,
+          created: Number(n.created) || Date.now(),
+          updated: Number(n.updated) || Number(n.created) || Date.now()
+        }))
     : []
   book.settings = book.settings && typeof book.settings === 'object' ? book.settings : {}
   book.locator = book.locator && typeof book.locator === 'object' ? book.locator : { chapter: book.chapter || 0, offset: 0, ratio: Number.isFinite(book.page) ? 0 : book.progress || 0 }
-  book.lastRead ||= book.added || Date.now()
+  if (!Number.isFinite(Number(book.lastRead))) book.lastRead = Number(book.added) || 0
   book.size ||= book.data?.byteLength || 0
   book.progress = Math.max(0, Math.min(1, +book.progress || 0))
   book.revision = Math.max(0, Number(book.revision) || 0)
@@ -2065,9 +2054,16 @@ const saveQueues = new Map()
 
 channel?.addEventListener('message', (e) => {
   if (!e.data?.id) return
-  if (state.book?.id === e.data.id) state.externalChange = true
+  if (state.book?.id === e.data.id) {
+    state.externalChange = true
+    if (e.data.deleted) toast('这本书已在另一个窗口中删除，当前阅读位置将不再保存', 5000)
+  }
   else loadLibrary().catch(() => {})
 })
+
+function broadcastLibraryChange(id = '*', detail = {}) {
+  channel?.postMessage({ id, updatedAt: Date.now(), ...detail })
+}
 
 async function saveCurrentBook() {
   const book = state.book
@@ -2138,12 +2134,6 @@ function escapeHtml(s = '') {
 
 function escapeRegExp(s = '') {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function formatBytes(bytes = 0) {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / 1048576).toFixed(1)} MB`
 }
 
 function toast(msg, ms = 2200) {
@@ -2264,18 +2254,18 @@ class ZipReader {
   async index() {
     if (this.data.length < 22) throw new Error('不是有效的 EPUB/ZIP 文件')
     let end = this.data.length - 22
-    while (end > Math.max(0, this.data.length - 65557) && this.u32(end) !== 0x06054b50) end--
-    if (end <= 0) throw new Error('不是有效的 EPUB/ZIP 文件')
-    
+    while (end >= Math.max(0, this.data.length - 65557) && this.u32(end) !== 0x06054b50) end--
+    if (end < 0) throw new Error('不是有效的 EPUB/ZIP 文件')
+    const directorySize = this.u32(end + 12)
     const total = this.u16(end + 10)
     const offset = this.u32(end + 16)
-    if (offset < 0 || offset >= this.data.length || total > 100000) {
+    if (total > 100000 || offset > this.data.length || directorySize > this.data.length - offset || offset + directorySize > end) {
       throw new Error('EPUB ZIP 目录无效')
     }
     let p = offset
     
     for (let i = 0; i < total; i++) {
-      if (this.u32(p) !== 0x02014b50) throw new Error('EPUB 目录损坏')
+      if (p < offset || p + 46 > offset + directorySize || p + 46 > this.data.length || this.u32(p) !== 0x02014b50) throw new Error('EPUB 目录损坏')
       
       const method = this.u16(p + 10)
       const size = this.u32(p + 20)
@@ -2287,7 +2277,10 @@ class ZipReader {
       if (p + 46 + nl + el + cl > this.data.length || local + 30 > this.data.length) {
         throw new Error('EPUB ZIP 条目越界')
       }
-      const name = dec.decode(this.data.slice(p + 46, p + 46 + nl)).replace(/^\.\//, '')
+      const name = dec.decode(this.data.slice(p + 46, p + 46 + nl + 0)).replace(/^\.\//, '')
+      if (size > 512 * 1024 * 1024 || rawSize > 512 * 1024 * 1024 || rawSize > size * 200 + 1024 * 1024) {
+        throw new Error('EPUB 资源大小或压缩比无效')
+      }
       
       this.files.set(name, { method, size, rawSize, local })
       p += 46 + nl + el + cl
@@ -2315,7 +2308,7 @@ class ZipReader {
     
     const nl = this.u16(f.local + 26)
     const el = this.u16(f.local + 28)
-    if (f.local + 30 + nl + el + f.size > this.data.length || f.size > 512 * 1024 * 1024) {
+    if (this.u32(f.local) !== 0x04034b50 || f.local + 30 + nl + el + f.size > this.data.length || f.rawSize > 512 * 1024 * 1024) {
       throw new Error('EPUB 资源大小或偏移无效')
     }
     const body = this.data.slice(f.local + 30 + nl + el, f.local + 30 + nl + el + f.size)
@@ -2327,7 +2320,9 @@ class ZipReader {
     }
     
     const stream = new Blob([body]).stream().pipeThrough(new DecompressionStream('deflate-raw'))
-    return new Uint8Array(await new Response(stream).arrayBuffer())
+    const output = new Uint8Array(await new Response(stream).arrayBuffer())
+    if (output.byteLength !== f.rawSize) throw new Error('EPUB 资源解压大小不匹配')
+    return output
   }
 
   async text(name) {
@@ -2342,11 +2337,14 @@ async function parseEpub(buffer) {
   if (!container) throw new Error('缺少 EPUB container.xml')
   
   const cx = new DOMParser().parseFromString(container, 'application/xml')
+  if (cx.querySelector('parsererror')) throw new Error('EPUB container.xml 格式无效')
   const opfPath = cx.querySelector('rootfile')?.getAttribute('full-path')
+  if (!opfPath || /^(?:[a-z]+:|\/)/i.test(opfPath)) throw new Error('EPUB 内容清单路径无效')
   const opfText = await zip.text(opfPath)
   if (!opfText) throw new Error('无法读取 EPUB 内容清单')
   
   const opf = new DOMParser().parseFromString(opfText, 'application/xml')
+  if (opf.querySelector('parsererror')) throw new Error('EPUB 内容清单格式无效')
   const title = opf.querySelector('metadata title, dc\\:title, title')?.textContent?.trim() || '未命名书籍'
   const author = opf.querySelector('metadata creator, dc\\:creator, creator')?.textContent?.trim() || '未知作者'
   const direction = opf.querySelector('spine')?.getAttribute('page-progression-direction') || 'ltr'
@@ -2658,13 +2656,17 @@ async function rewriteDocumentResources(doc, path) {
   }
 }
 
-async function rewriteCss(css, base) {
+async function rewriteCss(css, base, seen = new Set()) {
+  const key = base.split('#')[0]
+  if (seen.has(key) || seen.size > 32) return ''
+  const chain = new Set(seen)
+  chain.add(key)
   const imports = [...css.matchAll(/@import\s+(?:url\()?['"]?([^'"\s\)]+)['"]?\)?\s*;/gi)]
   
   for (const m of imports) {
     const importPath = resolvePath(base, m[1])
     const nested = await state.epub.zip.text(importPath)
-    css = css.replace(m[0], nested ? await rewriteCss(nested, importPath) : '')
+    css = css.replace(m[0], nested ? await rewriteCss(nested, importPath, chain) : '')
   }
   
   const matches = [...css.matchAll(/url\((['"]?)(.*?)\1\)/g)]
@@ -2745,6 +2747,7 @@ async function importFiles(files) {
       
       await saveBook(book)
       imported++
+      broadcastLibraryChange(book.id)
     } catch (e) {
       const isQuota = /quota/i.test(e?.name || e?.message || '')
       failed.push(`${file.name}：${isQuota ? '本地存储空间不足' : e.message}`)
@@ -2763,24 +2766,9 @@ async function importFiles(files) {
 
 // ==================== Library Management ====================
 async function loadLibrary() {
-  state.books = (await getBooks()).map(normalizeBook)
+  state.books = (await getBooks()).map(normalizeBook).filter(Boolean)
   $('#libraryCount').textContent = `${state.books.length} 本书`
   
-  const bookBytes = state.books.reduce((n, b) => n + (b.size || b.data?.byteLength || 0), 0)
-  let storage = `图书 ${formatBytes(bookBytes)}`
-  
-  try {
-    const estimate = await navigator.storage?.estimate?.()
-    if (estimate?.quota) {
-      const free = Math.max(0, estimate.quota - (estimate.usage || 0))
-      const tight = (estimate.usage || 0) / estimate.quota > 0.8
-      storage += tight 
-        ? ` · 空间偏紧，仅余约 ${formatBytes(free)}` 
-        : ` · 可用约 ${formatBytes(free)}`
-    }
-  } catch {}
-  
-  $('#storageInfo').textContent = storage
   renderLibrary()
   scheduleLegacyHashUpgrade()
 }
@@ -2804,6 +2792,322 @@ function scheduleLegacyHashUpgrade() {
   } else {
     setTimeout(run, 800)
   }
+}
+
+function coverFlowOffset(cardIndex, activeIndex, total) {
+  const raw = cardIndex - activeIndex
+  if (total <= 3) return raw
+  return ((raw + total / 2) % total + total) % total - total / 2
+}
+
+function fallbackCoverPalette(book) {
+  let hash = 0
+  for (const char of `${book?.title || ''}${book?.author || ''}`) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
+  const hue = hash % 360
+  const hsl = (h, s, l) => {
+    s /= 100; l /= 100
+    const c = (1 - Math.abs(2 * l - 1)) * s
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1))
+    const m = l - c / 2
+    const [r, g, b] = h < 60 ? [c,x,0] : h < 120 ? [x,c,0] : h < 180 ? [0,c,x] : h < 240 ? [0,x,c] : h < 300 ? [x,0,c] : [c,0,x]
+    return [r,g,b].map(v => Math.round((v + m) * 255))
+  }
+  return [hsl(hue, 34, 38), hsl((hue + 48) % 360, 30, 28)]
+}
+
+async function coverPalette(book) {
+  state.coverPaletteCache ||= new Map()
+  if (state.coverPaletteCache.has(book.id)) return state.coverPaletteCache.get(book.id)
+  const fallback = fallbackCoverPalette(book)
+  if (!book.cover) {
+    state.coverPaletteCache.set(book.id, fallback)
+    return fallback
+  }
+  try {
+    const image = new Image()
+    image.src = book.cover
+    await image.decode()
+    const canvas = document.createElement('canvas')
+    canvas.width = 28
+    canvas.height = 42
+    const context = canvas.getContext('2d', { willReadFrequently:true })
+    context.drawImage(image, 0, 0, canvas.width, canvas.height)
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data
+    const buckets = new Map()
+    for (let i = 0; i < pixels.length; i += 16) {
+      const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2], a = pixels[i + 3]
+      if (a < 180) continue
+      const max = Math.max(r,g,b), min = Math.min(r,g,b)
+      const light = (max + min) / 510
+      const saturation = max === min ? 0 : (max - min) / (255 - Math.abs(max + min - 255))
+      if (light < .06 || light > .94) continue
+      const key = `${r >> 5}-${g >> 5}-${b >> 5}`
+      const item = buckets.get(key) || { r:0,g:0,b:0,n:0,score:0 }
+      const weight = .35 + saturation * 1.35 + (1 - Math.abs(light - .48)) * .35
+      item.r += r; item.g += g; item.b += b; item.n++; item.score += weight
+      buckets.set(key, item)
+    }
+    const ranked = [...buckets.values()].sort((a,b) => b.score - a.score)
+    const first = ranked[0]
+    const firstRgb = first ? [first.r,first.g,first.b].map(v => Math.round(v / first.n)) : fallback[0]
+    const second = ranked.find(item => {
+      const rgb = [item.r,item.g,item.b].map(v => v / item.n)
+      return Math.hypot(rgb[0]-firstRgb[0],rgb[1]-firstRgb[1],rgb[2]-firstRgb[2]) > 70
+    })
+    const secondRgb = second ? [second.r,second.g,second.b].map(v => Math.round(v / second.n)) : fallback[1]
+    const palette = [firstRgb, secondRgb]
+    state.coverPaletteCache.set(book.id, palette)
+    return palette
+  } catch {
+    state.coverPaletteCache.set(book.id, fallback)
+    return fallback
+  }
+}
+
+function paintCoverFlowBackdrop(book, direction = 0) {
+  const layers = $$('.cover-flow-bg')
+  if (!layers.length || !book) return
+  const nextIndex = state.coverFlowBackdropIndex === 0 ? 1 : 0
+  const next = layers[nextIndex]
+  const current = layers[state.coverFlowBackdropIndex || 0]
+  const apply = (layer, palette) => {
+    layer.style.setProperty('--ambient-a', palette[0].join(' '))
+    layer.style.setProperty('--ambient-b', palette[1].join(' '))
+    const image = layer.querySelector('img')
+    if (book.cover) image.src = book.cover
+    else image.removeAttribute('src')
+  }
+  const fallback = fallbackCoverPalette(book)
+  apply(next, fallback)
+  next.style.setProperty('--drift', `${direction * 34}px`)
+  next.classList.remove('is-active')
+  requestAnimationFrame(() => {
+    current?.classList.remove('is-active')
+    next.classList.add('is-active')
+    next.style.removeProperty('--drift')
+  })
+  state.coverFlowBackdropIndex = nextIndex
+  state.coverFlowBackdropBookId = book.id
+  coverPalette(book).then(palette => {
+    if (state.coverFlowBackdropBookId !== book.id) return
+    apply($$('.cover-flow-bg')[state.coverFlowBackdropIndex || 0], palette)
+    $('#readingHero').style.setProperty('--active-glow', palette[0].join(' '))
+  })
+}
+
+function layoutCoverFlow(dragX = 0) {
+  const stage = $('#coverFlowStage')
+  const cards = $$('.cover-flow-card')
+  const total = state.coverFlowBooks?.length || 0
+  if (!total || !cards.length) return
+  const width = stage.clientWidth || innerWidth
+  const cardWidth = cards[0].offsetWidth || 220
+  const spacing = Math.max(cardWidth * .74, Math.min(width * .225, 270))
+  const dragOffset = dragX / spacing
+  cards.forEach(card => {
+    const base = coverFlowOffset(Number(card.dataset.index), state.coverFlowIndex || 0, total)
+    const offset = base + dragOffset
+    const abs = Math.abs(offset)
+    const side = Math.sign(offset)
+    const x = abs <= 1 ? offset * spacing : side * (spacing + (abs - 1) * spacing * .56)
+    const y = Math.min(24, abs * 9)
+    const rotate = abs < .04 ? 0 : side * -Math.min(48, 35 + Math.max(0, abs - 1) * 5)
+    const scale = Math.max(.66, 1.055 - abs * .12)
+    const opacity = Math.max(.12, 1 - abs * .205)
+    const z = 130 - abs * 92
+    const center = abs < .5
+    card.style.transform = `translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),${z}px) rotateY(${rotate}deg) scale(${scale})`
+    card.style.zIndex = String(100 - Math.round(abs * 10))
+    card.style.opacity = String(opacity)
+    card.style.filter = abs > 2.4 ? `brightness(${Math.max(.55, 1 - abs * .11)}) saturate(.7)` : `brightness(${Math.max(.72, 1 - abs * .08)}) saturate(${Math.max(.72, 1 - abs * .08)})`
+    card.setAttribute('aria-current', center ? 'true' : 'false')
+    card.tabIndex = center ? 0 : -1
+  })
+}
+
+function updateCoverFlowDetails(direction = 0) {
+  const source = state.coverFlowBooks || []
+  const index = state.coverFlowIndex || 0
+  const active = source[index]
+  if (!active) return
+  const percent = Math.round((active.progress || 0) * 100)
+  $('#readingHeroCount').textContent = `${index + 1} / ${source.length}`
+  const info = $('#coverFlowInfo')
+  info.classList.add('is-changing')
+  clearTimeout(state.coverFlowInfoTimer)
+  state.coverFlowInfoTimer = setTimeout(() => {
+    $('#coverFlowTitle').textContent = active.title
+    $('#coverFlowMeta').textContent = `${active.author || '未知作者'} · ${percent ? `已阅读 ${percent}%` : '尚未开始'}`
+    $('#coverFlowProgressBar').style.width = `${percent}%`
+    $('#coverFlowProgressText').textContent = `${percent}%`
+    info.classList.remove('is-changing')
+  }, 100)
+  $$('.cover-flow-dot').forEach((dot, i) => dot.classList.toggle('active', i === index))
+  paintCoverFlowBackdrop(active, direction)
+}
+
+function renderCoverFlow() {
+  const hero = $('#readingHero')
+  const previousId = state.coverFlowBooks?.[state.coverFlowIndex || 0]?.id
+  const source = state.books
+    .filter(b => b && !b.deletedAt)
+    .sort((a, b) => (b.lastRead || b.added || 0) - (a.lastRead || a.added || 0))
+    .slice(0, 9)
+  if (!source.length) {
+    hero.classList.remove('hidden')
+    state.coverFlowBooks = []
+    state.coverFlowKey = ''
+    const stage = $('#coverFlowStage')
+    stage.innerHTML = '<div class="cover-flow-empty"><span><span class="empty-icon"><svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><strong>书架还是空的</strong><small>从下方导入一本 EPUB，开始你的本地书库</small></span></div>'
+    $('#readingHeroCount').textContent = '0 本'
+    $('#coverFlowInfo').classList.add('hidden')
+    $('#coverFlowDots').innerHTML = ''
+    return
+  }
+  hero.classList.remove('hidden')
+  $('#coverFlowInfo').classList.remove('hidden')
+  const nextKey = source.map(book => `${book.id}:${book.updatedAt || 0}:${book.title}:${book.cover?.length || 0}`).join('|')
+  const rebuild = state.coverFlowKey !== nextKey
+  state.coverFlowBooks = source
+  const matchedIndex = source.findIndex(book => book.id === previousId)
+  if (matchedIndex >= 0) state.coverFlowIndex = matchedIndex
+  else if (!Number.isInteger(state.coverFlowIndex) || state.coverFlowIndex >= source.length) state.coverFlowIndex = 0
+  const stage = $('#coverFlowStage')
+  if (rebuild) {
+    state.coverFlowKey = nextKey
+    stage.classList.add('is-preparing')
+    stage.innerHTML = ''
+    source.forEach((book, i) => {
+      const card = document.createElement('button')
+      card.type = 'button'
+      card.className = 'cover-flow-card'
+      card.dataset.index = String(i)
+      card.setAttribute('aria-label', `打开《${book.title}》`)
+      if (book.cover) {
+        const image = document.createElement('img')
+        image.src = book.cover
+        image.alt = book.title
+        card.append(image)
+      } else {
+        const fallback = document.createElement('span')
+        fallback.className = 'cover-flow-fallback'
+        fallback.innerHTML = '<small>LOCAL EDITION</small>'
+        const title = document.createElement('strong')
+        title.textContent = book.title
+        fallback.append(title)
+        card.append(fallback)
+      }
+      card.onclick = () => {
+        if (state.coverFlowSuppressClick) return
+        if (i === state.coverFlowIndex) openBook(book.id)
+        else setCoverFlowIndex(i)
+      }
+      card.oncontextmenu = e => {
+        e.preventDefault()
+        if (!state.coverFlowSuppressClick) openBookManager(book.id)
+      }
+      stage.append(card)
+    })
+    const dots = $('#coverFlowDots')
+    dots.innerHTML = ''
+    source.forEach((book, i) => {
+      const dot = document.createElement('button')
+      dot.type = 'button'
+      dot.className = 'cover-flow-dot'
+      dot.title = book.title
+      dot.setAttribute('aria-label', `切换到《${book.title}》`)
+      dot.onclick = () => setCoverFlowIndex(i)
+      dots.append(dot)
+    })
+  }
+  layoutCoverFlow()
+  updateCoverFlowDetails()
+  if (rebuild) requestAnimationFrame(() => stage.classList.remove('is-preparing'))
+}
+
+function setCoverFlowIndex(index) {
+  const total = state.coverFlowBooks?.length || 0
+  if (!total) return
+  const previous = state.coverFlowIndex || 0
+  const next = (index % total + total) % total
+  if (next === previous) {
+    layoutCoverFlow()
+    return
+  }
+  let direction = next > previous ? 1 : -1
+  if (Math.abs(next - previous) > total / 2) direction *= -1
+  state.coverFlowIndex = next
+  layoutCoverFlow()
+  updateCoverFlowDetails(direction)
+}
+
+function shiftCoverFlow(delta) {
+  setCoverFlowIndex((state.coverFlowIndex || 0) + delta)
+}
+
+function bindCoverFlow() {
+  const stage = $('#coverFlowStage')
+  let pointerId = null
+  let startX = 0
+  let currentX = 0
+  let startedAt = 0
+  let captured = false
+  const finish = e => {
+    if (pointerId === null || (e.pointerId != null && e.pointerId !== pointerId)) return
+    const dx = currentX - startX
+    const velocity = dx / Math.max(1, performance.now() - startedAt)
+    const moved = Math.abs(dx) > 7
+    pointerId = null
+    captured = false
+    stage.classList.remove('is-dragging')
+    if (moved) {
+      state.coverFlowSuppressClick = true
+      setTimeout(() => { state.coverFlowSuppressClick = false }, 0)
+    }
+    if (Math.abs(dx) > Math.min(90, stage.clientWidth * .1) || Math.abs(velocity) > .45) {
+      shiftCoverFlow(dx < 0 ? 1 : -1)
+    } else {
+      layoutCoverFlow()
+    }
+  }
+  stage.onpointerdown = e => {
+    if (e.button !== 0 || pointerId !== null) return
+    pointerId = e.pointerId
+    startX = currentX = e.clientX
+    startedAt = performance.now()
+  }
+  stage.onpointermove = e => {
+    if (e.pointerId !== pointerId) return
+    currentX = e.clientX
+    const dx = currentX - startX
+    if (Math.abs(dx) > 4) {
+      stage.classList.add('is-dragging')
+      if (!captured) {
+        captured = true
+        stage.setPointerCapture?.(e.pointerId)
+      }
+    }
+    layoutCoverFlow(dx)
+  }
+  stage.onpointerup = finish
+  stage.onpointercancel = finish
+  document.addEventListener('pointerup', finish)
+  document.addEventListener('pointercancel', finish)
+  document.addEventListener('keydown', e => {
+    if ($('#libraryView').classList.contains('hidden')) return
+    if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) return
+    if ($('#libraryView').scrollTop > innerHeight * .8) return
+    if (e.key === 'ArrowLeft') { e.preventDefault(); shiftCoverFlow(-1) }
+    if (e.key === 'ArrowRight') { e.preventDefault(); shiftCoverFlow(1) }
+    if (e.key === 'Enter' && document.activeElement === stage) {
+      const book = state.coverFlowBooks?.[state.coverFlowIndex || 0]
+      if (book) openBook(book.id)
+    }
+  })
+  window.addEventListener('resize', () => {
+    clearTimeout(state.coverFlowResizeTimer)
+    state.coverFlowResizeTimer = setTimeout(() => layoutCoverFlow(), 100)
+  })
 }
 
 function renderLibrary() {
@@ -2835,6 +3139,7 @@ function renderLibrary() {
     : '点击这里，或把 EPUB 文件拖到书架'
   
   $('#bookGrid').innerHTML = ''
+  renderCoverFlow()
   
   for (const book of state.visibleBooks) {
     const card = document.createElement('article')
@@ -2848,9 +3153,11 @@ function renderLibrary() {
       </button>
       <div class="cover"></div>
       <div class="card-title" title="${escapeHtml(book.title)}">${escapeHtml(book.title)}</div>
-      <div class="card-meta">${escapeHtml(book.author)} · ${Math.round((book.progress || 0) * 100)}%</div>
-      <div class="card-progress"><i style="width:${Math.round((book.progress || 0) * 100)}%"></i></div>
     `
+    const meta = document.createElement('div')
+    meta.className = 'card-meta'
+    meta.textContent = `${book.author} · ${Math.round((book.progress || 0) * 100)}%`
+    card.append(meta)
     const cover = card.querySelector('.cover')
     if (book.cover) {
       const img = document.createElement('img')
@@ -2906,8 +3213,6 @@ async function exportData() {
       }, null, 2),
       'application/json'
     )
-    safeLocalSet('readerLastBackup', now.toISOString())
-    syncBackupStatus()
     toast(`已导出 ${books.length} 本图书的完整备份`)
   } catch (e) {
     toast(`备份失败：${e.message}`, 4500)
@@ -2949,15 +3254,37 @@ async function importBackup(file) {
       for (const book of incoming) {
         const same = existing.find(x => x.hash && book.hash && x.hash === book.hash)
         if (same) {
-          const notes = new Map([...(same.notes || []), ...(book.notes || [])].map(n => [n.id, n]))
-          s.put(normalizeBook({
+          const notes = new Map((same.notes || []).map(n => [n.id, n]))
+          for (const note of book.notes || []) {
+            const currentNote = notes.get(note.id)
+            if (!currentNote ||
+                (note.updated || note.created || 0) >=
+                (currentNote.updated || currentNote.created || 0)) {
+              notes.set(note.id, note)
+            }
+          }
+          const incomingIsNewer = (book.lastRead || 0) > (same.lastRead || 0)
+          const incomingSettingsAreNewer =
+            (book.settingsUpdatedAt || 0) > (same.settingsUpdatedAt || 0)
+          const merged = normalizeBook({
             ...same,
             ...book,
             id: same.id,
+            chapter: incomingIsNewer ? book.chapter : same.chapter,
+            page: incomingIsNewer ? book.page : same.page,
+            scrollTop: incomingIsNewer ? book.scrollTop : same.scrollTop,
+            progress: incomingIsNewer ? book.progress : same.progress,
+            locator: incomingIsNewer ? book.locator : same.locator,
             notes: [...notes.values()],
+            settings: incomingSettingsAreNewer ? book.settings : same.settings,
+            settingsUpdatedAt: Math.max(
+              same.settingsUpdatedAt || 0,
+              book.settingsUpdatedAt || 0
+            ),
             lastRead: Math.max(same.lastRead || 0, book.lastRead || 0),
             revision: Math.max(same.revision || 0, book.revision || 0) + 1
-          }))
+          })
+          s.put(merged)
         } else {
           s.put(book)
         }
@@ -2968,21 +3295,11 @@ async function importBackup(file) {
     })
     
     await loadLibrary()
+    broadcastLibraryChange('*')
     toast(`已验证并恢复 ${incoming.length} 本图书`)
   } catch (e) {
     toast('备份无效或内容已损坏，未写入任何数据', 4800)
   }
-}
-
-function syncBackupStatus() {
-  const iso = safeLocalGet('readerLastBackup', '')
-  const text = iso 
-    ? `上次备份：${new Date(iso).toLocaleDateString('zh-CN')}` 
-    : '尚未导出完整备份'
-  $('#backupStatus').textContent = text
-  $('#dataStatusText').textContent = iso 
-    ? '数据保存在本机 · 已备份' 
-    : '数据保存在本机 · 建议备份'
 }
 
 // ==================== Book Manager ====================
@@ -3018,8 +3335,12 @@ async function saveManagedBook() {
   book.title = $('#manageTitle').value.trim() || book.title
   book.author = $('#manageAuthor').value.trim() || '未知作者'
   book.cover = state.managedCover || null
+  book.updatedAt = Date.now()
+  state.coverPaletteCache?.delete(book.id)
+  state.coverFlowBackdropBookId = ''
   
   await saveBook(book)
+  broadcastLibraryChange(book.id)
   $('#bookManageDialog').close()
   await loadLibrary()
   toast('图书信息已保存')
@@ -3054,7 +3375,7 @@ function exportManagedOriginal() {
 
 async function resetManagedProgress() {
   const book = state.managedBook
-  if (!book || !confirm(`重置《${book.title}》的阅读进度？标注和设置会保留。`)) return
+  if (!book || !confirm(`重置《${book.title}》的阅读进度？笔记和设置会保留。`)) return
   
   book.chapter = 0
   book.page = 0
@@ -3065,6 +3386,7 @@ async function resetManagedProgress() {
   book.locatorAt = 0
   book.updatedAt = Date.now()
   await saveBook(book)
+  broadcastLibraryChange(book.id)
   $('#bookManageDialog').close()
   await loadLibrary()
   toast('阅读进度已重置')
@@ -3075,20 +3397,26 @@ async function deleteManagedBook() {
   if (!book || !confirm(`从本地书架删除《${book.title}》？此操作不可撤销，建议先导出备份。`)) return
   
   await removeBook(book.id)
+  broadcastLibraryChange(book.id, { deleted:true })
   $('#bookManageDialog').close()
   await loadLibrary()
   toast('图书已删除')
 }
 // ==================== Reader Core ====================
 async function openBook(id) {
+  const openBookToken = ++state.openBookToken
   try {
     const book = state.books.find((b) => b.id === id) ||
       (await getBooks()).find((b) => b.id === id)
+    if (openBookToken !== state.openBookToken) return
     if (!book) throw new Error('找不到这本书')
-    state.book = normalizeBook(book)
-    state.book.lastRead = Date.now()
+    const nextBook = normalizeBook({ ...book })
+    nextBook.lastRead = Date.now()
+    const nextEpub = await parseEpub(nextBook.data)
+    if (openBookToken !== state.openBookToken) return
     
-    state.epub = await parseEpub(state.book.data)
+    state.book = nextBook
+    state.epub = nextEpub
     state.fixedViewport = null
     state.renderToken = 0
     state.externalChange = false
@@ -3102,10 +3430,11 @@ async function openBook(id) {
     state.continuousLoading = false
     state.searchIndex = null
     state.returnLocator = null
+    state.chapterLoadGeneration = (state.chapterLoadGeneration || 0) + 1
     
+    document.documentElement.classList.remove('library-mode')
     $('#libraryView').classList.add('hidden')
     $('#readerView').classList.remove('hidden')
-    $('#bookTitle').textContent = state.book.title
     
     document.documentElement.classList.add('fullscreen-reading')
     applyBookTheme()
@@ -3115,10 +3444,12 @@ async function openBook(id) {
     
     await renderChapter(state.chapter, '', state.page, { locator: state.book.locator })
   } catch (e) {
+    if (openBookToken !== state.openBookToken) return
     clearUrls()
     state.book = null
     state.epub = null
     document.documentElement.classList.remove('fullscreen-reading')
+    document.documentElement.classList.add('library-mode')
     $('#readerView').classList.add('hidden')
     $('#libraryView').classList.remove('hidden')
     toast(`图书打开失败：${e.message}`, 4500)
@@ -3129,11 +3460,15 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
   if (!state.epub || index < 0 || index >= state.epub.spine.length) return
   
   const renderToken = ++state.renderToken
+  const chapterLoadGeneration = ++state.chapterLoadGeneration
   const restoreScroll = index === state.book.chapter 
     ? (state.book.scrollTop || 0) 
     : (initialPage > 1000 ? Number.MAX_SAFE_INTEGER : 0)
   
   state.chapter = index
+  state.continuousStartChapter = index
+  state.continuousLastChapter = index
+  state.continuousLoading = false
   state.page = Math.max(0, initialPage)
   clearUrls()
   
@@ -3169,6 +3504,7 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
   }
   
   await rewriteDocumentResources(doc, path)
+  if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) return
 
   const chapterMarker = doc.createElement('div')
   chapterMarker.className = 'continuous-chapter'
@@ -3199,19 +3535,34 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
   injected.textContent = buildReaderCss(settings)
   doc.head?.append(injected)
   
-  $('#readerFrame').srcdoc = new XMLSerializer().serializeToString(doc)
-  
+  const frame = $('#readerFrame')
+  const source = new XMLSerializer().serializeToString(doc)
   await new Promise((resolve, reject) => {
-    $('#readerFrame').onerror = () => reject(new Error('章节页面加载失败'))
-    $('#readerFrame').onload = async () => {
-      if (renderToken !== state.renderToken) {
-        resolve()
+    let settled = false
+    const finish = (error) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timeout)
+      frame.removeEventListener('load', handleLoad)
+      frame.removeEventListener('error', handleError)
+      error ? reject(error) : resolve()
+    }
+    const timeout = setTimeout(() => finish(new Error('章节页面加载超时')), 15000)
+    const handleError = () => {
+      finish(new Error('章节页面加载失败'))
+    }
+    const handleLoad = () => (async () => {
+      if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
+        finish()
         return
       }
       
-      const frame = $('#readerFrame')
       const idoc = frame.contentDocument
       const win = frame.contentWindow
+      if (!idoc?.body || !win) {
+        finish(new Error('章节页面未能建立可访问的正文文档'))
+        return
+      }
       
       idoc.addEventListener('mouseup', (e) => {
         state.selectionNoteId = ''
@@ -3263,7 +3614,9 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
         if (state.epub.fixedLayout) {
           e.preventDefault()
           clearTimeout(state.wheelTimer)
-          state.wheelTimer = setTimeout(() => navigateReading(e.deltaY > 0 ? 1 : -1), 80)
+          state.wheelTimer = setTimeout(() => {
+            navigateReading(e.deltaY > 0 ? 1 : -1).catch(error => toast(`翻页失败：${error.message}`, 3500))
+          }, 80)
           return
         }
         
@@ -3286,10 +3639,14 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
       } catch {}
       
       await waitForDocumentImages(idoc)
+      if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
+        finish()
+        return
+      }
       
       requestAnimationFrame(() => {
-        if (renderToken !== state.renderToken) {
-          resolve()
+        if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
+          finish()
           return
         }
         
@@ -3318,9 +3675,12 @@ async function renderChapter(index, fragment = '', initialPage = 0, options = {}
         focusPendingNote()
         state.navigating = false
         
-        resolve()
+        finish()
       })
-    }
+    })().catch(error => finish(error instanceof Error ? error : new Error(String(error))))
+    frame.addEventListener('error', handleError)
+    frame.addEventListener('load', handleLoad)
+    frame.srcdoc = source
   })
   
   state.book.chapter = index
@@ -3355,10 +3715,13 @@ function currentContinuousChapter(doc = $('#readerFrame').contentDocument) {
 
 async function appendNextChapter() {
   if (!state.epub || state.epub.fixedLayout || state.continuousLoading) return false
+  const loadedCount = $('#readerFrame').contentDocument?.querySelectorAll('[data-chapter-index]').length || 0
+  if (loadedCount >= 24) return false
   const nextIndex = (state.continuousLastChapter ?? state.chapter) + 1
   if (nextIndex >= state.epub.spine.length) return false
 
   state.continuousLoading = true
+  const generation = state.chapterLoadGeneration
   try {
     const path = state.epub.spine[nextIndex]
     const text = await state.epub.zip.text(path)
@@ -3367,6 +3730,7 @@ async function appendNextChapter() {
     if (doc.querySelector('parsererror') || !doc.body) throw new Error('章节内容损坏')
     sanitizeEpubDocument(doc)
     await rewriteDocumentResources(doc, path)
+    if (generation !== state.chapterLoadGeneration) return false
     for (const el of [...doc.querySelectorAll('a[href]')]) {
       const href = el.getAttribute('href')
       if (!href || /^(https?:|mailto:)/i.test(href)) {
@@ -3503,21 +3867,28 @@ async function navigateReading(delta) {
   const frame = $('#readerFrame')
   const win = frame.contentWindow
   
-  if (state.epub?.fixedLayout) {
-    // Fixed layout: go to next/prev chapter
-  } else {
-    return ensureContinuousContent()
-      .then(() => {
-        const doc = frame.contentDocument
-        const step = frame.clientHeight * 0.82
-        const max = doc.documentElement.scrollHeight - frame.clientHeight
-        const target = win.scrollY + delta * step
-        if (target >= 0 && target <= max + 5) {
-          win.scrollTo({ top: Math.max(0, target), behavior: 'smooth' })
-          return true
-        }
-        return false
-      })
+  if (!state.epub.fixedLayout) {
+    await ensureContinuousContent()
+    const doc = frame.contentDocument
+    const step = frame.clientHeight * 0.82
+    const max = doc.documentElement.scrollHeight - frame.clientHeight
+    const target = win.scrollY + delta * step
+    if (target >= 0 && target <= max + 5) {
+      win.scrollTo({ top: Math.max(0, target), behavior: 'smooth' })
+      return true
+    }
+    if (delta < 0 && state.chapter > 0) {
+      state.navigating = true
+      try {
+        await renderChapter(state.chapter - 1, '', 99999)
+        showReadingStatus(1500)
+        return true
+      } catch (error) {
+        state.navigating = false
+        toast(`上一章打开失败：${error.message}`, 3500)
+      }
+    }
+    return false
   }
   
   const chapter = state.chapter + delta
@@ -3654,7 +4025,7 @@ function renderToc() {
     b.className = 'toc-item'
     b.textContent = item.label
     b.dataset.href = item.href
-    b.onclick = () => goHref(item.href)
+    b.onclick = () => goHref(item.href).catch(error => toast(`章节打开失败：${error.message}`, 3500))
     $('#tocPanel').append(b)
   })
   
@@ -3670,7 +4041,7 @@ function markToc() {
   })
 }
 
-function goHref(href) {
+async function goHref(href) {
   const [path, frag] = href.split('#')
   let i = state.epub.spine.indexOf(path)
   
@@ -3679,7 +4050,13 @@ function goHref(href) {
   }
   
   if (i >= 0) {
-    renderChapter(i, frag)
+    state.navigating = true
+    try {
+      await renderChapter(i, frag)
+    } catch (error) {
+      state.navigating = false
+      toast(`章节打开失败：${error.message}`, 3500)
+    }
   }
 }
 
@@ -3712,13 +4089,17 @@ async function showFootnote(href) {
     doc = $('#readerFrame').contentDocument
   } else {
     const raw = await state.epub.zip.text(path)
+    if (!raw) {
+      await goHref(href)
+      return
+    }
     doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
     if (doc.body) await rewriteDocumentResources(doc, path)
   }
   
   const target = frag && doc?.getElementById(frag)
   if (!target) {
-    goHref(href)
+    await goHref(href)
     return
   }
   
@@ -3764,11 +4145,11 @@ function handleReaderTap(x, width) {
   
   const ratio = x / Math.max(1, width)
   if (ratio < 0.28) {
-    navigateReading(state.epub?.direction === 'rtl' ? 1 : -1)
+    navigateReading(state.epub?.direction === 'rtl' ? 1 : -1).catch(error => toast(`翻页失败：${error.message}`, 3500))
     return
   }
   if (ratio > 0.72) {
-    navigateReading(state.epub?.direction === 'rtl' ? -1 : 1)
+    navigateReading(state.epub?.direction === 'rtl' ? -1 : 1).catch(error => toast(`翻页失败：${error.message}`, 3500))
     return
   }
 }
@@ -3803,7 +4184,14 @@ function closeImageViewer() {
 }
 
 async function home() {
-  if (state.book) await saveReadingPosition()
+  state.openBookToken++
+  if (state.book) {
+    try {
+      await saveReadingPosition()
+    } catch {
+      toast('阅读位置保存失败，但仍可返回书架', 4000)
+    }
+  }
   
   clearUrls()
   closeImageViewer()
@@ -3811,15 +4199,20 @@ async function home() {
   
   state.book = null
   state.epub = null
+  state.renderToken++
+  state.chapterLoadGeneration = (state.chapterLoadGeneration || 0) + 1
+  state.searchToken = (state.searchToken || 0) + 1
+  state.searchIndex = null
   state.fixedViewport = null
   state.returnLocator = null
   
   document.documentElement.classList.remove('fullscreen-reading')
+  document.documentElement.classList.add('library-mode')
   document.documentElement.dataset.theme = normalizeSettings(legacySettings()).theme
   
   $('#readerView').classList.add('hidden')
   $('#libraryView').classList.remove('hidden')
-  $('#bookTitle').textContent = '我的书架'
+  $('#libraryView').scrollTop = 0
   
   loadLibrary()
 }
@@ -3842,16 +4235,16 @@ function openSidebar(panel) {
   
   $('#drawerTitle').textContent = 
     panel === 'tocPanel' ? '目录' :
-    panel === 'notesPanel' ? '标注' : '设置'
+    panel === 'notesPanel' ? '笔记' : '设置'
   
   if (panel === 'settingsPanel') syncSettings()
 }
 
 function handleReadingKey(e) {
+  const target = e.target
+  const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName) || target?.isContentEditable
   if ((e.ctrlKey || e.metaKey) && !e.altKey) {
     const key = e.key.toLowerCase()
-    const target = e.target
-    const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName) || target?.isContentEditable
 
     if (key === 'f' && state.book && !isTyping) {
       e.preventDefault()
@@ -3866,11 +4259,17 @@ function handleReadingKey(e) {
       return
     }
 
-    if (key === 's' && state.book && !isTyping) {
+    if (key === 'z' && state.book) {
       e.preventDefault()
-      saveReadingPosition().then(() => toast('阅读位置已保存')).catch(() => toast('保存失败，请重试', 3500))
+      undoLastNoteAction()
       return
     }
+  }
+
+  if (e.key === 'Enter' && state.selection && !isTyping && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault()
+    addNote('marker')
+    return
   }
 
   if (e.key === 'Escape') {
@@ -3900,25 +4299,25 @@ function handleReadingKey(e) {
     }
   }
   
-  if (!state.book || 
-      $('dialog[open]') || 
-      e.defaultPrevented || 
-      e.metaKey || 
-      e.ctrlKey || 
+  if (!state.book ||
+      $('dialog[open]') ||
+      e.defaultPrevented ||
+      e.metaKey ||
+      e.ctrlKey ||
       e.altKey) return
   
-  const target = e.target
-  const tag = target?.tagName
+  const currentTarget = e.target
+  const tag = currentTarget?.tagName
   
   if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(tag) || 
-      target?.isContentEditable) return
+      currentTarget?.isContentEditable) return
   
   if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
     e.preventDefault()
-    navigateReading(state.epub?.direction === 'rtl' ? 1 : -1)
+    navigateReading(state.epub?.direction === 'rtl' ? 1 : -1).catch(error => toast(`翻页失败：${error.message}`, 3500))
   } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
     e.preventDefault()
-    navigateReading(state.epub?.direction === 'rtl' ? -1 : 1)
+    navigateReading(state.epub?.direction === 'rtl' ? -1 : 1).catch(error => toast(`翻页失败：${error.message}`, 3500))
   }
 }
 // ==================== Notes & Highlights ====================
@@ -4013,12 +4412,28 @@ function matchingNote(kind, quote = state.selection) {
 }
 
 function syncSelectionActions() {
-  $('#noteBtn').classList.toggle('active', !!matchingNote('marker'))
+  const note = matchingNote('marker')
+  $('#noteBtn').classList.toggle('active', !!note)
+  const color = note?.color || getSettings().highlightColor || 'yellow'
+  $('.selection-color-dot').style.background = getHighlightColorValue(color)
 }
 
-async function addNote(kind) {
+function addRemark() {
   if (!state.selection) return
-  
+  $('#remarkInput').value = ''
+  $('#remarkDialog').showModal()
+  requestAnimationFrame(() => $('#remarkInput').focus())
+}
+
+async function saveRemark() {
+  const value = $('#remarkInput').value.trim()
+  if (!value) return toast('请先输入备注内容')
+  await addNote('remark', value)
+  $('#remarkDialog').close()
+}
+
+async function addNote(kind = 'marker', noteText = '') {
+  if (!state.selection) return
   const existing = matchingNotes(kind)
   if (existing.length) {
     const ids = new Set(existing.map(n => n.id))
@@ -4036,44 +4451,65 @@ async function addNote(kind) {
     toast('已删除笔记')
     return
   }
-  
-  const thought = kind === 'marker' ? prompt('添加备注（可选）：', '') : ''
-  if (kind === 'marker' && thought === null) return
-  
+
+  const selectedRange = (() => {
+    const sel = $('#readerFrame').contentWindow?.getSelection()
+    return sel?.rangeCount ? sel.getRangeAt(0).cloneRange() : null
+  })()
   const position = selectedTextPosition()
   const bodyText = $('#readerFrame').contentDocument.body.textContent || ''
-  
   const item = {
-    id: uid(),
-    chapter: state.chapter,
-    quote: state.selection,
-    note: thought,
-    kind,
-    position,
+    id: uid(), chapter: state.chapter, quote: state.selection, note: noteText,
+    kind, position,
     before: bodyText.slice(Math.max(0, position - 32), position),
-    after: bodyText.slice(
-      position + state.selection.length,
-      position + state.selection.length + 32
-    ),
-    color: getSettings().highlightColor || 'yellow',
-    created: Date.now(),
-    updated: Date.now()
+    after: bodyText.slice(position + state.selection.length, position + state.selection.length + 32),
+    color: getSettings().highlightColor || 'yellow', created: Date.now(), updated: Date.now()
   }
-  
   state.book.notes ||= []
   state.book.notes.push(item)
-  await saveCurrentBook()
-  
-  const idoc = $('#readerFrame').contentDocument
-  highlightFirst(idoc.body, item.quote, item.id, item.kind, item.position, item)
-  $('#readerFrame').contentWindow.getSelection()?.removeAllRanges()
-  
+  state.lastNoteAction = { type: 'add', id: item.id }
+  const highlighted = highlightSelectionRange(selectedRange, item.id, item)
+  if (highlighted === 0) {
+    const fallback = highlightFirst($('#readerFrame').contentDocument.body, item.quote, item.id, item.kind, item.position, item)
+    if (!fallback) {
+      state.book.notes = state.book.notes.filter(n => n.id !== item.id)
+      state.lastNoteAction = null
+      renderNotes()
+      toast('笔记未能标注，请重新选择文字', 3500)
+      return
+    }
+  }
+  try {
+    await saveCurrentBook()
+  } catch (error) {
+    $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(item.id)}"]`).forEach(el => el.replaceWith(...el.childNodes))
+    state.book.notes = state.book.notes.filter(n => n.id !== item.id)
+    state.lastNoteAction = null
+    toast('笔记保存失败，请重试', 3500)
+    return
+  }
   state.selection = ''
   state.selectionNoteId = ''
   $('#selectionBar').classList.add('hidden')
   renderNotes()
-  
-  toast('笔记已保存')
+  toast(noteText ? '备注已保存' : '笔记已保存')
+}
+
+async function undoLastNoteAction() {
+  const action = state.lastNoteAction
+  if (!action || action.type !== 'add' || !state.book) {
+    toast('没有可撤销的笔记或备注')
+    return
+  }
+  const note = state.book.notes?.find(n => n.id === action.id)
+  if (!note) return
+  state.book.notes = state.book.notes.filter(n => n.id !== action.id)
+  await saveCurrentBook()
+  $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(action.id)}"]`).forEach(el => el.replaceWith(...el.childNodes))
+  state.lastNoteAction = null
+  renderNotes()
+  hideSelectionTools()
+  toast(note.note ? '已撤销备注' : '已撤销笔记')
 }
 
 function hideSelectionTools() {
@@ -4124,45 +4560,81 @@ function locateNoteText(all, note) {
   return all.indexOf(note.quote)
 }
 
+function highlightSelectionRange(range, id, note = {}) {
+  if (!range || range.collapsed) return 0
+  const doc = range.startContainer.ownerDocument
+  const root = range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+    ? range.commonAncestorContainer.parentElement
+    : range.commonAncestorContainer
+  if (!root) return 0
+
+  const start = textOffset(root, range.startContainer, range.startOffset)
+  const end = textOffset(root, range.endContainer, range.endOffset)
+  if (start < 0 || end <= start) return 0
+
+  const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  const parts = []
+  let node
+  let cursor = 0
+  while (node = walker.nextNode()) {
+    const nodeStart = cursor
+    const nodeEnd = cursor + node.data.length
+    cursor = nodeEnd
+    if (node.parentElement?.closest('script,style,.reader-highlight,.reader-underline')) continue
+    const from = Math.max(0, start - nodeStart)
+    const to = Math.min(node.data.length, end - nodeStart)
+    if (from < to) parts.push({ node, from, to })
+  }
+
+  let applied = 0
+  for (const part of parts.reverse()) {
+    try {
+      const mark = doc.createElement('span')
+      mark.className = 'reader-highlight'
+      mark.dataset.note = id
+      mark.dataset.color = note.color || 'yellow'
+      const piece = doc.createRange()
+      piece.setStart(part.node, part.from)
+      piece.setEnd(part.node, part.to)
+      piece.surroundContents(mark)
+      applied++
+    } catch {}
+  }
+  return applied
+}
 function highlightFirst(root, quote, id, kind = 'marker', position = -1, note = {}) {
   const doc = root.ownerDocument
   const walker = doc.createTreeWalker(root, doc.defaultView.NodeFilter.SHOW_TEXT)
   let node
   let all = ''
   const nodes = []
-  
   while (node = walker.nextNode()) {
+    if (node.parentElement?.closest('script,style,.reader-highlight,.reader-underline')) continue
     nodes.push({ node, start: all.length, end: all.length + node.data.length })
     all += node.data
   }
-  
   const at = locateNoteText(all, { ...note, quote, position })
   if (at < 0) return
-  
   const end = at + quote.length
   const relevant = nodes.filter(x => x.end > at && x.start < end)
-  
+  let applied = 0
   for (const part of relevant.reverse()) {
     const from = Math.max(0, at - part.start)
     const to = Math.min(part.node.data.length, end - part.start)
     if (from >= to) continue
-    
     try {
       const range = doc.createRange()
       const mark = doc.createElement('span')
       range.setStart(part.node, from)
       range.setEnd(part.node, to)
-      
       mark.className = kind === 'underline' ? 'reader-underline' : 'reader-highlight'
       mark.dataset.note = id
-      
-      if (kind !== 'underline') {
-        mark.dataset.color = note.color || 'yellow'
-      }
-      
+      if (kind !== 'underline') mark.dataset.color = note.color || 'yellow'
       range.surroundContents(mark)
+      applied++
     } catch {}
   }
+  return applied > 0
 }
 
 function focusPendingNote() {
@@ -4200,27 +4672,15 @@ function focusPendingNote() {
 }
 
 function noteKindLabel(kind) {
-  return '笔记'
+  return kind === 'remark' ? '备注' : kind === 'underline' ? '下划线' : '笔记'
 }
 
 function renderNotes() {
   const p = $('#notesPanel')
   
   p.innerHTML = `
-    <div class="note-filters">
-      <button data-note-filter="all">全部</button>
-      <button data-note-filter="marker">笔记</button>
-      ${state.returnLocator ? '<button data-return-reading>返回原位置</button>' : ''}
-    </div>
+    <div class="note-filters">${state.returnLocator ? '<button data-return-reading>返回原位置</button>' : ''}</div>
   `
-  
-  p.querySelectorAll('[data-note-filter]').forEach(x => {
-    x.classList.toggle('active', x.dataset.noteFilter === state.noteFilter)
-    x.onclick = () => {
-      state.noteFilter = x.dataset.noteFilter
-      renderNotes()
-    }
-  })
   
   p.querySelector('[data-return-reading]')?.addEventListener('click', () => {
     const locator = state.returnLocator
@@ -4229,14 +4689,10 @@ function renderNotes() {
     renderNotes()
   })
   
-  const notes = (state.book.notes || [])
-    .filter(n => state.noteFilter === 'all' || (n.kind || 'marker') === state.noteFilter)
+  const notes = [...(state.book.notes || [])]
     .sort((a, b) => (a.chapter - b.chapter) || (a.position - b.position))
   
   for (const n of notes) {
-    const editable = true
-    const editLabel = '编辑'
-    
     const d = document.createElement('div')
     d.className = 'note-item'
     
@@ -4275,19 +4731,23 @@ function renderNotes() {
           if (n.chapter === state.chapter) {
             renderChapter(state.chapter, '', state.page, { locator: captureReadingLocator() })
           }
-        } else {
+        } else if ((n.kind || 'marker') === 'remark') {
           const value = prompt('编辑想法：', n.note || '')
           if (value === null) return
-          n.note = value
+          const text = value.trim()
+          if (!text) return toast('备注内容不能为空')
+          n.note = text
           n.updated = Date.now()
           await saveCurrentBook()
+        } else {
+          toast('该标注类型暂不支持编辑')
         }
         renderNotes()
       }
     }
     
     d.querySelector('[data-action="delete"]').onclick = async () => {
-      if (!confirm('删除这条标注？')) return
+      if (!confirm('删除这条笔记？')) return
       
       state.book.notes = state.book.notes.filter(x => x.id !== n.id)
       await saveCurrentBook()
@@ -4302,7 +4762,7 @@ function renderNotes() {
   }
   
   if (!notes.length) {
-    p.insertAdjacentHTML('beforeend', '<p class="card-meta">还没有符合条件的标注。</p>')
+    p.insertAdjacentHTML('beforeend', '<p class="card-meta">还没有笔记。</p>')
   }
 }
 
@@ -4401,41 +4861,50 @@ function exportCurrentNotes(format = 'txt') {
 async function searchBook() {
   const q = $('#searchInput').value.trim().toLocaleLowerCase()
   const out = $('#searchResults')
+  const token = state.searchToken = (state.searchToken || 0) + 1
   
   out.innerHTML = ''
   if (!q) return
   
   out.innerHTML = '<p class="card-meta">正在建立本地搜索索引…</p>'
   
-  if (!state.searchIndex) {
-    state.searchIndex = []
-    for (let i = 0; i < state.epub.spine.length; i++) {
-      const raw = await state.epub.zip.text(state.epub.spine[i])
-      const doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
-      const text = doc.body?.textContent || ''
-      state.searchIndex.push({ i, text, lower: text.toLocaleLowerCase() })
+  try {
+    if (!state.searchIndex) {
+      const index = []
+      for (let i = 0; i < state.epub.spine.length; i++) {
+        const raw = await state.epub.zip.text(state.epub.spine[i])
+        if (token !== state.searchToken || !state.book) return
+        if (!raw) {
+          index.push({ i, text:'', lower:'' })
+          continue
+        }
+        const doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
+        const text = doc.body?.textContent || ''
+        index.push({ i, text, lower: text.toLocaleLowerCase() })
+      }
+      state.searchIndex = index
     }
-  }
   
-  const found = []
-  for (const chapter of state.searchIndex) {
-    let from = 0
-    let count = 0
+    const found = []
+    for (const chapter of state.searchIndex) {
+      let from = 0
+      let count = 0
     
-    while ((from = chapter.lower.indexOf(q, from)) >= 0 && count < 20) {
-      found.push({
-        i: chapter.i,
-        position: from,
-        text: chapter.text.slice(Math.max(0, from - 55), from + q.length + 90)
-      })
-      from += q.length
-      count++
+      while ((from = chapter.lower.indexOf(q, from)) >= 0 && count < 20) {
+        found.push({
+          i: chapter.i,
+          position: from,
+          text: chapter.text.slice(Math.max(0, from - 55), from + q.length + 90)
+        })
+        from += q.length
+        count++
+      }
     }
-  }
   
-  out.innerHTML = ''
+    out.innerHTML = ''
+    if (token !== state.searchToken || !state.book) return
   
-  for (const r of found.slice(0, 200)) {
+    for (const r of found.slice(0, 200)) {
     const d = document.createElement('div')
     d.className = 'search-result'
     
@@ -4450,7 +4919,7 @@ async function searchBook() {
       <p>${marked}</p>
     `
     
-    d.onclick = () => {
+    d.onclick = async () => {
       const raw = state.searchIndex[r.i].text
       state.book.locator = {
         chapter: r.i,
@@ -4459,15 +4928,26 @@ async function searchBook() {
         before: raw.slice(Math.max(0, r.position - 32), r.position),
         after: raw.slice(r.position, r.position + 64)
       }
-      renderChapter(r.i, '', 0, { locator: state.book.locator })
       $('#searchDialog').close()
+      state.navigating = true
+      try {
+        await renderChapter(r.i, '', 0, { locator: state.book.locator })
+      } catch (error) {
+        state.navigating = false
+        toast(`搜索结果打开失败：${error.message}`, 3500)
+      }
     }
     
-    out.append(d)
-  }
+      out.append(d)
+    }
   
-  if (!found.length) {
-    out.innerHTML = '<p class="card-meta">没有找到匹配内容。</p>'
+    if (!found.length) {
+      out.innerHTML = '<p class="card-meta">没有找到匹配内容。</p>'
+    }
+  } catch (error) {
+    if (token !== state.searchToken) return
+    out.innerHTML = '<p class="card-meta">搜索索引建立失败，请重试。</p>'
+    toast(`搜索失败：${error.message}`, 3500)
   }
 }
 
@@ -4626,37 +5106,29 @@ function syncSettings() {
   $('#imageWidth').value = s.imageWidth
   $('#pageMargin').value = s.pageMargin
   
-  $$('[data-highlight-color]').forEach(b => 
-    b.classList.toggle('active', b.dataset.highlightColor === s.highlightColor)
-  )
-  
   syncTypographyUI()
   syncThemeUI()
 }
 
-function setHighlightColor(color) {
+function setSelectionColor(color) {
   if (!state.book || !['yellow', 'green', 'blue', 'pink'].includes(color)) return
-  
-  persistBookSettings({ highlightColor: color })
-  
-  $$('[data-highlight-color]').forEach(b => 
-    b.classList.toggle('active', b.dataset.highlightColor === color)
-  )
-  
   const note = matchingNote('marker')
   if (note) {
     note.color = color
     note.updated = Date.now()
     saveCurrentBook()
-    
-    $('#readerFrame').contentDocument?.querySelectorAll(
-      `[data-note="${CSS.escape(note.id)}"]`
-    ).forEach(el => el.dataset.color = color)
-    
-    renderNotes()
+    $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(note.id)}"]`).forEach(el => el.dataset.color = color)
+  } else {
+    persistBookSettings({ highlightColor: color })
   }
-  
-  toast(note ? '已更新当前马克笔颜色' : '已设为默认马克笔颜色')
+  $('.selection-color-dot').style.background = getHighlightColorValue(color)
+  $('#selectionColorMenu').classList.add('hidden')
+  syncSelectionActions()
+  renderNotes()
+}
+
+function getHighlightColorValue(color) {
+  return ({ yellow:'#fef08a', green:'#86efac', blue:'#7dd3fc', pink:'#f9a8d4' })[color] || '#fef08a'
 }
 
 // ==================== Theme Management ====================
@@ -4720,6 +5192,7 @@ function buildReaderCss(settings = getSettings()) {
     .trim() || '#fff'
   
   const fixed = !!state.epub?.fixedLayout
+  const canvasBackground = fixed ? 'transparent' : paper
   
   const fixedViewport = state.fixedViewport || { width: 800, height: 1200 }
   const fixedScale = Math.min(
@@ -4753,7 +5226,7 @@ function buildReaderCss(settings = getSettings()) {
     ? `body,body *:not(#reader-theme-sentinel):not(.reader-highlight){color:${themeInk()}!important}`
     : ''
   
-  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:transparent!important;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:transparent!important;box-sizing:border-box}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
+  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
 }
 
 function applyReaderAppearance({ ratio, locator } = {}) {
@@ -4803,21 +5276,62 @@ function applyReaderAppearance({ ratio, locator } = {}) {
 // ==================== Event Handlers ====================
 
 // Library events
-$('#fileInput').onchange = async (e) => {
+$('#heroFileInput').onchange = async (e) => {
   await importFiles(e.target.files)
   e.target.value = ''
 }
 
-$('#backupInput').onchange = async (e) => {
+$('#heroBackupInput').onchange = async (e) => {
   if (e.target.files[0]) await importBackup(e.target.files[0])
   e.target.value = ''
 }
 
-$('#exportBtn').onclick = exportData
+$('#heroExportBtn').onclick = exportData
+
+const heroActions = $('.hero-actions')
+heroActions?.addEventListener('pointermove', (e) => {
+  const rect = heroActions.getBoundingClientRect()
+  heroActions.style.setProperty('--glass-x', `${((e.clientX - rect.left) / rect.width) * 100}%`)
+  heroActions.style.setProperty('--glass-y', `${((e.clientY - rect.top) / rect.height) * 100}%`)
+})
+heroActions?.addEventListener('pointerleave', () => {
+  heroActions.style.setProperty('--glass-x', '50%')
+  heroActions.style.setProperty('--glass-y', '30%')
+})
 
 $('#librarySearch').oninput = renderLibrary
-$('#librarySort').onchange = renderLibrary
-$('#libraryFilter').onchange = renderLibrary
+
+function closeLibrarySelects(except = null) {
+  $$('.library-select.open').forEach(select => {
+    if (select !== except) {
+      select.classList.remove('open')
+      select.querySelector('.library-select-trigger')?.setAttribute('aria-expanded', 'false')
+    }
+  })
+}
+
+$$('.library-select').forEach(select => {
+  const key = select.dataset.select
+  const native = $('#' + key)
+  const trigger = select.querySelector('.library-select-trigger')
+  trigger.onclick = (e) => {
+    e.stopPropagation()
+    const open = select.classList.contains('open')
+    closeLibrarySelects(select)
+    select.classList.toggle('open', !open)
+    trigger.setAttribute('aria-expanded', String(!open))
+  }
+  select.querySelectorAll('.library-select-option').forEach(option => {
+    option.onclick = () => {
+      native.value = option.dataset.value
+      trigger.textContent = option.textContent
+      select.querySelectorAll('.library-select-option').forEach(x => x.classList.toggle('active', x === option))
+      select.classList.remove('open')
+      trigger.setAttribute('aria-expanded', 'false')
+      renderLibrary()
+    }
+  })
+})
 
 $('#dropZone').ondragover = (e) => {
   e.preventDefault()
@@ -4836,7 +5350,7 @@ $('#dropZone').ondrop = (e) => {
 
 $('#emptyState').onclick = () => {
   if (!state.books.length) {
-    $('#fileInput').click()
+    $('#heroFileInput').click()
   } else {
     $('#librarySearch').value = ''
     $('#libraryFilter').value = 'all'
@@ -4844,19 +5358,9 @@ $('#emptyState').onclick = () => {
   }
 }
 
-function toggleLibraryMenu() {
-  $('#libraryMenu').classList.toggle('hidden')
-}
-
-function closeLibraryMenu() {
-  $('#libraryMenu').classList.add('hidden')
-}
-
-$('#libraryMoreBtn').onclick = toggleLibraryMenu
-$('#dataStatusBtn').onclick = toggleLibraryMenu
+bindCoverFlow()
 
 // Reader events
-$('#homeBtn').onclick = home
 $('#readerHomeBtn').onclick = home
 $('#drawerBackdrop').onclick = closeReaderDrawer
 $('#tocBtn')?.addEventListener('click', () => openSidebar('tocPanel'))
@@ -4866,6 +5370,11 @@ $$('.tab').forEach(t => t.onclick = () => openSidebar(t.dataset.panel))
 
 // Selection events
 $('#noteBtn').onclick = () => addNote('marker')
+$('#remarkBtn').onclick = addRemark
+$('#highlightColorBtn').onclick = () => $('#selectionColorMenu').classList.toggle('hidden')
+$$('[data-selection-color]').forEach(b => {
+  b.onclick = () => setSelectionColor(b.dataset.selectionColor)
+})
 
 // Settings events
 ;[
@@ -4886,10 +5395,6 @@ $('#noteBtn').onclick = () => addNote('marker')
   $('#' + id).onchange = () => setSettings(id)
 })
 
-$$('[data-highlight-color]').forEach(b => {
-  b.onclick = () => setHighlightColor(b.dataset.highlightColor)
-})
-
 $('#bookTypography').onclick = () => setTypography('book')
 $('#customTypography').onclick = () => setTypography('custom')
 
@@ -4897,7 +5402,14 @@ $$('[data-theme-value]').forEach(b => {
   b.onclick = () => setTheme(b.dataset.themeValue)
 })
 
-// Search events
+$('#closeRemark').onclick = () => $('#remarkDialog').close()
+$('#cancelRemark').onclick = () => $('#remarkDialog').close()
+$('#saveRemark').onclick = saveRemark
+$('#remarkInput').onkeydown = (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'enter') saveRemark()
+}
+
+
 $('#drawerSearchBtn').onclick = () => state.book && $('#searchDialog').showModal()
 $('#closeSearch').onclick = () => $('#searchDialog').close()
 $('#runSearch').onclick = searchBook
@@ -4955,9 +5467,8 @@ $('#imageViewerImg').onclick = (e) => e.stopPropagation()
 document.addEventListener('keydown', handleReadingKey)
 
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('#libraryMenu,#libraryMoreBtn,#dataStatusBtn')) {
-    closeLibraryMenu()
-  }
+  if (!e.target.closest('.library-select')) closeLibrarySelects()
+  if (!e.target.closest('#selectionBar')) $('#selectionColorMenu')?.classList.add('hidden')
 })
 
 document.addEventListener('visibilitychange', () => {
@@ -4982,11 +5493,8 @@ document.documentElement.dataset.theme = ['light', 'eink', 'dark'].includes(
   : 'light'
 
 syncThemeUI()
-syncBackupStatus()
-
 loadLibrary().catch(e => {
   toast('无法打开本地书库，请检查浏览器是否允许本地存储', 6000)
-  $('#storageInfo').textContent = '本地存储不可用'
 })
     </script>
   </body>
