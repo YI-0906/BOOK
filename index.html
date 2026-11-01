@@ -3365,6 +3365,27 @@ function ensureSelectionLayer(reader) {
   reader.selectionUI = {layer,highlights,handles};
   return reader.selectionUI;
 }
+function selectionEdgePosition(range, edge) {
+  if (!range?.startContainer.isConnected) return null;
+  const start=edge==='start', node=start ? range.startContainer : range.endContainer;
+  const offset=start ? range.startOffset : range.endOffset, probe=range.cloneRange();
+  // Measure the boundary character, avoiding larger rectangles from inline wrappers.
+  if (node.nodeType===Node.TEXT_NODE) {
+    if (start) {
+      const length=node.data.codePointAt(offset)>0xffff ? 2 : 1;
+      probe.setEnd(node,Math.min(node.length,offset+length));
+    } else {
+      const length=offset>1 && /[\uDC00-\uDFFF]/.test(node.data[offset-1]) && /[\uD800-\uDBFF]/.test(node.data[offset-2]) ? 2 : 1;
+      probe.setStart(node,Math.max(0,offset-length));
+    }
+  }
+  const rects=[...probe.getClientRects()].filter(rect=>rect.width && rect.height);
+  const rect=start ? rects[0] : rects.at(-1);
+  if (!rect) return null;
+  const element=node.nodeType===Node.ELEMENT_NODE ? node : node.parentElement;
+  const rtl=node.ownerDocument.defaultView.getComputedStyle(element).direction==='rtl';
+  return {x:start!==rtl ? rect.left : rect.right,top:rect.top,bottom:rect.bottom,height:rect.height};
+}
 function paintTouchSelection() {
   const reader = state.reader, range = state.selectionRange;
   if (!isActiveReader(reader) || !reader.touch || !state.selection || !range?.startContainer.isConnected) return;
@@ -3379,15 +3400,15 @@ function paintTouchSelection() {
     fragment.append(block);
   }
   ui.highlights.replaceChildren(fragment);
-  const first = rects[0], last = rects.at(-1);
   for (let index=0;index<2;index++) {
-    const rect = index ? last : first, button = ui.handles[index];
-    const shown = rect && rect.bottom>0 && rect.top<reader.frame.clientHeight;
+    const edge=index ? 'end' : 'start', caret=selectionEdgePosition(range,edge), button=ui.handles[index];
+    const shown = caret && caret.bottom>0 && caret.top<reader.frame.clientHeight;
     button.classList.toggle('hidden',!shown);
     if (shown) {
-      const x = Math.max(22,Math.min(reader.frame.clientWidth-22,index ? rect.right : rect.left));
-      button.style.left=(x-22)+'px';
-      button.style.top=Math.max(0,Math.min(reader.frame.clientHeight-44,index ? rect.bottom-8 : rect.top-36))+'px';
+      button.style.setProperty('--selection-caret-height',caret.height+'px');
+      button.style.height=Math.max(44,caret.height+14)+'px';
+      button.style.left=(caret.x-22)+'px';
+      button.style.top=(caret.top-(index ? 0 : 14))+'px';
     }
   }
 }
@@ -3505,10 +3526,10 @@ function beginReaderGesture(reader, event) {
     x:event.clientX,y:event.clientY,time:performance.now(),moved:false,selected:!!state.selection};
   if (edge && reader.touch && reader.selectionBounds) {
     event.preventDefault();
-    const rects=[...state.selectionRange.getClientRects()].filter(r=>r.width && r.height),rect=edge.dataset.selectionEdge==='start' ? rects[0] : rects.at(-1);
-    if (!rect) return;
+    const caret=selectionEdgePosition(state.selectionRange,edge.dataset.selectionEdge);
+    if (!caret) return;
     reader.selectionDrag={id:event.pointerId,target:edge,edge:edge.dataset.selectionEdge,x:event.clientX,y:event.clientY,
-      dx:(edge.dataset.selectionEdge==='start' ? rect.left : rect.right)-event.clientX,dy:(rect.top+rect.bottom)/2-event.clientY};
+      dx:caret.x-event.clientX,dy:(caret.top+caret.bottom)/2-event.clientY};
     if (event.source!=='touch') edge.setPointerCapture(event.pointerId);
     edgeScrollSelection(reader);return;
   }
@@ -4187,7 +4208,7 @@ function buildReaderCss(settings = getSettings()) {
   const themeOverride = !fixed && (settings.theme === 'dark' || settings.theme === 'eink')
     ? `body,body .continuous-chapter *:not(#reader-theme-sentinel):not(.reader-highlight){color:${themeInk()}!important}`
     : ''
-  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box}html.touch-reader .continuous-chapter,html.touch-reader .continuous-chapter *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}html.touch-reader body{touch-action:pan-y pinch-zoom}.reader-selection-layer{position:fixed;inset:0;pointer-events:none;z-index:1000}.reader-selection-layer.hidden,.reader-selection-handle.hidden{display:none!important}.reader-selection-layer i{position:absolute;display:block;background:color-mix(in srgb,${themeInk()} 22%,transparent);border-radius:2px;pointer-events:none}.reader-selection-handle{position:absolute;width:44px;height:44px;border:0;padding:0;background:transparent;pointer-events:auto;touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent}.reader-selection-handle::before{content:"";position:absolute;left:21px;width:2px;height:22px;background:${themeInk()}}.reader-selection-handle::after{content:"";position:absolute;left:15px;width:14px;height:14px;border-radius:50%;background:${themeInk()}}.reader-selection-handle.start::before{bottom:0}.reader-selection-handle.start::after{top:0}.reader-selection-handle.end::before{top:0}.reader-selection-handle.end::after{bottom:0} .continuous-chapter{display:flow-root;position:relative;min-height:1px;margin:0!important;${fixed ? 'width:100%;height:100%;' : ''}}.chapter-placeholder{display:block;margin:0;padding:0;overflow:hidden}.chapter-retry{display:block;margin:16px auto;padding:12px 16px;min-height:44px;border:1px solid ${themeInk()};border-radius:8px;background:${paper};color:${themeInk()};font:inherit;font-size:14px}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
+  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box}html.touch-reader .continuous-chapter,html.touch-reader .continuous-chapter *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}html.touch-reader body{touch-action:pan-y pinch-zoom}.reader-selection-layer{position:fixed;inset:0;pointer-events:none;z-index:1000}.reader-selection-layer.hidden,.reader-selection-handle.hidden{display:none!important}.reader-selection-layer i{position:absolute;display:block;background:color-mix(in srgb,${themeInk()} 22%,transparent);border-radius:2px;pointer-events:none}.reader-selection-handle{position:absolute;width:44px;height:44px;border:0;padding:0;background:transparent;pointer-events:auto;touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent}.reader-selection-handle::before{content:"";position:absolute;left:21px;width:2px;height:var(--selection-caret-height,22px);background:${themeInk()}}.reader-selection-handle::after{content:"";position:absolute;left:15px;width:14px;height:14px;border-radius:50%;background:${themeInk()}}.reader-selection-handle.start::before{top:14px}.reader-selection-handle.start::after{top:0}.reader-selection-handle.end::before{top:0}.reader-selection-handle.end::after{top:var(--selection-caret-height,22px)} .continuous-chapter{display:flow-root;position:relative;min-height:1px;margin:0!important;${fixed ? 'width:100%;height:100%;' : ''}}.chapter-placeholder{display:block;margin:0;padding:0;overflow:hidden}.chapter-retry{display:block;margin:16px auto;padding:12px 16px;min-height:44px;border:1px solid ${themeInk()};border-radius:8px;background:${paper};color:${themeInk()};font:inherit;font-size:14px}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
 }
 function applyReaderAppearance({ locator } = {}) {
   const reader = state.reader
