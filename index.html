@@ -733,16 +733,16 @@ html.keyboard-open .ai-composer textarea{height:26px;min-height:26px;max-height:
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2V11.5A8.5 8.5 0 0 1 10.5 3h2A8.5 8.5 0 0 1 21 11.5Z"/><path d="M7 10h9M7 14h6"/></svg>
           </button>
           <div class="reader-paper">
-            <iframe id="readerFrame" title="EPUB 内容" sandbox="allow-same-origin"></iframe>
+            <iframe id="readerFrame" title="EPUB 内容" sandbox="allow-same-origin allow-scripts"></iframe>
           </div>
 
           <!-- Selection Bar -->
           <div id="selectionBar" class="selection-bar hidden">
-            <button id="highlightColorBtn" class="selection-color-button" type="button" aria-label="调整笔记颜色" title="调整笔记颜色">
+            <button id="highlightColorBtn" class="selection-color-button" type="button" aria-label="调整标注颜色" title="调整标注颜色">
               <span class="selection-color-dot"></span>
             </button>
             <span class="selection-divider" aria-hidden="true"></span>
-            <button id="noteBtn" class="selection-action" type="button" aria-label="添加笔记">笔记</button>
+            <button id="noteBtn" class="selection-action" type="button" aria-label="添加标注">标注</button>
             <span class="selection-divider" aria-hidden="true"></span>
             <button id="remarkBtn" class="selection-action" type="button" aria-label="添加备注">备注</button>
             <span class="selection-divider" aria-hidden="true"></span>
@@ -1616,7 +1616,7 @@ function sanitizeEpubDocument(doc) {
   })
   const meta = doc.createElement('meta')
   meta.httpEquiv = 'Content-Security-Policy'
-  meta.content = "default-src 'none'; img-src blob: data:; style-src 'unsafe-inline'; font-src blob: data:; media-src blob: data:"
+  meta.content = "default-src 'none'; script-src 'none'; img-src blob: data:; style-src 'unsafe-inline'; font-src blob: data:; media-src blob: data:"
   doc.head?.prepend(meta)
   return doc
 }
@@ -2396,6 +2396,9 @@ async function deleteManagedBook() {
   toast('图书已删除')
 }
 const TARGET_RESIDENT_CHAPTERS = 12
+// WebKit needs allow-scripts for callbacks installed by the host in the iframe.
+// EPUB scripts remain removed by sanitization and blocked by script-src 'none'.
+const READER_FRAME_SANDBOX = 'allow-same-origin allow-scripts'
 const isActiveReader = reader => !!reader && state.reader === reader && !reader.disposed
 const abortError = () => new DOMException('阅读操作已取消', 'AbortError')
 function disposeReader(reader = state.reader) {
@@ -2439,7 +2442,7 @@ async function initializeReaderFrame(reader) {
   const frame = document.createElement('iframe')
   frame.id = 'readerFrame'
   frame.title = 'EPUB 内容'
-  frame.setAttribute('sandbox', 'allow-same-origin')
+  frame.setAttribute('sandbox', READER_FRAME_SANDBOX)
   $('#readerFrame').replaceWith(frame)
   reader.frame = frame
   await new Promise((resolve, reject) => {
@@ -2463,7 +2466,7 @@ async function initializeReaderFrame(reader) {
     const timer = setTimeout(() => finish(new Error('阅读页面加载超时')), 15000)
     frame.addEventListener('load', onLoad)
     reader.abort.signal.addEventListener('abort', onAbort, { once: true })
-    frame.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; img-src blob: data:; style-src &#39;unsafe-inline&#39;; font-src blob: data:; media-src blob: data:"><style id="reader-runtime-style"></style></head><body></body></html>'
+    frame.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; img-src blob: data:; style-src &#39;unsafe-inline&#39;; font-src blob: data:; media-src blob: data:"><style id="reader-runtime-style"></style></head><body></body></html>'
   })
   const doc = reader.doc, signal = reader.abort.signal
   const listen = (type, handler, options = {}) => doc.addEventListener(type, event => {
@@ -3151,7 +3154,7 @@ async function home() {
   closeReaderDrawer()
   $('#selectionBar').classList.add('hidden')
   const emptyFrame = document.createElement('iframe')
-  emptyFrame.id = 'readerFrame'; emptyFrame.title = 'EPUB 内容'; emptyFrame.setAttribute('sandbox', 'allow-same-origin')
+  emptyFrame.id = 'readerFrame'; emptyFrame.title = 'EPUB 内容'; emptyFrame.setAttribute('sandbox', READER_FRAME_SANDBOX)
   $('#readerFrame').replaceWith(emptyFrame)
   document.documentElement.classList.add('library-mode')
   document.documentElement.dataset.theme = normalizeSettings(legacySettings()).theme
