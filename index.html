@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#202124" />
     <title>本地阅读器</title>
-    <meta name="reader-version" content="5.2.0-mobile" />
+    <meta name="reader-version" content="5.3.0" />
     <style>
 :root{--bg:#ffffff;--surface:#fafafa;--paper:#ffffff;--ink:#1a1a1a;--muted:#737373;--line:#e5e5e5;--accent:#1a1a1a;--accent-hover:#404040;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.1);--shadow-lg:0 8px 24px rgba(0,0,0,0.12)}
 html[data-theme=eink]{--bg:#e8e8e8;--surface:#f0f0f0;--paper:#f5f5f5;--ink:#000000;--muted:#666666;--line:#d0d0d0;--accent:#000000;--accent-hover:#333333}
@@ -99,18 +99,19 @@ html.library-mode .library-toolbar{width:min(1200px,calc(100% - 48px));margin:0 
 html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 @media (prefers-reduced-motion:reduce){.cover-flow-bg,.cover-flow-card,.cover-flow-info,.cover-flow-progress-track i,.cover-flow-dot{transition-duration:1ms !important}
 .hero-scroll-hint svg{animation:none}
+.hero-action,.sidebar,.drawer-backdrop,.reading-status,.reader-menu-button,.reader-home-button{transition:none}
 }
 .library-toolbar{max-width:1200px;margin:0 auto 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
 .library-section-title{display:flex;align-items:baseline;gap:12px}
 .library-section-title h2{margin:0;font-size:18px;font-weight:600}
 .library-section-title span{color:var(--muted);font-size:13px}
 .library-controls{display:flex;align-items:center;gap:8px;flex:1;max-width:600px;justify-content:flex-end}
-.search-field{flex:1;min-width:200px;max-width:300px;height:36px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);transition:all 0.15s}
+.search-field{flex:1;min-width:200px;max-width:300px;height:36px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .search-field:focus-within{border-color:var(--accent)}
 .search-field svg{color:var(--muted)}
 .search-field input{flex:1;min-width:0;border:0;background:transparent;outline:0}
 .library-select{position:relative;min-width:112px}
-.library-select-trigger{width:100%;height:36px;padding:0 32px 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);text-align:left;position:relative;transition:all .15s}
+.library-select-trigger{width:100%;height:36px;padding:0 32px 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);text-align:left;position:relative;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .library-select-trigger::after{content:'';position:absolute;top:50%;right:12px;width:7px;height:7px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:translateY(-65%) rotate(45deg)}
 .library-select.open .library-select-trigger,.library-select-trigger:hover{border-color:var(--accent);background:var(--bg)}
 .library-select-menu{position:absolute;z-index:240;top:calc(100% + 6px);left:0;right:0;padding:5px;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s}
@@ -119,14 +120,14 @@ html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 .library-select-option:hover,.library-select-option.active{background:var(--bg);color:var(--accent)}
 .library-select-option.active::after{content:'✓';float:right;color:var(--accent)}
 .drop-zone{max-width:1200px;margin:0 auto}
-.empty-state{width:100%;min-height:320px;border:2px dashed var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 24px;cursor:pointer;transition:all 0.15s}
+.empty-state{width:100%;min-height:320px;border:2px dashed var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 24px;cursor:pointer;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .empty-state:hover{border-color:var(--accent);background:var(--bg)}
 .empty-icon{width:64px;height:64px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--accent)}
 .empty-title{font-size:16px;font-weight:600;color:var(--ink);margin:0}
 .empty-description{font-size:13px;color:var(--muted);margin:0}
 .book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:32px 24px}
 .book-card{position:relative}
-.cover{width:100%;aspect-ratio:2/3;border-radius:8px;background:linear-gradient(135deg,#525252,#262626);display:flex;align-items:flex-end;padding:16px;color:white;position:relative;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-md);transition:all 0.15s}
+.cover{width:100%;aspect-ratio:2/3;border-radius:8px;background:linear-gradient(135deg,#525252,#262626);display:flex;align-items:flex-end;padding:16px;color:white;position:relative;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-md);transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .cover:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .cover-fallback{font-size:15px;font-weight:600;line-height:1.4;position:relative;z-index:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -135,45 +136,44 @@ html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 .card-meta{height:18px;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-progress{height:2px;background:var(--line);border-radius:2px;margin-top:8px;overflow:hidden}
 .card-progress i{display:block;height:100%;background:var(--accent)}
-.delete-book{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:2;opacity:0;transition:all 0.15s}
+.delete-book{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:2;opacity:0;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .book-card:hover .delete-book,.delete-book:focus-visible{opacity:1}
 .delete-book:hover{background:rgba(0,0,0,0.8)}
 .reader-view{height:100%;position:relative;background:var(--bg);box-sizing:border-box;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .reading-stage{height:100%;position:relative;overflow:hidden;padding:0}
 .reader-paper{height:100%;width:100%;background:var(--paper);position:relative;overflow:hidden}
-.reader-menu-button{position:absolute;top:16px;left:16px;z-index:52;width:40px;height:40px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.reader-menu-button{position:absolute;top:16px;left:16px;z-index:52;width:40px;height:40px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,border-color .15s,opacity .15s}
+.reader-view.chrome-hidden .reading-stage>.reader-menu-button,.reader-view.chrome-hidden .reading-stage>.reader-home-button{opacity:0;visibility:hidden;pointer-events:none}
 .reader-menu-button:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
-.reader-home-button{position:absolute;top:16px;right:16px;z-index:52;width:40px;height:40px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.reader-home-button{position:absolute;top:16px;right:16px;z-index:52;width:40px;height:40px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .reader-home-button:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
 #readerFrame{border:0;width:100%;height:100%;background:var(--paper)}
-.drawer-backdrop{position:absolute;z-index:100;inset:0;background:rgba(0,0,0,0.4);opacity:0;visibility:hidden;transition:all 0.2s}
+.drawer-backdrop{position:absolute;z-index:100;inset:0;background:rgba(0,0,0,0.4);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
 .drawer-backdrop.visible{opacity:1;visibility:visible}
-.sidebar{position:absolute;z-index:110;top:0;bottom:0;left:0;width:320px;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;transform:translateX(-100%);visibility:hidden;transition:all 0.2s}
+.sidebar{position:absolute;z-index:110;top:0;bottom:0;left:0;width:320px;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;transform:translateX(-100%);visibility:hidden;transition:transform .2s,visibility .2s}
 .sidebar.open{transform:translateX(0);visibility:visible}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
 .drawer-head strong{font-weight:600;font-size:15px}
 .drawer-quick{display:flex;align-items:center;gap:4px;margin-left:auto;margin-right:8px}
-.drawer-quick button{width:36px;height:36px;border:1px solid var(--line);border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--muted);box-shadow:0 1px 2px rgba(0,0,0,.06);transition:all 0.15s}
+.drawer-quick button{width:36px;height:36px;border:1px solid var(--line);border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--muted);box-shadow:0 1px 2px rgba(0,0,0,.06);transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .drawer-quick button:hover,.drawer-quick button:focus-visible{background:var(--surface);color:var(--ink);border-color:var(--accent)}
 .drawer-quick button .icon{width:18px;height:18px}
 .icon-solid{fill:currentColor;stroke:none !important}
 .sidebar-tabs{display:flex;padding:8px 12px 0;gap:4px}
-.tab{flex:1;padding:8px 12px;border-radius:6px 6px 0 0;color:var(--muted);font-size:13px;font-weight:500;text-align:center;transition:all 0.15s}
+.tab{flex:1;padding:8px 12px;border-radius:6px 6px 0 0;color:var(--muted);font-size:13px;font-weight:500;text-align:center;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .tab:hover{background:var(--bg);color:var(--ink)}
 .tab.active{color:var(--ink);background:var(--bg)}
 .side-panel{flex:1;overflow:auto;padding:16px}
-.toc-item{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:6px;font-size:13px;line-height:1.5;margin-bottom:4px;transition:all 0.15s}
+.toc-item{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:6px;font-size:13px;line-height:1.5;margin-bottom:4px;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .toc-item:hover{background:var(--bg);color:var(--accent)}
 .toc-item.active{background:var(--bg);font-weight:500}
-.note-filters{display:flex;gap:8px;padding:0 0 12px;flex-wrap:wrap}
-.note-filters button{padding:6px 12px;border-radius:6px;color:var(--muted);font-size:12px;border:1px solid var(--line);transition:all 0.15s}
-.note-filters button:hover{background:var(--bg);color:var(--ink);border-color:var(--accent)}
-.note-filters button.active{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.note-filters{display:block;min-height:44px;padding:8px 12px;margin-bottom:12px;border:1px solid var(--line);border-radius:6px;font-size:12px;color:var(--muted);text-align:left}
+.note-filters:hover{background:var(--surface);color:var(--ink)}
 .note-item{display:block;width:100%;text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:13px;line-height:1.5}
 .note-item small{display:block;color:var(--muted);margin-top:8px;font-size:12px}
 .note-kind{display:inline-block;margin:0 8px 6px 0;padding:2px 8px;border-radius:4px;background:var(--bg);color:var(--ink);font-size:11px;font-weight:500;border:1px solid var(--line)}
 .note-actions{display:flex;gap:8px;margin-top:12px}
-.note-actions button{padding:6px 12px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:12px;transition:all 0.15s}
+.note-actions button{padding:6px 12px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:12px;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .note-actions button:hover{color:var(--accent);border-color:var(--accent);background:var(--bg)}
 .settings-panel{padding:16px}
 .settings-group-title{margin:24px 0 12px;padding:0;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase}
@@ -186,20 +186,20 @@ html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 .setting-row input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:0;cursor:pointer}
 .setting-row select{flex:1;height:36px;padding:0 32px 0 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg) url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="%23737373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 10px center;appearance:none;cursor:pointer}
 .theme-options{display:flex;align-items:center;gap:8px}
-.theme-swatch{width:40px;height:32px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:all 0.15s}
+.theme-swatch{width:40px;height:32px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .theme-swatch:hover{border-color:var(--line)}
 .theme-swatch.active{border-color:var(--accent)}
 .theme-swatch.light{background:#ffffff;box-shadow:inset 0 0 0 1px #e5e5e5}
 .theme-swatch.eink{background:#f0f0f0;box-shadow:inset 0 0 0 1px #d0d0d0}
 .theme-swatch.dark{background:#1a1a1a;box-shadow:inset 0 0 0 1px #262626}
 .segmented{display:flex;height:36px;background:var(--bg);border-radius:6px;padding:2px;gap:2px}
-.segmented button{flex:1;padding:0 12px;border-radius:5px;color:var(--muted);font-size:13px;transition:all 0.15s}
+.segmented button{flex:1;padding:0 12px;border-radius:5px;color:var(--muted);font-size:13px;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .segmented button:hover{color:var(--ink)}
 .segmented button.active{background:var(--surface);color:var(--accent);font-weight:500}
 .range-wrap{flex:1;display:flex;align-items:center;gap:12px}
 .range-wrap b{font-weight:500;color:var(--muted)}
 .range-wrap .large-a{font-size:18px}
-.highlight-swatch{width:40px;height:32px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:all 0.15s}
+.highlight-swatch{width:40px;height:32px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .highlight-swatch:hover{border-color:var(--line)}
 .highlight-swatch.active{border-color:var(--accent)}
 .highlight-yellow{background:#fef08a}
@@ -207,7 +207,8 @@ html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 .highlight-blue{background:#7dd3fc}
 .highlight-pink{background:#f9a8d4}
 .selection-bar{position:absolute;z-index:150;left:50%;top:80px;transform:translateX(-50%);white-space:nowrap;background:var(--ink);color:var(--paper);padding:4px;border-radius:8px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:0}
-.selection-bar button{color:var(--paper);transition:all .15s}
+.selection-bar button{color:var(--paper);transition:background .15s,color .15s,border-color .15s,opacity .15s}
+.selection-bar button:active{background:rgba(255,255,255,.18)}
 .selection-bar button:hover{background:rgba(255,255,255,.1)}
 .selection-color-button{width:36px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:6px}
 .selection-color-dot{width:14px;height:14px;border-radius:50%;background:#fef08a;box-shadow:0 0 0 2px rgba(255,255,255,.75)}
@@ -227,7 +228,7 @@ html.library-mode .drop-zone{width:min(1200px,calc(100% - 48px))}
 .remark-actions{display:flex;justify-content:flex-end;gap:8px}
 .remark-actions button{height:36px;padding:0 14px;border:1px solid var(--line);border-radius:8px}
 .remark-actions .primary-btn{border-color:var(--accent)}
-.reading-status{position:absolute;z-index:120;left:50%;bottom:64px;transform:translate(-50%,8px);display:flex;align-items:center;gap:12px;max-width:min(600px,calc(100% - 48px));padding:10px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md);opacity:0;visibility:hidden;pointer-events:none;transition:all 0.2s;font-size:13px}
+.reading-status{position:absolute;z-index:120;left:50%;bottom:64px;transform:translate(-50%,8px);display:flex;align-items:center;gap:12px;max-width:min(600px,calc(100% - 48px));padding:10px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,transform .2s,visibility .2s;font-size:13px}
 .reading-status.visible{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .reading-status strong{max-width:50vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .reading-status span{color:var(--muted);white-space:nowrap}
@@ -236,7 +237,7 @@ dialog::backdrop{background:rgba(0,0,0,0.4)}
 .dialog-card{width:min(480px,90vw);padding:24px;display:grid;gap:20px}
 .dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .dialog-head h2{margin:0;font-size:18px;font-weight:600}
-.dialog-head button{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.15s}
+.dialog-head button{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .dialog-head button:hover{background:var(--bg);color:var(--accent)}
 .search-card{width:min(640px,92vw)}
 .search-row{display:flex;gap:8px}
@@ -252,7 +253,7 @@ dialog::backdrop{background:rgba(0,0,0,0.4)}
 .footnote-content{line-height:1.7;overflow:auto;max-height:52vh;color:var(--ink);font-size:14px}
 .footnote-content img{max-width:100%;height:auto}
 .export-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.export-options button{height:44px;border:1px solid var(--line);border-radius:8px;font-weight:500;transition:all 0.15s}
+.export-options button{height:44px;border:1px solid var(--line);border-radius:8px;font-weight:500;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .export-options button:hover{border-color:var(--accent);background:var(--bg);color:var(--accent)}
 .book-manage-form{display:grid;gap:16px}
 .book-manage-form label{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:12px;color:var(--ink);font-size:13px;font-weight:500}
@@ -260,10 +261,10 @@ dialog::backdrop{background:rgba(0,0,0,0.4)}
 .book-manage-form input[type="text"]:focus{outline:0;border-color:var(--accent)}
 .manage-cover-row{display:flex;align-items:center;gap:12px}
 .manage-cover-row img{width:56px;height:84px;border-radius:4px;object-fit:cover;background:var(--bg);border:1px solid var(--line)}
-.manage-cover-row button{height:32px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-size:12px;transition:all 0.15s}
+.manage-cover-row button{height:32px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-size:12px;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .manage-cover-row button:hover{background:var(--bg);border-color:var(--accent)}
 .manage-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.manage-actions button{height:36px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;transition:all 0.15s}
+.manage-actions button{height:36px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .manage-actions button:hover{background:var(--bg);border-color:var(--accent)}
 .manage-actions .danger{color:#dc2626}
 .manage-actions .danger:hover{border-color:#dc2626}
@@ -289,7 +290,9 @@ html.library-mode .library-view{padding:0 0 48px}
 .cover-flow-dots{margin-top:9px}
 .hero-bottom{gap:9px}
 .hero-actions{width:min(360px,calc(100vw - 24px));min-height:54px;padding:5px;border-radius:20px}
-.hero-action{min-height:42px;border-radius:15px;font-size:11px}
+.hero-action{min-height:44px;border-radius:15px;font-size:11px}
+.delete-book{width:44px;height:44px;opacity:1}
+.library-select-trigger,.library-select-option{min-height:44px}
 html.library-mode .library-toolbar{width:calc(100% - 32px);padding-top:44px}
 html.library-mode .drop-zone{width:calc(100% - 32px)}
 .library-toolbar{flex-direction:column;align-items:stretch;gap:12px;margin-bottom:20px}
@@ -342,6 +345,7 @@ html[data-theme=dark] .ai-panel,html[data-theme=dark] .ai-settings{color-scheme:
 .ai-panel-model .ai-model-label{font-size:12px;color:var(--muted);flex-shrink:0}
 .ai-model-trigger{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;flex:1;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:var(--paper);font-size:13px;text-align:left}
 .ai-model-trigger span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ai-model-trigger:active,.ai-icon-button:active,.ai-small-button:active{background:var(--surface)}
 .ai-model-trigger:hover,.ai-model-trigger[aria-expanded=true]{border-color:var(--muted)}
 .ai-model-menu{position:fixed;z-index:250;margin:0;padding:0;border:0;border-radius:9px;background:var(--paper);color:var(--ink);box-shadow:var(--shadow-md);display:flex;flex-direction:column;overflow:hidden}
 .ai-model-menu .ai-model-list{max-height:none;min-height:0;flex:1}
@@ -381,7 +385,7 @@ html[data-theme=dark] .ai-panel,html[data-theme=dark] .ai-settings{color-scheme:
 .ai-message-body table{border-collapse:collapse;width:100%;font-size:12px;margin:12px 0}
 .ai-message-body th,.ai-message-body td{padding:6px 8px;border:1px solid var(--line);text-align:left}
 .ai-message-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-.ai-message-actions button{padding:4px 7px;border-radius:5px;font-size:11px;color:var(--muted)}
+.ai-message-actions button{min-height:32px;padding:4px 7px;border-radius:5px;font-size:12px;color:var(--muted)}
 .ai-message-actions button:hover{background:var(--surface);color:var(--ink)}
 .ai-message-state{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.6}
 .ai-message-state.error{padding:10px 12px;border:1px solid var(--line);border-radius:7px;color:var(--ink)}
@@ -460,7 +464,7 @@ html[data-theme=dark] .ai-panel,html[data-theme=dark] .ai-settings{color-scheme:
 .ai-composer{padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
 .ai-composer-hint{display:none}
 .ai-composer-bottom{justify-content:flex-end}
-.ai-send,.ai-stop,.ai-small-button,.ai-model-trigger,.ai-model-option{min-height:44px}
+.ai-send,.ai-stop,.ai-small-button,.ai-model-trigger,.ai-model-option,.ai-message-actions button{min-height:44px}
 .ai-panel-tools .ai-icon-button,.ai-settings .dialog-head button{width:44px;height:44px}
 .ai-inline-option,.ai-context-option{min-height:44px}
 .ai-key-wrap input,.ai-setting-field input[type=url],.ai-search-wrap input,.ai-composer textarea{font-size:16px}
@@ -485,6 +489,7 @@ html.compact-viewport .ai-panel-head{padding:2px 12px}
 html.compact-viewport .ai-reference blockquote,html.compact-viewport .ai-reference-label{display:none}
 html.compact-viewport .ai-reference-preview{display:block;flex:1}
 html.compact-viewport .ai-chat-scroll{padding:0 12px}
+html.compact-viewport .ai-empty{display:none}
 html.compact-viewport .ai-latest{display:none}
 html.compact-viewport .ai-composer{padding:6px 12px}
 html.compact-viewport .ai-composer-box{display:flex;align-items:flex-end;gap:8px;padding:6px 8px}
@@ -834,7 +839,7 @@ html.keyboard-open .ai-composer textarea{height:26px;min-height:26px;max-height:
     <dialog id="remarkDialog">
       <div class="dialog-card remark-card">
         <div class="dialog-head">
-          <h2>添加备注</h2>
+          <h2 id="remarkTitle">添加备注</h2>
           <button id="closeRemark" type="button" aria-label="关闭">
             <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg>
           </button>
@@ -960,7 +965,7 @@ const state = {
   chapter: 0, selection: '', selectionChapter: 0, navigating: false,
   openBookToken: 0, libraryFilter: 'all', librarySort: 'recent'
 }
-const uid = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`
+const uid = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
 async function fileHash(buffer) {
   if (!crypto.subtle) throw new Error('请使用支持本地安全存储的现代浏览器打开阅读器')
   const hash = await crypto.subtle.digest('SHA-256', buffer)
@@ -1895,6 +1900,7 @@ async function createBackupBlob(books) {
 }
 async function exportData() {
   try {
+    await saveReadingPosition()
     await saveQueues.get(state.book?.id)
     const books = await getBooks()
     const date = new Date(), localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -2385,7 +2391,7 @@ async function deleteManagedBook() {
   const book = state.managedBook
   if (!book || !confirm(`从本地书架删除《${book.title}》？此操作不可撤销，建议先导出备份。`)) return
   await removeBook(book.id)
-    $('#bookManageDialog').close()
+  $('#bookManageDialog').close()
   await loadLibrary()
   toast('图书已删除')
 }
@@ -2399,6 +2405,10 @@ function disposeReader(reader = state.reader) {
   clearTimeout(reader.saveTimer)
   clearTimeout(reader.wheelTimer)
   clearTimeout(reader.resizeTimer)
+  clearTimeout(reader.chromeTimer)
+  stopReaderGesture(reader,true)
+  reader.selectionUI?.layer.remove()
+  reader.selectionMap=null
   clearTimeout(state.selectionTimer)
   clearTimeout(state.settingsTimer)
   clearTimeout(state.statusTimer)
@@ -2460,18 +2470,21 @@ async function initializeReaderFrame(reader) {
     if (isActiveReader(reader) && !reader.initializing) handler(event)
   }, { ...options, signal })
   listen('selectionchange', captureSelection)
-  listen('contextmenu', event => { if (matchMedia('(pointer:coarse)').matches) event.preventDefault(); captureSelection() })
-  listen('pointerdown', event => {
-    reader.gesture = { x:event.clientX, y:event.clientY, time:performance.now(), selected:!!reader.win.getSelection().toString(), moved:false }
-  }, { passive:true })
-  listen('pointermove', event => {
-    const gesture = reader.gesture
-    if (gesture && Math.hypot(event.clientX-gesture.x, event.clientY-gesture.y)>8) gesture.moved = true
-  }, { passive:true })
+  listen('contextmenu', event => { if (reader.touch) event.preventDefault(); else captureSelection() })
+  syncTouchReader(reader)
+  listen('pointerdown', event => beginReaderGesture(reader,event), {passive:false})
+  listen('pointermove', event => moveReaderGesture(reader,event), {passive:false})
+  listen('pointerup', event => finishReaderGesture(reader,event))
+  listen('pointercancel', () => stopReaderGesture(reader,true))
+  listen('lostpointercapture', () => { if (reader.selectionDrag) stopReaderGesture(reader,true) })
+  listen('touchmove', event => { if (reader.selectionDrag) event.preventDefault() }, {passive:false})
+  reader.win.addEventListener('blur', () => stopReaderGesture(reader,true), {signal})
+
   listen('mouseup', () => { state.selectionNoteId = ''; captureSelection() })
   listen('touchend', () => { state.selectionNoteId = ''; captureSelection(); ensureContinuousContent().catch(reportError) }, { passive: true })
   listen('keydown', handleReadingKey)
   listen('click', event => {
+    if (event.defaultPrevented || performance.now() < (reader.ignoreClickUntil || 0)) return
     const link = event.target.closest('[data-epub-href]')
     if (link) {
       event.preventDefault()
@@ -2484,7 +2497,10 @@ async function initializeReaderFrame(reader) {
     const media = event.target.closest('img,svg')
     if (media && openImageViewer(media)) { event.preventDefault(); return }
     const gesture = reader.gesture
-    if (!reader.win.getSelection().toString() && !gesture?.moved && !gesture?.selected && (!gesture || performance.now()-gesture.time<450) && !event.target.closest('a,button,input,select,textarea')) handleReaderTap(event.clientX, frame.clientWidth)
+    if (!gesture?.moved && (!gesture || performance.now()-gesture.time<450) && !event.target.closest('a,button,input,select,textarea')) {
+      if (reader.touch) { if (state.selection) hideSelectionTools(); else handleReaderTap(event.clientX,frame.clientWidth) }
+      else if (!reader.win.getSelection().toString() && !gesture?.selected) handleReaderTap(event.clientX,frame.clientWidth)
+    }
   })
   listen('wheel', event => {
     if (reader.epub.fixedLayout) {
@@ -2578,6 +2594,7 @@ async function openBook(id) {
     renderToc()
     renderNotes()
     await renderChapter(index, '', 0, { locator: book.locator, prepared })
+    if (isActiveReader(reader)) setReaderChrome(true,2000)
   } catch (error) {
     if (reader && state.reader === reader) disposeReader(reader)
     else if (reader) disposeReader(reader)
@@ -2613,6 +2630,7 @@ async function renderChapter(index, fragment = '', endPosition = 0, options = {}
     reader.failed.clear()
     reader.doc.body.replaceChildren(reader.doc.importNode(prepared.node, true))
     prepared.node = reader.doc.body.firstElementChild
+    reader.selectionMap=null
     addChapterStyle(reader, prepared)
     reader.chapters.set(index, prepared)
     reader.first = reader.last = index
@@ -2658,6 +2676,10 @@ function onReaderScroll(reader) {
     if (!isActiveReader(reader) || reader.initializing) return
     updateReadingProgress()
     markToc()
+    if (reader.touch) {
+      paintTouchSelection()
+      if (performance.now() < (reader.userScrollingUntil || 0) && !readerChromeBusy()) setReaderChrome(false)
+    }
     ensureContinuousContent().catch(reportError)
     clearTimeout(reader.saveTimer)
     reader.saveTimer = setTimeout(() => { if (isActiveReader(reader)) saveReadingPosition().catch(reportError) }, 300)
@@ -2804,15 +2826,18 @@ async function ensureContinuousContent() {
   return task
 }
 async function waitForDocumentImages(root) {
-  const images = [...root.querySelectorAll('img')].filter(img => !img.complete)
-  if (!images.length) return
-  await Promise.race([
-    Promise.all(images.map(img => new Promise(resolve => {
-      img.addEventListener('load', resolve, { once: true })
-      img.addEventListener('error', resolve, { once: true })
-    }))),
-    new Promise(resolve => setTimeout(resolve, 1800))
-  ])
+  const images=[...root.querySelectorAll('img')].filter(img=>!img.complete);
+  if (!images.length) return;
+  const cleanups=[];let timer;
+  try {
+    await Promise.race([
+      Promise.all(images.map(img=>new Promise(resolve=>{
+        img.addEventListener('load',resolve,{once:true});img.addEventListener('error',resolve,{once:true});
+        cleanups.push(()=>{img.removeEventListener('load',resolve);img.removeEventListener('error',resolve)});
+      }))),
+      new Promise(resolve=>{timer=setTimeout(resolve,1800)})
+    ]);
+  } finally {clearTimeout(timer);for (const cleanup of cleanups) cleanup()}
 }
 function chapterRatio() {
   const reader = state.reader
@@ -2832,11 +2857,12 @@ function updateReadingProgress() {
   let progress = Math.min(1, (state.chapter + chapterRatio()) / total)
   const max = Math.max(0, reader.scroller.scrollHeight - reader.frame.clientHeight)
   if (reader.last === total - 1 && (reader.epub.fixedLayout || reader.scroller.scrollTop >= max - 2)) progress = 1
-  book.chapter = state.chapter
-  book.progress = progress
-  book.locator = captureReadingLocator()
-  book.lastRead = timestamp(book.progressUpdatedAt || 0)
-  book.progressUpdatedAt = book.lastRead
+  const locator=captureReadingLocator();
+  const changed=book.chapter!==state.chapter || book.progress!==progress || JSON.stringify(book.locator)!==JSON.stringify(locator);
+  book.chapter=state.chapter;book.progress=progress;book.locator=locator;
+  if (changed || Date.now()-(book.lastRead||0)>60000) {
+    book.lastRead=timestamp(book.progressUpdatedAt||0);book.progressUpdatedAt=book.lastRead;
+  }
 }
 function showReadingStatus(ms = 1250) {
   if (!state.book || !state.epub) return
@@ -2930,10 +2956,7 @@ function resolveLocatorOffset(root, locator) {
   }
   return expected
 }
-function nodeAtTextOffset(root, offset) {
-  const map = textMap(root)
-  return map.nodes.find(item => item.end > offset) || map.nodes.at(-1)
-}
+
 function scrollToLocator(doc, locator) {
   const root = doc.querySelector(`.continuous-chapter[data-chapter-index="${Number(locator?.chapter) || 0}"]`)
   if (!root) return false
@@ -2975,6 +2998,7 @@ function selectedChapterRoot() {
 function renderToc() {
   $('#tocPanel').innerHTML = ''
   state.reader.tocButtons = new Map()
+  state.reader.tocByPath = new Map()
   state.reader.activeToc = null
   state.epub.toc.forEach((item) => {
     const b = document.createElement('button')
@@ -2982,6 +3006,8 @@ function renderToc() {
     b.textContent = item.label
     b.dataset.href = item.href
     b.onclick = () => goHref(item.href).catch(error => toast(`章节打开失败：${error.message}`, 3500))
+    const path=item.href.split('#')[0],items=state.reader.tocByPath.get(path)||[]
+    items.push(item);state.reader.tocByPath.set(path,items)
     state.reader.tocButtons.set(item.href, b)
     $('#tocPanel').append(b)
   })
@@ -2989,7 +3015,7 @@ function renderToc() {
 }
 function tocItem(index, position) {
   const path = state.epub?.spine[index], root = chapterRoot(index)
-  const items = state.epub?.toc.filter(item => item.href.split('#')[0] === path) || []
+  const items = state.reader?.tocByPath?.get(path) || []
   if (!root) return items[0]
   let current = items[0]
   for (const item of items) {
@@ -3059,6 +3085,7 @@ function closeReaderDrawer() {
   side.classList.remove('open')
   side.dataset.panel = ''
   $('#drawerBackdrop').classList.remove('visible')
+  setReaderChrome(true)
 }
 function handleReaderTap(x, width) {
   const side = $('#sidebar')
@@ -3066,6 +3093,7 @@ function handleReaderTap(x, width) {
     closeReaderDrawer()
     return
   }
+  if (state.reader?.touch) { setReaderChrome($('#readerView').classList.contains('chrome-hidden')); return }
   const ratio = x / Math.max(1, width)
   if (ratio < 0.28) {
     navigateReading(state.epub?.direction === 'rtl' ? 1 : -1).catch(error => toast(`翻页失败：${error.message}`, 3500))
@@ -3092,12 +3120,16 @@ function openImageViewer(media) {
   }
   if (!src) return false
   $('#imageViewerImg').src = src
+  hideSelectionTools()
   $('#imageViewer').classList.remove('hidden')
+  setReaderChrome(true)
+  $('#closeImageViewer').focus({preventScroll:true})
   return true
 }
 function closeImageViewer() {
   $('#imageViewer').classList.add('hidden')
   $('#imageViewerImg').removeAttribute('src')
+  setReaderChrome(true)
 }
 async function home() {
   closeAI()
@@ -3129,6 +3161,7 @@ function openSidebar(panel) {
     return
   }
   side.classList.add('open')
+  setReaderChrome(true)
   side.dataset.panel = panel
   $('#drawerBackdrop').classList.add('visible')
   $$('.tab').forEach(x => x.classList.toggle('active', x.dataset.panel === panel))
@@ -3211,59 +3244,284 @@ function handleReadingKey(e) {
     navigateReading(state.epub?.direction === 'rtl' ? -1 : 1).catch(error => toast(`翻页失败：${error.message}`, 3500))
   }
 }
-function captureSelection() {
-  const reader = state.reader
-  if (!isActiveReader(reader)) return
-  clearTimeout(state.selectionTimer)
-  state.selectionTimer = setTimeout(() => {
-    if (!isActiveReader(reader)) return
-    if ($('#remarkDialog').open) return
-    const frame = $('#readerFrame')
-    const sel = frame.contentWindow.getSelection()
-    const text = sel?.toString().trim()
-    const bar = $('#selectionBar')
-    const root = selectedChapterRoot()
-    if (text && !root) { bar.classList.add('hidden'); state.selection = ''; state.selectionLocator = null; return }
-    state.selectionChapter = Number(root?.dataset.chapterIndex ?? state.chapter)
-    state.selection = text || ''
-    state.selectionLocator = null
-    bar.classList.toggle('hidden', !text)
-    if (!text || !sel.rangeCount) return
-    state.selectionRange = sel.getRangeAt(0).cloneRange()
-    const range = sel.getRangeAt(0), chapterText = textMap(root).text
-    const offset = textOffset(root, range.startContainer, range.startOffset) + sel.toString().length - sel.toString().trimStart().length
-    if (offset < 0 || chapterText.slice(offset, offset + text.length) !== text) { hideSelectionTools(); return }
-    state.selectionLocator = { bookId: reader.book.id, chapter: state.selectionChapter, position: offset, quote: text,
-      before: chapterText.slice(Math.max(0, offset - 32), offset), after: chapterText.slice(offset + text.length, offset + text.length + 32) }
-    const rect = sel.getRangeAt(0).getBoundingClientRect()
-    const frameRect = frame.getBoundingClientRect()
-    const stageRect = $('.reading-stage').getBoundingClientRect()
-    const barWidth = bar.offsetWidth || 260
-    const barHeight = bar.offsetHeight || 42
-    const selectionTop = frameRect.top - stageRect.top + rect.top
-    const selectionBottom = frameRect.top - stageRect.top + rect.bottom
-    const spaceBelow = stageRect.height - selectionBottom
-    const spaceAbove = selectionTop
-    const preferBelow = spaceBelow >= barHeight + 16
-    const useBelow = preferBelow || spaceBelow >= spaceAbove
-    const half = barWidth / 2 + 10
-    const left = Math.max(
-      half,
-      Math.min(
-        stageRect.width - half,
-        frameRect.left - stageRect.left + rect.left + rect.width / 2
-      )
-    )
-    const rawTop = useBelow
-      ? selectionBottom + 12
-      : selectionTop - barHeight - 12
-    const top = Math.max(10, Math.min(stageRect.height - barHeight - 10, rawTop))
-    bar.dataset.placement = useBelow ? 'below' : 'above'
-    bar.style.left = `${left}px`
-    bar.style.top = `${top}px`
-    syncSelectionActions()
-  }, 120)
+function isTouchReader() {
+  return navigator.maxTouchPoints > 0 && innerWidth <= 900;
 }
+function syncTouchReader(reader = state.reader) {
+  if (!isActiveReader(reader)) return;
+  const touch = isTouchReader();
+  if (reader.touch !== touch) hideSelectionTools();
+  reader.touch = touch;
+  reader.doc.documentElement.classList.toggle('touch-reader', touch);
+  if (!touch) setReaderChrome(true);
+}
+function readerChromeBusy() {
+  return !!($('dialog[open]') || $('#sidebar').classList.contains('open') || !$('#aiPanel').classList.contains('hidden') || !$('#imageViewer').classList.contains('hidden'));
+}
+function setReaderChrome(visible, delay = 3000) {
+  const reader = state.reader;
+  if (!isActiveReader(reader)) return;
+  clearTimeout(reader.chromeTimer);
+  visible = !reader.touch || visible;
+  $('#readerView').classList.toggle('chrome-hidden', !visible);
+  for (const id of ['tocBtn','readerHomeBtn','readerAIEntry']) {
+    const button = $('#'+id);
+    button.tabIndex = visible ? 0 : -1;
+    button.setAttribute('aria-hidden', String(!visible));
+  }
+  if (reader.touch && visible && !readerChromeBusy() && !state.selection) {
+    reader.chromeTimer = setTimeout(() => {
+      if (isActiveReader(reader) && !readerChromeBusy() && !document.activeElement?.matches('.reading-stage>button:focus-visible')) setReaderChrome(false);
+    }, delay);
+  }
+}
+function selectionTextMap(root) {
+  const reader = state.reader;
+  if (reader.selectionMap?.root === root) return reader.selectionMap;
+  const map = {root,...textMap(root)};
+  map.byNode = new Map(map.nodes.map(item => [item.node,item]));
+  reader.selectionMap = map;
+  return map;
+}
+function rangeForOffsets(root, start, end) {
+  const map = selectionTextMap(root);
+  start=Math.max(0,Math.min(map.total,start));end=Math.min(map.total,end);
+  if (/[\uDC00-\uDFFF]/.test(map.text[start]||'') && /[\uD800-\uDBFF]/.test(map.text[start-1]||'')) start--;
+  if (/[\uDC00-\uDFFF]/.test(map.text[end]||'') && /[\uD800-\uDBFF]/.test(map.text[end-1]||'')) end++;
+  const first = map.nodes.find(item => item.end > start), last = map.nodes.find(item => item.end >= end && item.end > item.start);
+  if (!first || !last || end <= start) return null;
+  const range = root.ownerDocument.createRange();
+  range.setStart(first.node,start-first.start); range.setEnd(last.node,end-last.start);
+  return range;
+}
+function storeSelectionRange(root, range) {
+  const reader = state.reader;
+  if (!isActiveReader(reader) || !root?.isConnected) return false;
+  const map = selectionTextMap(root);
+  const first=map.byNode.get(range.startContainer),last=map.byNode.get(range.endContainer);
+  let start=first ? first.start+range.startOffset : textOffset(root,range.startContainer,range.startOffset);
+  let end=last ? last.start+range.endOffset : textOffset(root,range.endContainer,range.endOffset);
+  if (start < 0 || end <= start) return false;
+  const raw = map.text.slice(start,end), quote = raw.trim();
+  if (!quote) return false;
+  start += raw.length-raw.trimStart().length; end = start+quote.length;
+  state.selection = quote; state.selectionChapter = Number(root.dataset.chapterIndex);
+  state.selectionLocator = {bookId:reader.book.id,chapter:state.selectionChapter,position:start,quote,
+    before:map.text.slice(Math.max(0,start-32),start),after:map.text.slice(end,end+32)};
+  state.selectionRange = rangeForOffsets(root,start,end);
+  reader.selectionBounds = {root,start,end};
+  if (!$('#remarkDialog').open) {
+    $('#selectionBar').classList.remove('hidden');
+    positionSelectionBar(); syncSelectionActions();
+    if (reader.touch) { paintTouchSelection(); setReaderChrome(false); }
+  }
+  return true;
+}
+function positionSelectionBar() {
+  const range = state.selectionRange;
+  if (!range?.startContainer.isConnected) return;
+  const reader = state.reader, bar = $('#selectionBar');
+  if (reader.touch) { bar.style.removeProperty('left'); bar.style.removeProperty('top'); return; }
+  const rect = range.getBoundingClientRect(), frame = reader.frame.getBoundingClientRect(), stage = $('.reading-stage').getBoundingClientRect();
+  const width = bar.offsetWidth || 260, height = bar.offsetHeight || 42;
+  const below = frame.top-stage.top+rect.bottom+12;
+  const above = frame.top-stage.top+rect.top-height-12;
+  bar.style.left = Math.max(width/2+10,Math.min(stage.width-width/2-10,frame.left-stage.left+rect.left+rect.width/2))+'px';
+  bar.style.top = Math.max(10,Math.min(stage.height-height-10,below+height <= stage.height ? below : above))+'px';
+}
+function captureSelection() {
+  const reader = state.reader;
+  if (!isActiveReader(reader) || reader.touch) return;
+  clearTimeout(state.selectionTimer);
+  state.selectionTimer = setTimeout(() => {
+    if (!isActiveReader(reader) || $('#remarkDialog').open) return;
+    const sel = reader.win.getSelection(), root = selectedChapterRoot();
+    if (!sel?.rangeCount || sel.isCollapsed) { hideSelectionTools(); return; }
+    if (!root || !storeSelectionRange(root,sel.getRangeAt(0))) hideSelectionTools();
+  },120);
+}
+function ensureSelectionLayer(reader) {
+  if (reader.selectionUI) return reader.selectionUI;
+  const layer = reader.doc.createElement('div'); layer.className = 'reader-selection-layer';
+  const highlights = reader.doc.createElement('div'); layer.append(highlights);
+  const handles = ['start','end'].map(edge => {
+    const button = reader.doc.createElement('button'); button.type = 'button';
+    button.className = 'reader-selection-handle '+edge; button.dataset.selectionEdge = edge;
+    button.setAttribute('aria-label',edge === 'start' ? '调整选文起点' : '调整选文终点');
+    layer.append(button); return button;
+  });
+  reader.doc.documentElement.append(layer);
+  reader.selectionUI = {layer,highlights,handles};
+  return reader.selectionUI;
+}
+function paintTouchSelection() {
+  const reader = state.reader, range = state.selectionRange;
+  if (!isActiveReader(reader) || !reader.touch || !state.selection || !range?.startContainer.isConnected) return;
+  const ui = ensureSelectionLayer(reader);
+  ui.layer.classList.toggle('hidden',$('#remarkDialog').open);
+  const seen=new Set();
+  const rects=[...range.getClientRects()].filter(r=>{const key=[r.left,r.top,r.width,r.height].map(Math.round).join(',');if(!r.width||!r.height||seen.has(key))return false;seen.add(key);return true});
+  const visible = rects.filter(r=>r.bottom>0 && r.top<reader.frame.clientHeight).slice(0,250);
+  const fragment = reader.doc.createDocumentFragment();
+  for (const rect of visible) {
+    const block = reader.doc.createElement('i'); block.style.cssText=`left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px`;
+    fragment.append(block);
+  }
+  ui.highlights.replaceChildren(fragment);
+  const first = rects[0], last = rects.at(-1);
+  for (let index=0;index<2;index++) {
+    const rect = index ? last : first, button = ui.handles[index];
+    const shown = rect && rect.bottom>0 && rect.top<reader.frame.clientHeight;
+    button.classList.toggle('hidden',!shown);
+    if (shown) {
+      const x = Math.max(22,Math.min(reader.frame.clientWidth-22,index ? rect.right : rect.left));
+      button.style.left=(x-22)+'px';
+      button.style.top=Math.max(0,Math.min(reader.frame.clientHeight-44,index ? rect.bottom-8 : rect.top-36))+'px';
+    }
+  }
+}
+function offsetAtPoint(root, x, y) {
+  const doc = root.ownerDocument, map = selectionTextMap(root), bounds = root.getBoundingClientRect();
+  if (y < bounds.top) return 0;
+  if (y > bounds.bottom) return map.total;
+  x = Math.max(bounds.left+1,Math.min(bounds.right-1,x));
+  y = Math.max(1,Math.min(state.reader.frame.clientHeight-1,y));
+  const caret = doc.caretPositionFromPoint?.(x,y), range = caret ? null : doc.caretRangeFromPoint?.(x,y);
+  const node = caret?.offsetNode || range?.startContainer, at = caret?.offset ?? range?.startOffset;
+  const item = map.byNode.get(node);
+  if (item && !node.parentElement?.closest('rt,rp')) return item.start+Math.min(item.node.data.length,at);
+  // Safari may omit a native caret for text with user-select:none.
+  const element = doc.elementFromPoint(x,y), block = element?.closest('p,li,h1,h2,h3,h4,blockquote,td');
+  let best = null, distance = Infinity;
+  for (const item of map.nodes) {
+    if (!item.node.data.trim() || item.node.parentElement?.closest('rt,rp') || block && !block.contains(item.node)) continue;
+    const r = doc.createRange(); r.selectNodeContents(item.node);
+    const boxes = [...r.getClientRects()].filter(box=>box.height && box.bottom>0 && box.top<state.reader.frame.clientHeight);
+    for (const box of boxes) {
+      const d = Math.max(box.left-x,0,x-box.right)**2+Math.max(box.top-y,0,y-box.bottom)**2;
+      if (d < distance) {best=item;distance=d;}
+    }
+  }
+  if (!best) return null;
+  const r = doc.createRange(), text = best.node.data;
+  let low=0,high=text.length;
+  while (low<high) {
+    const mid=(low+high)>>1; r.setStart(best.node,mid);r.setEnd(best.node,Math.min(text.length,mid+1));
+    if (r.getBoundingClientRect().bottom<y) low=mid+1; else high=mid;
+  }
+  const from=Math.max(0,low-2); let closest=low, score=Infinity;
+  for (let i=from;i<Math.min(text.length,low+200);i++) {
+    if (i && /[\uDC00-\uDFFF]/.test(text[i]) && /[\uD800-\uDBFF]/.test(text[i-1])) continue;
+    const length=text.codePointAt(i)>0xffff ? 2 : 1;
+    r.setStart(best.node,i);r.setEnd(best.node,i+length);
+    const rect=r.getBoundingClientRect();
+    if (rect.top>y+rect.height) break;
+    const d=Math.abs((rect.top+rect.bottom)/2-y)*4+Math.abs((rect.left+rect.right)/2-x);
+    if (d<score) {score=d;closest=i+(x>(rect.left+rect.right)/2 ? length : 0);}
+  }
+  return best.start+closest;
+}
+function selectAtPoint(reader, x, y, target) {
+  const root = target.closest('.continuous-chapter');
+  if (!root) return false;
+  const offset = offsetAtPoint(root,x,y), map = selectionTextMap(root);
+  if (offset == null) return false;
+  const paragraph=target.closest('p,li,h1,h2,h3,h4,blockquote,td') || root;
+  const base=textOffset(root,paragraph,0), local=textMap(paragraph).text;
+  const at=Math.max(0,Math.min(local.length,offset-base));
+  let start=at,end=at;
+  while (start>0 && !/[。！？.!?\n]/.test(local[start-1]) && at-start<80) start--;
+  while (end<local.length && !/[。！？.!?\n]/.test(local[end]) && end-at<80) end++;
+  if (end<local.length && /[。！？.!?]/.test(local[end])) end++;
+  const range=rangeForOffsets(root,Math.max(0,base+start),Math.min(map.total,base+end));
+  return range && storeSelectionRange(root,range);
+}
+function stopReaderGesture(reader, cancelled = false) {
+  clearTimeout(reader.longPressTimer); reader.longPressTimer=null;
+  const drag=reader.selectionDrag; reader.selectionDrag=null;
+  cancelAnimationFrame(reader.edgeFrame);reader.edgeFrame=0;
+  if (drag) {
+    reader.ignoreClickUntil=performance.now()+500;
+    if (drag.target.hasPointerCapture?.(drag.id)) drag.target.releasePointerCapture(drag.id);
+    paintTouchSelection();
+  }
+  if (cancelled && reader.gesture) reader.gesture.moved=true;
+}
+function finishReaderGesture(reader, event) {
+  const gesture=reader.gesture;
+  if (!gesture || gesture.id!==event.pointerId) return;
+  const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
+  const swipe=reader.touch && reader.epub.fixedLayout && !reader.selectionDrag && !state.selection && Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2;
+  stopReaderGesture(reader);
+  if (swipe) {
+    reader.ignoreClickUntil=performance.now()+500;
+    navigateReading((dx<0?1:-1)*(reader.epub.direction==='rtl'?-1:1)).catch(reportError);
+  }
+}
+function beginReaderGesture(reader, event) {
+  if (event.pointerType === 'touch' && !reader.touch && innerWidth<=900) {
+    reader.touch=true;reader.doc.documentElement.classList.add('touch-reader');
+  }
+  if (event.isPrimary === false) {stopReaderGesture(reader,true);return;}
+  stopReaderGesture(reader);
+  const edge=event.target.closest('[data-selection-edge]');
+  reader.gesture={id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now(),moved:false,selected:!!state.selection};
+  if (edge && reader.touch && reader.selectionBounds) {
+    event.preventDefault();
+    const rects=[...state.selectionRange.getClientRects()].filter(r=>r.width && r.height),rect=edge.dataset.selectionEdge==='start' ? rects[0] : rects.at(-1);
+    if (!rect) return;
+    reader.selectionDrag={id:event.pointerId,target:edge,edge:edge.dataset.selectionEdge,x:event.clientX,y:event.clientY,
+      dx:(edge.dataset.selectionEdge==='start' ? rect.left : rect.right)-event.clientX,dy:(rect.top+rect.bottom)/2-event.clientY};
+    edge.setPointerCapture(event.pointerId); edgeScrollSelection(reader);return;
+  }
+  if (!reader.touch || event.pointerType !== 'touch' || event.target.closest('a,button,img,svg,input,textarea,select')) return;
+  const target=event.target;
+  reader.longPressTimer=setTimeout(()=>{
+    if (!isActiveReader(reader) || reader.gesture?.moved || reader.gesture?.id!==event.pointerId) return;
+    state.selectionNoteId='';
+    if (selectAtPoint(reader,event.clientX,event.clientY,target)) reader.ignoreClickUntil=performance.now()+700;
+  },360);
+}
+function moveReaderGesture(reader, event) {
+  const drag=reader.selectionDrag;
+  if (drag) {
+    if (event.pointerId!==drag.id) return;
+    event.preventDefault();drag.x=event.clientX;drag.y=event.clientY;
+    updateSelectionDrag(reader);return;
+  }
+  const gesture=reader.gesture;
+  if (!gesture || event.pointerId!==gesture.id) return;
+  if (Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>8) {
+    gesture.moved=true;reader.userScrollingUntil=performance.now()+1500;
+    clearTimeout(reader.longPressTimer);
+  }
+}
+function updateSelectionDrag(reader) {
+  const drag=reader.selectionDrag,bounds=reader.selectionBounds;
+  if (!drag || !bounds || !bounds.root.isConnected) return;
+  const map=selectionTextMap(bounds.root),at=offsetAtPoint(bounds.root,drag.x+drag.dx,drag.y+drag.dy);
+  if (at==null) return;
+  let start=bounds.start,end=bounds.end;
+  if (drag.edge==='start') start=Math.max(0,Math.min(end-1,at));
+  else end=Math.min(map.total,Math.max(start+1,at));
+  if (/[\uDC00-\uDFFF]/.test(map.text[start]||'') && /[\uD800-\uDBFF]/.test(map.text[start-1]||'')) start--;
+  if (/[\uDC00-\uDFFF]/.test(map.text[end]||'') && /[\uD800-\uDBFF]/.test(map.text[end-1]||'')) end++;
+  const range=rangeForOffsets(bounds.root,start,end);
+  if (range) storeSelectionRange(bounds.root,range);
+}
+function edgeScrollSelection(reader) {
+  if (!isActiveReader(reader) || !reader.selectionDrag) return;
+  const drag=reader.selectionDrag, height=reader.frame.clientHeight;
+  const speed=drag.y<56 ? -Math.min(14,(56-drag.y)/4) : drag.y>height-56 ? Math.min(14,(drag.y-height+56)/4) : 0;
+  if (speed && !reader.epub.fixedLayout) {
+    const root=reader.selectionBounds.root.getBoundingClientRect();
+    if (speed<0 && root.top<40 || speed>0 && root.bottom>height-40) {
+      reader.scroller.scrollTop+=speed;updateSelectionDrag(reader);
+    }
+  }
+  reader.edgeFrame=requestAnimationFrame(()=>edgeScrollSelection(reader));
+}
+
 function selectedTextPosition() {
   return state.selectionLocator?.position ?? -1
 }
@@ -3300,8 +3558,10 @@ function syncSelectionActions() {
 }
 function addRemark() {
   if (!state.selection) return
+  state.editingNoteId='';$('#remarkTitle').textContent='添加备注';
   $('#remarkInput').value = ''
   $('#selectionBar').classList.add('hidden')
+  state.reader?.selectionUI?.layer.classList.add('hidden')
   $('#selectionColorMenu').classList.add('hidden')
   $('#remarkDialog').showModal()
   requestAnimationFrame(() => $('#remarkInput').focus({preventScroll:true}))
@@ -3335,9 +3595,15 @@ async function commitNoteChange(reader, change, {undo=false} = {}) {
   } finally { reader.noteBusy = false }
 }
 async function saveRemark() {
-  const reader = state.reader, text = $('#remarkInput').value.trim()
-  if (!text) return toast('请先输入备注内容')
-  if (await addNote('remark', text) && isActiveReader(reader)) $('#remarkDialog').close()
+  const reader=state.reader,text=$('#remarkInput').value.trim();
+  if (!text) return toast('请先输入备注内容');
+  let saved;
+  if (state.editingNoteId) {
+    const id=state.editingNoteId;
+    if (!reader?.book.notes.some(note=>note.id===id)) return toast('这条备注已删除');
+    saved=await commitNoteChange(reader,book=>{const note=book.notes.find(item=>item.id===id);note.note=text;note.updated=timestamp(note.updated)});
+  } else saved=await addNote('remark',text);
+  if (saved && isActiveReader(reader)) $('#remarkDialog').close();
 }
 async function addNote(kind = 'marker', noteText = '') {
   const reader = state.reader, locator = state.selectionLocator
@@ -3389,6 +3655,13 @@ function hideSelectionTools() {
   state.selection = ''
   state.selectionLocator = null
   state.selectionRange = null
+  if (state.reader) {
+    stopReaderGesture(state.reader)
+    state.reader.selectionBounds=null
+    state.reader.selectionUI?.layer.classList.add('hidden')
+    state.reader.selectionUI?.highlights.replaceChildren()
+    state.reader.selectionMap=null
+  }
   state.selectionNoteId = ''
   $('#selectionColorMenu').classList.add('hidden')
   $('#selectionBar').classList.add('hidden')
@@ -3429,9 +3702,16 @@ function applyNotesToSection(section, chapter) {
 function refreshHighlights() {
   const reader = state.reader
   if (!isActiveReader(reader) || !reader.doc?.body) return
+  const locator = state.selectionLocator && {...state.selectionLocator}
+  reader.selectionMap=null
   reader.doc.querySelectorAll('.reader-highlight,.reader-underline').forEach(el => el.replaceWith(...el.childNodes))
   reader.doc.body.normalize()
   for (const chapter of reader.chapters.values()) if (chapter.resident) applyNotesToSection(chapter.node, chapter.index)
+  if (locator) {
+    const root=chapterRoot(locator.chapter), at=root && locateNoteText(textMap(root).text,locator)
+    const range=root && at>=0 && rangeForOffsets(root,at,at+locator.quote.length)
+    if (range) storeSelectionRange(root,range); else hideSelectionTools()
+  }
 }
 function focusPendingNote() {
   const reader = state.reader, id = state.pendingNoteId
@@ -3448,10 +3728,10 @@ function focusPendingNote() {
     const range = reader.doc.createRange()
     range.setStart(first.node, at - first.start); range.setEnd(last.node, at + note.quote.length - last.start)
     if (!reader.epub.fixedLayout) reader.scroller.scrollTo({ top: reader.scroller.scrollTop + range.getBoundingClientRect().top - reader.frame.clientHeight * 0.3, behavior: 'instant' })
-    const selection = reader.win.getSelection(); selection.removeAllRanges(); selection.addRange(range)
     state.selectionNoteId = id
     updateReadingProgress()
-    captureSelection()
+    if (reader.touch) storeSelectionRange(root,range)
+    else { const selection=reader.win.getSelection(); selection.removeAllRanges();selection.addRange(range);captureSelection() }
   })
 }
 function noteKindLabel(kind) { return kind === 'remark' ? '备注' : kind === 'underline' ? '下划线' : '笔记' }
@@ -3496,18 +3776,15 @@ function renderNotes() {
       if (isActiveReader(reader)) renderNotes()
     })
     if (note.kind !== 'underline') action('edit', '编辑', async () => {
-      let text = note.note
       if (note.kind === 'remark') {
-        text = prompt('编辑想法：', note.note || '')
-        if (text === null) return
-        text = text.trim()
-        if (!text) return toast('备注内容不能为空')
+        hideSelectionTools();state.editingNoteId=note.id;$('#remarkTitle').textContent='编辑备注';
+        $('#remarkInput').value=note.note||'';$('#remarkDialog').showModal();
+        requestAnimationFrame(()=>$('#remarkInput').focus({preventScroll:true}));return;
       }
       await commitNoteChange(reader, book => {
         const current = book.notes.find(entry => entry.id === note.id)
         if (!current) return
         if (current.kind === 'marker') { const colors = ['yellow', 'green', 'blue', 'pink']; current.color = colors[(colors.indexOf(current.color || 'yellow') + 1) % colors.length] }
-        else current.note = text
         current.updated = timestamp(current.updated)
       })
     })
@@ -3641,7 +3918,7 @@ async function searchBook() {
       item.onclick = async () => {
         if (!isActiveReader(reader)) return
         $('#searchDialog').close()
-        await renderChapter(result.chapter, '', 0, { locator: result.locator })
+        if (await renderChapter(result.chapter, '', 0, { locator: result.locator })) closeReaderDrawer()
       }
       out.append(item)
     }
@@ -3836,7 +4113,7 @@ function themeInk() {
 function buildReaderCss(settings = getSettings()) {
   const frame = $('#readerFrame')
   const frameWidth = Math.max(320, frame?.clientWidth || 1024)
-  const frameHeight = Math.max(320, frame?.clientHeight || 768)
+  const frameHeight = Math.max(1, frame?.clientHeight || 768)
   const marginScale = Math.max(0.5, Math.min(1.6, (+settings.pageMargin || 6) / 6))
   const outer = Math.max(20, Math.min(140, frameWidth * 0.045 * marginScale))
   const paper = getComputedStyle(document.documentElement)
@@ -3869,7 +4146,7 @@ function buildReaderCss(settings = getSettings()) {
   const themeOverride = !fixed && (settings.theme === 'dark' || settings.theme === 'eink')
     ? `body,body .continuous-chapter *:not(#reader-theme-sentinel):not(.reader-highlight){color:${themeInk()}!important}`
     : ''
-  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box} .continuous-chapter{display:flow-root;position:relative;min-height:1px;margin:0!important;${fixed ? 'width:100%;height:100%;' : ''}}.chapter-placeholder{display:block;margin:0;padding:0;overflow:hidden}.chapter-retry{display:block;margin:16px auto;padding:12px 16px;min-height:44px;border:1px solid ${themeInk()};border-radius:8px;background:${paper};color:${themeInk()};font:inherit;font-size:14px}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
+  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box}html.touch-reader .continuous-chapter,html.touch-reader .continuous-chapter *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}html.touch-reader body{touch-action:pan-y pinch-zoom}.reader-selection-layer{position:fixed;inset:0;pointer-events:none;z-index:1000}.reader-selection-layer.hidden,.reader-selection-handle.hidden{display:none!important}.reader-selection-layer i{position:absolute;display:block;background:color-mix(in srgb,${themeInk()} 22%,transparent);border-radius:2px;pointer-events:none}.reader-selection-handle{position:absolute;width:44px;height:44px;border:0;padding:0;background:transparent;pointer-events:auto;touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent}.reader-selection-handle::before{content:"";position:absolute;left:21px;width:2px;height:22px;background:${themeInk()}}.reader-selection-handle::after{content:"";position:absolute;left:15px;width:14px;height:14px;border-radius:50%;background:${themeInk()}}.reader-selection-handle.start::before{bottom:0}.reader-selection-handle.start::after{top:0}.reader-selection-handle.end::before{top:0}.reader-selection-handle.end::after{bottom:0} .continuous-chapter{display:flow-root;position:relative;min-height:1px;margin:0!important;${fixed ? 'width:100%;height:100%;' : ''}}.chapter-placeholder{display:block;margin:0;padding:0;overflow:hidden}.chapter-retry{display:block;margin:16px auto;padding:12px 16px;min-height:44px;border:1px solid ${themeInk()};border-radius:8px;background:${paper};color:${themeInk()};font:inherit;font-size:14px}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
 }
 function applyReaderAppearance({ locator } = {}) {
   const reader = state.reader
@@ -3883,6 +4160,7 @@ function applyReaderAppearance({ locator } = {}) {
     if (reader.epub.fixedLayout) reader.scroller.scrollTo({ top: 0, behavior: 'instant' })
     else scrollToLocator(reader.doc, anchor)
     reader.restoring = false
+    if (state.selection) {positionSelectionBar();paintTouchSelection()}
     updateReadingProgress()
     showReadingStatus()
     saveCurrentBook().catch(reportError)
@@ -3989,11 +4267,11 @@ $('#closeSidebar').onclick = closeReaderDrawer
 $$('.tab').forEach(t => t.onclick = () => openSidebar(t.dataset.panel))
 $('#selectionBar').addEventListener('pointerdown', event => event.preventDefault())
 $('#remarkDialog').addEventListener('close', () => {
+  state.editingNoteId='';
   const reader = state.reader, range = state.selectionRange
   if (!isActiveReader(reader) || !state.selection || !range?.startContainer.isConnected) return
-  const selection = reader.win.getSelection()
-  selection.removeAllRanges(); selection.addRange(range)
-  captureSelection()
+  if (reader.touch) { storeSelectionRange(chapterRoot(state.selectionChapter),range);paintTouchSelection() }
+  else { const selection=reader.win.getSelection();selection.removeAllRanges();selection.addRange(range);captureSelection() }
 })
 $('#noteBtn').onclick = () => addNote('marker').catch(reportError)
 $('#remarkBtn').onclick = addRemark
@@ -4074,6 +4352,8 @@ $('#imageViewer').onclick = closeImageViewer
 $('#closeImageViewer').onclick = closeImageViewer
 $('#imageViewerImg').onclick = event => event.stopPropagation()
 document.addEventListener('keydown', handleReadingKey)
+document.addEventListener('close',()=>setReaderChrome(true),true)
+document.addEventListener('focusin',event=>{if(event.target.closest('.reading-stage>button'))setReaderChrome(true)})
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.library-select')) closeLibrarySelects()
   if (!e.target.closest('#selectionBar')) $('#selectionColorMenu')?.classList.add('hidden')
@@ -4087,6 +4367,7 @@ window.addEventListener('pagehide', () => { saveReadingPosition().catch(reportEr
 window.addEventListener('resize', () => {
   const reader = state.reader
   if (!isActiveReader(reader)) return
+  stopReaderGesture(reader,true)
   if (document.documentElement.classList.contains('keyboard-open')) return
   const locator = reader.book.locator || captureReadingLocator()
   clearTimeout(reader.resizeTimer)
@@ -4298,23 +4579,24 @@ async function aiReadCompletion(response, onText, onActivity = () => {}, onThink
 const ai = {
   config: { baseURL:'', key:'', protocol:'auto', modelProtocols:{}, models:[], defaultModel:'', rememberKey:true, stream:true },
   current:null, busy:null, settings:null, modelRequest:null, cache:new Map(), writeQueue:Promise.resolve(),
-  saveTimer:null, paintFrame:null, storageWarning:false, history:false
+  saveTimer:null, paintFrame:null, storageWarning:false, history:false, pendingSaves:new Map()
 };
 const aiDB = new Promise(resolve => {
-  let request;
-  try { request = indexedDB.open('local-reader-ai-v1', 1); } catch { resolve(null); return; }
+  let request,settled=false;
+  const finish=db=>{if(settled){db?.close();return}settled=true;resolve(db)};
+  try { request = indexedDB.open('local-reader-ai-v1', 1); } catch { finish(null); return; }
   request.onupgradeneeded = () => {
     const db = request.result;
     db.createObjectStore('config', { keyPath:'id' });
     const chats = db.createObjectStore('conversations', { keyPath:'id' });
     chats.createIndex('bookId', 'bookId');
   };
-  request.onerror = () => resolve(null);
-  request.onblocked = () => { aiWarnStorage(); resolve(null); };
+  request.onerror = () => finish(null);
+  request.onblocked = () => { aiWarnStorage(); finish(null); };
   request.onsuccess = () => {
     const db = request.result;
     db.onversionchange = () => { db.close(); aiWarnStorage(); };
-    resolve(db);
+    finish(db);
   };
 });
 function aiWarnStorage() {
@@ -4379,10 +4661,25 @@ function aiNormalizeChat(raw) {
 }
 function aiSaveChat(chat) {
   if (!chat) return Promise.resolve(false);
-  chat.updated = timestamp(chat.updated);
-  const copy = structuredClone(chat);
-  ai.cache.set(copy.id,copy);
-  return aiWriteStore('conversations',store => store.put(copy));
+  chat.updated=timestamp(chat.updated);
+  const copy=structuredClone(chat);ai.cache.set(copy.id,copy);
+  let pending=ai.pendingSaves.get(copy.id);
+  if (pending) {pending.copy=copy;return pending.task;}
+  pending={copy,task:null};ai.pendingSaves.set(copy.id,pending);
+  pending.task=(async()=>{
+    let saved=false;
+    try {
+      do {
+        const snapshot=pending.copy;
+        saved=await aiWriteStore('conversations',store=>store.put(snapshot));
+        if (!saved) break;
+        if (ai.cache.get(snapshot.id)===snapshot) ai.cache.delete(snapshot.id);
+        if (pending.copy===snapshot) break;
+      } while (true);
+      return saved;
+    } finally {if (ai.pendingSaves.get(copy.id)===pending) ai.pendingSaves.delete(copy.id)}
+  })();
+  return pending.task;
 }
 function aiDebounceSave(chat = ai.current) {
   clearTimeout(ai.saveTimer);
@@ -4469,11 +4766,13 @@ function aiSetPanel(open) {
   $('#readerView').classList.toggle('ai-open',open);
   $('#aiPanel').classList.toggle('hidden',!open);
   if (open) closeReaderDrawer();
+  setReaderChrome(true);
   if (locator && window.innerWidth>900) applyReaderAppearance({locator});
   updateViewport();
 }
 function closeAI({focus=false}={}) {
   if (ai.busy) ai.busy.controller.abort();
+  cancelAnimationFrame(ai.paintFrame);ai.paintFrame=null;
   clearTimeout(ai.saveTimer);
   if (ai.current) { ai.current.draft=$('#aiQuestion').value; aiSaveChat(ai.current); }
   aiSetPanel(false);
@@ -4732,7 +5031,8 @@ async function aiShowHistory() {
     remove.innerHTML='<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7m4-7v7"/></svg>';
     remove.onclick=async()=>{
       if (!confirm('删除这段问答记录？')) return;
-      clearTimeout(ai.saveTimer);ai.cache.delete(chat.id);await aiWriteStore('conversations',store=>store.delete(chat.id));
+      clearTimeout(ai.saveTimer);await ai.pendingSaves.get(chat.id)?.task;
+      ai.cache.delete(chat.id);await aiWriteStore('conversations',store=>store.delete(chat.id));
       if (ai.current?.id===chat.id) ai.current=null;await aiShowHistory();
     };
     row.append(button,remove);list.append(row);
@@ -4818,6 +5118,7 @@ function updateViewport() {
   document.documentElement.style.setProperty('--keyboard-bottom',Math.max(0,window.innerHeight-height-(viewport?.offsetTop||0))+'px');
   document.documentElement.classList.toggle('keyboard-open',window.innerHeight-height>120);
   document.documentElement.classList.toggle('compact-viewport',height<320 && innerWidth<=900);
+  if (state.reader) {syncTouchReader();paintTouchSelection();}
   aiPositionModelMenu();
 }
 $('#askAIBtn').onclick=()=>openAIFromSelection().catch(reportError);
