@@ -2472,12 +2472,18 @@ async function initializeReaderFrame(reader) {
   listen('selectionchange', captureSelection)
   listen('contextmenu', event => { if (reader.touch) event.preventDefault(); else captureSelection() })
   syncTouchReader(reader)
-  listen('pointerdown', event => beginReaderGesture(reader,event), {passive:false})
-  listen('pointermove', event => moveReaderGesture(reader,event), {passive:false})
-  listen('pointerup', event => finishReaderGesture(reader,event))
-  listen('pointercancel', () => stopReaderGesture(reader,true))
+  // Touch Events also cover mobile browsers that omit or cancel Pointer Events.
+  reader.touchEvents = 'ontouchstart' in reader.win
+  const usePointer = event => event.pointerType !== 'touch' || !reader.touchEvents
+  listen('pointerdown', event => { if (usePointer(event)) beginReaderGesture(reader,event) }, {passive:false})
+  listen('pointermove', event => { if (usePointer(event)) moveReaderGesture(reader,event) }, {passive:false})
+  listen('pointerup', event => { if (usePointer(event)) finishReaderGesture(reader,event) })
+  listen('pointercancel', event => { if (usePointer(event)) stopReaderGesture(reader,true) })
   listen('lostpointercapture', () => { if (reader.selectionDrag) stopReaderGesture(reader,true) })
-  listen('touchmove', event => { if (reader.selectionDrag) event.preventDefault() }, {passive:false})
+  listen('touchstart', event => handleReaderTouch(reader,event,'start'), {passive:false})
+  listen('touchmove', event => handleReaderTouch(reader,event,'move'), {passive:false})
+  listen('touchend', event => handleReaderTouch(reader,event,'end'), {passive:false})
+  listen('touchcancel', () => stopReaderGesture(reader,true))
   reader.win.addEventListener('blur', () => stopReaderGesture(reader,true), {signal})
 
   listen('mouseup', () => { state.selectionNoteId = ''; captureSelection() })
@@ -2497,6 +2503,8 @@ async function initializeReaderFrame(reader) {
     const media = event.target.closest('img,svg')
     if (media && openImageViewer(media)) { event.preventDefault(); return }
     const gesture = reader.gesture
+    // A touch tap is handled on release; its compatibility click must not toggle twice.
+    if (reader.touch && gesture?.touchHandled) return
     if (!gesture?.moved && (!gesture || performance.now()-gesture.time<450) && !event.target.closest('a,button,input,select,textarea')) {
       if (reader.touch) { if (state.selection) hideSelectionTools(); else handleReaderTap(event.clientX,frame.clientWidth) }
       else if (!reader.win.getSelection().toString() && !gesture?.selected) handleReaderTap(event.clientX,frame.clientWidth)
@@ -3422,6 +3430,7 @@ function offsetAtPoint(root, x, y) {
   return best.start+closest;
 }
 function selectAtPoint(reader, x, y, target) {
+  target = reader.doc.elementFromPoint(x,y) || target;
   const root = target.closest('.continuous-chapter');
   if (!root) return false;
   const offset = offsetAtPoint(root,x,y), map = selectionTextMap(root);
@@ -3445,17 +3454,41 @@ function stopReaderGesture(reader, cancelled = false) {
     if (drag.target.hasPointerCapture?.(drag.id)) drag.target.releasePointerCapture(drag.id);
     paintTouchSelection();
   }
-  if (cancelled && reader.gesture) reader.gesture.moved=true;
+  if (cancelled && reader.gesture) {
+    reader.gesture.moved=true;
+    reader.gesture.cancelled=true;
+    if (reader.gesture.pointerType==='touch') reader.gesture.touchHandled=true;
+  }
+}
+function handleReaderTouch(reader, event, phase) {
+  reader.touchEvents=true;
+  if (event.touches.length>1) { stopReaderGesture(reader,true); return; }
+  const touch=[...event.changedTouches].find(t => phase==='start' || t.identifier===reader.gesture?.id);
+  if (!touch) return;
+  const input={pointerId:touch.identifier,pointerType:'touch',source:'touch',isPrimary:true,
+    clientX:touch.clientX,clientY:touch.clientY,target:touch.target || event.target,
+    preventDefault:() => { if (event.cancelable) event.preventDefault(); }};
+  if (phase==='start') beginReaderGesture(reader,input);
+  else if (phase==='move') moveReaderGesture(reader,input);
+  else finishReaderGesture(reader,input);
 }
 function finishReaderGesture(reader, event) {
   const gesture=reader.gesture;
   if (!gesture || gesture.id!==event.pointerId) return;
+  const dragged=!!reader.selectionDrag;
   const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
-  const swipe=reader.touch && reader.epub.fixedLayout && !reader.selectionDrag && !state.selection && Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2;
+  const swipe=reader.touch && reader.epub.fixedLayout && !gesture.cancelled && !dragged && !state.selection && Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2;
+  const touch=reader.touch && event.pointerType==='touch';
+  const tap=touch && !gesture.moved && !gesture.longPressed && !dragged &&
+    Math.hypot(dx,dy)<=8 && performance.now()-gesture.time<450;
   stopReaderGesture(reader);
+  if (touch) gesture.touchHandled=true;
   if (swipe) {
     reader.ignoreClickUntil=performance.now()+500;
     navigateReading((dx<0?1:-1)*(reader.epub.direction==='rtl'?-1:1)).catch(reportError);
+  } else if (tap && !event.target.closest('a,button,img,svg,input,select,textarea')) {
+    if (state.selection || gesture.selected) { hideSelectionTools(); setReaderChrome(true); }
+    else handleReaderTap(event.clientX,reader.frame.clientWidth);
   }
 }
 function beginReaderGesture(reader, event) {
@@ -3465,21 +3498,26 @@ function beginReaderGesture(reader, event) {
   if (event.isPrimary === false) {stopReaderGesture(reader,true);return;}
   stopReaderGesture(reader);
   const edge=event.target.closest('[data-selection-edge]');
-  reader.gesture={id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now(),moved:false,selected:!!state.selection};
+  reader.gesture={id:event.pointerId,pointerType:event.pointerType,source:event.source || 'pointer',
+    x:event.clientX,y:event.clientY,time:performance.now(),moved:false,selected:!!state.selection};
   if (edge && reader.touch && reader.selectionBounds) {
     event.preventDefault();
     const rects=[...state.selectionRange.getClientRects()].filter(r=>r.width && r.height),rect=edge.dataset.selectionEdge==='start' ? rects[0] : rects.at(-1);
     if (!rect) return;
     reader.selectionDrag={id:event.pointerId,target:edge,edge:edge.dataset.selectionEdge,x:event.clientX,y:event.clientY,
       dx:(edge.dataset.selectionEdge==='start' ? rect.left : rect.right)-event.clientX,dy:(rect.top+rect.bottom)/2-event.clientY};
-    edge.setPointerCapture(event.pointerId); edgeScrollSelection(reader);return;
+    if (event.source!=='touch') edge.setPointerCapture(event.pointerId);
+    edgeScrollSelection(reader);return;
   }
   if (!reader.touch || event.pointerType !== 'touch' || event.target.closest('a,button,img,svg,input,textarea,select')) return;
   const target=event.target;
   reader.longPressTimer=setTimeout(()=>{
     if (!isActiveReader(reader) || reader.gesture?.moved || reader.gesture?.id!==event.pointerId) return;
     state.selectionNoteId='';
-    if (selectAtPoint(reader,event.clientX,event.clientY,target)) reader.ignoreClickUntil=performance.now()+700;
+    if (selectAtPoint(reader,event.clientX,event.clientY,target)) {
+      reader.gesture.longPressed=true;
+      reader.ignoreClickUntil=performance.now()+700;
+    }
   },360);
 }
 function moveReaderGesture(reader, event) {
