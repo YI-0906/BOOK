@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' blob:; img-src 'self' blob: data:; font-src 'self' blob: data:; media-src 'self' blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiByeD0iMTQ0IiBmaWxsPSIjMjAyMTI0Ii8+CjxwYXRoIGQ9Ik0xMTEuMTExIDU0Mi44NDVDMTExLjExMSA1NjYuNDE5IDEyMC40NzYgNTg5LjAyOSAxMzcuMTQ2IDYwNS42OThDMTUzLjgxNiA2MjIuMzY4IDE3Ni40MjUgNjMxLjczMyAyMDAgNjMxLjczM0gzNzkuMzc4VjMxMS4xMTFDMzc5LjM3OCAyNzUuNzQ5IDM2NS4zMyAyNDEuODM1IDM0MC4zMjUgMjE2LjgzQzMxNS4zMiAxOTEuODI1IDI4MS40MDcgMTc3Ljc3OCAyNDYuMDQ0IDE3Ny43NzhIMjAwQzE3Ni40MjUgMTc3Ljc3OCAxNTMuODE2IDE4Ny4xNDMgMTM3LjE0NiAyMDMuODEzQzEyMC40NzYgMjIwLjQ4MyAxMTEuMTExIDI0My4wOTIgMTExLjExMSAyNjYuNjY3VjU0Mi44NDVaTTQyMC42MjIgNjMxLjczM0g2MDBDNjIzLjU3NSA2MzEuNzMzIDY0Ni4xODQgNjIyLjM2OCA2NjIuODU0IDYwNS42OThDNjc5LjUyNCA1ODkuMDI5IDY4OC44ODkgNTY2LjQxOSA2ODguODg5IDU0Mi44NDVWMjY2LjY2N0M2ODguODg5IDI0My4wOTIgNjc5LjUyNCAyMjAuNDgzIDY2Mi44NTQgMjAzLjgxM0M2NDYuMTg0IDE4Ny4xNDMgNjIzLjU3NSAxNzcuNzc4IDYwMCAxNzcuNzc4SDU1My45NTZDNTE4LjU5MyAxNzcuNzc4IDQ4NC42NzkgMTkxLjgyNSA0NTkuNjc1IDIxNi44M0M0MzQuNjcgMjQxLjgzNSA0MjAuNjIyIDI3NS43NDkgNDIwLjYyMiAzMTEuMTExVjYzMS43MzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
     <title>本地阅读器</title>
+    <meta name="reader-version" content="5.0.0" />
     <style>
 /* ==================== CSS Variables ==================== */
 :root {
@@ -124,12 +125,12 @@ svg.icon {
   stroke-linejoin: round;
 }
 
-.icon-sm {
+svg.icon-sm {
   width: 16px;
   height: 16px;
 }
 
-.icon-lg {
+svg.icon-lg {
   width: 24px;
   height: 24px;
 }
@@ -206,9 +207,10 @@ html.library-mode .library-view { padding:0 0 72px; }
 .cover-flow-fallback strong { font-size:17px; line-height:1.35; }
 .cover-flow-empty { position:absolute; inset:0; display:grid; place-items:center; text-align:center; color:rgba(245,247,252,.76); }
 .cover-flow-empty > span { display:flex; flex-direction:column; align-items:center; gap:12px; padding:28px; }
-.cover-flow-empty .empty-icon { color:rgba(255,255,255,.78); background:rgba(255,255,255,.1); box-shadow:inset 0 1px rgba(255,255,255,.14); backdrop-filter:blur(16px); }
+.cover-flow-empty .empty-icon { cursor:pointer; transition:background .2s,transform .2s; color:rgba(255,255,255,.78); background:rgba(255,255,255,.1); box-shadow:inset 0 1px rgba(255,255,255,.14); backdrop-filter:blur(16px); }
+.cover-flow-empty .empty-icon:hover { background:rgba(255,255,255,.16); transform:translateY(-2px); }
 .cover-flow-empty strong { font-size:18px; font-weight:600; }
-.cover-flow-empty small { color:rgba(235,239,249,.5); font-size:12px; }
+.cover-flow-empty small { color:rgba(235,239,249,.64); font-size:12px; }
 .cover-flow-info { position:relative; z-index:8; width:min(560px,82vw); min-height:100px; margin:-2px auto clamp(12px,2vh,22px); text-align:center; transition:opacity .2s ease,transform .28s ease; }
 .cover-flow-info.is-changing { opacity:0; transform:translateY(7px); }
 .cover-flow-info h2 { margin:0; overflow:hidden; color:#f8f9fc; font-size:clamp(18px,1.7vw,23px); line-height:1.35; font-weight:650; letter-spacing:-.01em; text-overflow:ellipsis; white-space:nowrap; text-shadow:0 3px 18px rgba(0,0,0,.42); }
@@ -218,62 +220,45 @@ html.library-mode .library-view { padding:0 0 72px; }
 .cover-flow-progress-track i { display:block; width:0; height:100%; border-radius:inherit; background:rgba(255,255,255,.84); transition:width .46s cubic-bezier(.2,.8,.2,1); }
 .cover-flow-progress > span:last-child { width:34px; color:rgba(235,239,249,.72); font-size:11px; text-align:right; }
 .cover-flow-dots { position:relative; z-index:8; display:flex; justify-content:center; gap:7px; margin-top:12px; }
-.cover-flow-dot { width:5px; height:5px; padding:0; border-radius:50%; background:rgba(255,255,255,.28); transition:width .3s ease,background .3s ease,transform .2s; }
+.cover-flow-dot { width:8px; height:8px; padding:0; border-radius:50%; background:rgba(255,255,255,.28); transition:width .3s ease,background .3s ease,transform .2s; }
 .cover-flow-dot:hover { transform:scale(1.45); background:rgba(255,255,255,.62); }
 .cover-flow-dot.active { width:16px; border-radius:999px; background:rgba(255,255,255,.78); }
 .hero-bottom { position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:12px; }
-.hero-scroll-hint { display:flex; align-items:center; gap:7px; color:rgba(239,242,249,.46); font-size:11px; letter-spacing:.02em; }
+.hero-scroll-hint { display:flex; align-items:center; gap:7px; color:rgba(239,242,249,.62); font-size:11px; letter-spacing:.02em; }
 .hero-scroll-hint svg { width:14px; height:14px; animation:coverFlowNudge 2.2s ease-in-out infinite; }
-.liquid-glass-filters { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
 .hero-actions {
   --glass-x:50%;
   --glass-y:30%;
-  --glass-angle:0deg;
   position:relative;
   width:min(520px,calc(100vw - 40px));
   min-height:56px;
   padding:5px;
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  border:1px solid transparent;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border:1px solid rgba(222,235,255,.16);
   border-radius:22px;
-  background:linear-gradient(180deg,rgba(25,31,42,.34),rgba(8,12,20,.22)) padding-box;
-  box-shadow:0 24px 58px rgba(0,0,0,.34),0 7px 20px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.18),inset 0 -1px rgba(255,255,255,.04);
-  -webkit-backdrop-filter:blur(15px) saturate(1.45) contrast(1.08);
-  backdrop-filter:blur(15px) saturate(1.45) contrast(1.08);
+  background:linear-gradient(180deg,rgba(54,64,81,.38),rgba(17,24,36,.38));
+  background-clip:padding-box;
+  box-shadow:0 16px 36px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.1);
+  -webkit-backdrop-filter:blur(18px) saturate(1.35);
+  backdrop-filter:blur(18px) saturate(1.35);
   isolation:isolate;
   overflow:hidden;
-}
-.hero-actions::before {
-  content:'';
-  position:absolute;
-  z-index:-1;
-  inset:-1px;
-  padding:1px;
-  border-radius:inherit;
-  background:conic-gradient(from var(--glass-angle),transparent 0 8%,rgba(104,224,255,.5) 12%,transparent 19% 38%,rgba(175,129,255,.42) 43%,transparent 51% 68%,rgba(255,210,114,.38) 73%,rgba(255,115,148,.38) 77%,transparent 83% 100%);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  opacity:.74;
-  animation:liquidGlassSpectrum 13s linear infinite;
-  pointer-events:none;
 }
 .hero-actions::after {
   content:'';
   position:absolute;
-  z-index:5;
   inset:0;
   border-radius:inherit;
-  background:radial-gradient(170px 58px at var(--glass-x) var(--glass-y),rgba(255,255,255,.21),rgba(255,255,255,.055) 34%,transparent 70%),linear-gradient(112deg,rgba(255,255,255,.14),transparent 19% 73%,rgba(143,202,255,.055));
-  mix-blend-mode:screen;
-  opacity:.68;
+  background:radial-gradient(180px 70px at var(--glass-x) var(--glass-y),rgba(255,255,255,.11),transparent 75%);
   pointer-events:none;
 }
-.glass-refraction { position:absolute; z-index:-1; inset:2px; border-radius:19px; background:radial-gradient(ellipse at 50% -12%,rgba(255,255,255,.12),transparent 47%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015)); filter:url(#liquidGlassDistortion); opacity:.72; pointer-events:none; }
-.glass-edge { position:absolute; z-index:3; inset:1px; border-radius:21px; box-shadow:inset 1px 1px 0 rgba(255,255,255,.16),inset -1px -1px 0 rgba(3,7,14,.32),inset 0 0 0 4px rgba(255,255,255,.016),inset 0 -8px 18px rgba(0,0,0,.07); pointer-events:none; }
-.glass-edge::before { content:''; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(105deg,rgba(122,226,255,.09),transparent 20% 70%,rgba(214,142,255,.075)); filter:url(#liquidGlassEdge); opacity:.8; }
-.glass-caustic { position:absolute; z-index:2; left:8%; right:8%; bottom:-10px; height:26px; border-radius:50%; background:radial-gradient(ellipse,rgba(184,220,255,.2),rgba(108,151,255,.07) 37%,transparent 72%); filter:blur(7px); opacity:.68; pointer-events:none; }
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  .hero-actions { background:linear-gradient(180deg,rgba(49,59,75,.94),rgba(25,32,45,.94)); }
+}
+.reading-hero button:focus-visible { outline:2px solid rgba(240,246,255,.9); }
+.hero-action:focus-visible { outline-offset:-3px; }
+.hero-action:disabled { cursor:wait; opacity:.55; }
 .hero-action { position:relative; z-index:4; min-width:0; min-height:44px; display:flex; align-items:center; justify-content:center; border:1px solid transparent; border-radius:17px; color:rgba(249,250,253,.84); font-size:12px; font-weight:680; cursor:pointer; text-shadow:0 1px 12px rgba(0,0,0,.22); transition:color .22s,transform .22s,background .22s,border-color .22s,box-shadow .22s; }
 .hero-action::after { content:''; position:absolute; inset:0; z-index:-1; border-radius:inherit; background:radial-gradient(110px 42px at 50% 0,rgba(255,255,255,.1),transparent 70%); opacity:0; transition:opacity .22s; }
 .hero-action + .hero-action::before { content:''; position:absolute; left:-1px; top:12px; bottom:12px; width:1px; background:linear-gradient(180deg,transparent,rgba(255,255,255,.13) 24% 76%,transparent); box-shadow:-1px 0 rgba(0,0,0,.08); }
@@ -281,8 +266,6 @@ html.library-mode .library-view { padding:0 0 72px; }
 .hero-action:hover::after,.hero-action:focus-visible::after { opacity:1; }
 .hero-action:active { transform:translateY(0) scale(.985); background:rgba(255,255,255,.08); }
 .hero-action.primary { color:#fff; border-color:rgba(255,255,255,.08); background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.045)); box-shadow:inset 0 1px rgba(255,255,255,.1),inset 0 -1px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.09); }
-@property --glass-angle { syntax:'<angle>'; inherits:false; initial-value:0deg; }
-@keyframes liquidGlassSpectrum { to { --glass-angle:360deg; } }
 @keyframes coverFlowNudge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
 
 html.library-mode .library-toolbar { width:min(1200px,calc(100% - 48px)); margin:0 auto 24px; padding-top:64px; }
@@ -291,7 +274,6 @@ html.library-mode .drop-zone { width:min(1200px,calc(100% - 48px)); }
 @media (prefers-reduced-motion:reduce) {
   .cover-flow-bg,.cover-flow-card,.cover-flow-info,.cover-flow-progress-track i,.cover-flow-dot { transition-duration:1ms !important; }
   .hero-scroll-hint svg { animation:none; }
-  .hero-actions::before { animation:none; }
 }
 
 .library-toolbar {
@@ -360,30 +342,12 @@ html.library-mode .drop-zone { width:min(1200px,calc(100% - 48px)); }
   outline: 0;
 }
 
-.library-controls select {
-  height: 36px;
-  padding: 0 32px 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface) url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="%23737373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 10px center;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.15s;
-}
 
-.library-controls select:focus,
-.library-controls select:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
 
-.library-controls select:hover {
-  border-color: var(--accent);
-}
+
+
 
 /* ==================== Library Selects ==================== */
-.library-controls select.native-select { display:none; }
 .library-select { position:relative; min-width:112px; }
 .library-select-trigger { width:100%; height:36px; padding:0 32px 0 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface); text-align:left; position:relative; transition:all .15s; }
 .library-select-trigger::after { content:''; position:absolute; top:50%; right:12px; width:7px; height:7px; border-right:1.5px solid var(--muted); border-bottom:1.5px solid var(--muted); transform:translateY(-65%) rotate(45deg); }
@@ -455,7 +419,7 @@ html.library-mode .drop-zone { width:min(1200px,calc(100% - 48px)); }
   position: relative;
 }
 
-.cover {
+.cover { width:100%;
   aspect-ratio: 2/3;
   border-radius: 8px;
   background: linear-gradient(135deg, #525252, #262626);
@@ -495,7 +459,7 @@ html.library-mode .drop-zone { width:min(1200px,calc(100% - 48px)); }
   overflow: hidden;
 }
 
-.card-title {
+.card-title { width:100%;
   margin: 12px 0 4px;
   height: 21px;
   font-size: 14px;
@@ -1214,6 +1178,10 @@ dialog::backdrop {
 }
 
 .search-result {
+  display:block;
+  width:100%;
+  text-align:left;
+  border-radius:0;
   padding: 12px;
   border-bottom: 1px solid var(--line);
   cursor: pointer;
@@ -1454,8 +1422,6 @@ dialog::backdrop {
   .cover-flow-dots { margin-top:9px; }
   .hero-bottom { gap:9px; }
   .hero-actions { width:min(360px,calc(100vw - 24px)); min-height:54px; padding:5px; border-radius:20px; }
-  .glass-edge { border-radius:19px; }
-  .glass-refraction { border-radius:17px; }
   .hero-action { min-height:42px; border-radius:15px; font-size:11px; }
   html.library-mode .library-toolbar { width:calc(100% - 32px); padding-top:44px; }
   html.library-mode .drop-zone { width:calc(100% - 32px); }
@@ -1482,20 +1448,17 @@ dialog::backdrop {
     height: 40px;
   }
 
-  .library-controls select {
-    width: 100%;
-  }
 
   .book-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px 14px;
   }
 
-  .cover {
+  .cover { width:100%;
     padding: 12px;
   }
 
-  .card-title {
+  .card-title { width:100%;
     margin-top: 10px;
   }
 
@@ -1511,28 +1474,20 @@ dialog::backdrop {
   }
 }
 
-/* ==================== Fullscreen Reading ==================== */
-.fullscreen-reading main {
-  height: 100%;
+@media (max-height:560px) {
+  .reading-hero { height:auto; min-height:100svh; padding:16px 20px; grid-template-rows:minmax(140px,1fr) auto auto; }
+  .cover-flow { min-height:140px; }
+  .cover-flow-card { width:clamp(90px,20svh,150px); border-radius:10px; }
+  .cover-flow-info { min-height:76px; margin:8px auto 12px; }
+  .cover-flow-info h2 { font-size:17px; }
+  .cover-flow-meta { margin:4px 0 8px; }
+  .cover-flow-empty > span { gap:8px; padding:12px; }
+  .cover-flow-empty .empty-icon { width:48px; height:48px; }
+  .cover-flow-empty strong { font-size:16px; }
+  .hero-bottom { gap:8px; }
+  .reading-hero-count { top:12px; right:16px; }
 }
 
-.fullscreen-reading .reading-stage {
-  height: 100%;
-}
-
-.fullscreen-reading .reader-paper {
-  max-width: 100%;
-  height: 100%;
-}
-
-/* ==================== Utilities ==================== */
-.cursor-hidden {
-  cursor: none !important;
-}
-
-.cursor-hidden * {
-  cursor: none !important;
-}
     </style>
   </head>
   <body>
@@ -1564,29 +1519,11 @@ dialog::backdrop {
               <span>向下滚动查看全部图书</span>
               <svg class="icon" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>
             </div>
-            <svg class="liquid-glass-filters" aria-hidden="true">
-              <filter id="liquidGlassDistortion" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.055" numOctaves="2" seed="7" result="noise" />
-                <feGaussianBlur in="noise" stdDeviation="0.35" result="softNoise" />
-                <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="13" xChannelSelector="R" yChannelSelector="B" />
-              </filter>
-              <filter id="liquidGlassEdge" x="-15%" y="-45%" width="130%" height="190%" color-interpolation-filters="sRGB">
-                <feTurbulence type="turbulence" baseFrequency="0.009 0.07" numOctaves="1" seed="11" result="edgeNoise" />
-                <feDisplacementMap in="SourceGraphic" in2="edgeNoise" scale="8" xChannelSelector="R" yChannelSelector="G" />
-              </filter>
-            </svg>
+            <input id="heroFileInput" type="file" accept=".epub,application/epub+zip" multiple hidden />
+            <input id="heroBackupInput" type="file" accept=".json,application/json" hidden />
             <div class="hero-actions" aria-label="书库操作">
-              <span class="glass-refraction" aria-hidden="true"></span>
-              <span class="glass-edge" aria-hidden="true"></span>
-              <span class="glass-caustic" aria-hidden="true"></span>
-              <label class="hero-action">
-                <span>导入备份</span>
-                <input id="heroBackupInput" type="file" accept=".json" hidden />
-              </label>
-              <label class="hero-action primary">
-                <span>添加图书</span>
-                <input id="heroFileInput" type="file" accept=".epub,application/epub+zip" multiple hidden />
-              </label>
+              <button id="heroBackupBtn" class="hero-action" type="button"><span>导入备份</span></button>
+              <button id="heroImportBtn" class="hero-action primary" type="button"><span>添加图书</span></button>
               <button id="heroExportBtn" class="hero-action" type="button">
                 <span>导出备份</span>
               </button>
@@ -1608,8 +1545,8 @@ dialog::backdrop {
               <input id="librarySearch" type="search" placeholder="搜索书名或作者" />
             </div>
             <div class="library-select" data-select="libraryFilter">
-              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">全部</button>
-              <div class="library-select-menu" role="listbox">
+              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-controls="libraryFilterMenu" aria-expanded="false">全部</button>
+              <div id="libraryFilterMenu" class="library-select-menu" role="listbox" aria-label="筛选图书">
                 <button class="library-select-option active" type="button" data-value="all">全部</button>
                 <button class="library-select-option" type="button" data-value="reading">阅读中</button>
                 <button class="library-select-option" type="button" data-value="finished">已读完</button>
@@ -1617,20 +1554,14 @@ dialog::backdrop {
               </div>
             </div>
             <div class="library-select" data-select="librarySort">
-              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">最近阅读</button>
-              <div class="library-select-menu" role="listbox">
+              <button class="library-select-trigger" type="button" aria-haspopup="listbox" aria-controls="librarySortMenu" aria-expanded="false">最近阅读</button>
+              <div id="librarySortMenu" class="library-select-menu" role="listbox" aria-label="图书排序">
                 <button class="library-select-option active" type="button" data-value="recent">最近阅读</button>
                 <button class="library-select-option" type="button" data-value="added">最近导入</button>
                 <button class="library-select-option" type="button" data-value="title">书名排序</button>
                 <button class="library-select-option" type="button" data-value="progress">阅读进度</button>
               </div>
             </div>
-            <select id="libraryFilter" class="native-select" aria-hidden="true" tabindex="-1">
-              <option value="all">全部</option><option value="reading">阅读中</option><option value="finished">已读完</option><option value="unread">未开始</option>
-            </select>
-            <select id="librarySort" class="native-select" aria-hidden="true" tabindex="-1">
-              <option value="recent">最近阅读</option><option value="added">最近导入</option><option value="title">书名排序</option><option value="progress">阅读进度</option>
-            </select>
           </div>
         </div>
 
@@ -1948,7 +1879,6 @@ const DEFAULT_SETTINGS = {
   paragraph: 1,
   width: 800,
   font: "Georgia, 'Songti SC', serif",
-  mode: 'scroll',
   typography: 'book',
   theme: 'light',
   align: 'book',
@@ -1959,160 +1889,342 @@ const DEFAULT_SETTINGS = {
   highlightColor: 'yellow'
 }
 
-// ==================== State ====================
+// ==================== Application State ====================
 const state = {
-  books: [],
-  visibleBooks: [],
-  book: null,
-  epub: null,
-  chapter: 0,
-  page: 0,
-  pageCount: 1,
-  urls: [],
-  assetCache: new Map(),
-  selection: '',
-  navigating: false,
-  searchIndex: null,
-  renderToken: 0,
-  openBookToken: 0,
-  externalChange: false
+  books: [], visibleBooks: [], book: null, epub: null, reader: null,
+  chapter: 0, selection: '', selectionChapter: 0, navigating: false,
+  openBookToken: 0, libraryFilter: 'all', librarySort: 'recent'
 }
-
-// ==================== IndexedDB ====================
-const DB_VERSION = 2
-const dbp = new Promise((resolve, reject) => {
-  const request = indexedDB.open('local-reader', DB_VERSION)
-  request.onupgradeneeded = () => {
-    const db = request.result
-    if (!db.objectStoreNames.contains('books')) {
-      db.createObjectStore('books', { keyPath: 'id' })
-    }
-  }
-  request.onsuccess = () => resolve(request.result)
-  request.onerror = () => reject(request.error)
-})
-
-async function store(mode, fn) {
-  const db = await dbp
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('books', mode)
-    const result = fn(tx.objectStore('books'))
-    tx.oncomplete = () => resolve(result?.result)
-    tx.onerror = () => reject(tx.error)
-    tx.onabort = () => reject(tx.error || new Error('本地数据库事务已中止'))
-  })
-}
-
-const getBooks = () => store('readonly', (s) => s.getAll())
-const saveBook = (book) => store('readwrite', (s) => s.put(book))
-const removeBook = (id) => store('readwrite', (s) => s.delete(id))
-
-// ==================== Helper Functions ====================
 const uid = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`
 
 async function fileHash(buffer) {
-  try {
-    const hash = await crypto.subtle.digest('SHA-256', buffer)
-    return [...new Uint8Array(hash)].map(x => x.toString(16).padStart(2, '0')).join('')
-  } catch {
-    return `${buffer.byteLength}:${new Uint8Array(buffer).slice(0, 64).join(',')}`
-  }
+  if (!crypto.subtle) throw new Error('请使用支持本地安全存储的现代浏览器打开阅读器')
+  const hash = await crypto.subtle.digest('SHA-256', buffer)
+  return [...new Uint8Array(hash)].map(value => value.toString(16).padStart(2, '0')).join('')
 }
 
 function normalizeBook(book) {
   if (!book || typeof book !== 'object') return null
+  book = { ...book }
   book.title = String(book.title || book.name || '未命名书籍')
   book.author = String(book.author || '未知作者')
-  if (typeof book.cover !== 'string' || !/^data:image\/(png|jpeg|jpg|gif|webp|svg\+xml);base64,/i.test(book.cover)) {
-    book.cover = null
-  }
-  book.notes = Array.isArray(book.notes)
-    ? book.notes
-        .filter(n => n && typeof n === 'object' && typeof n.quote === 'string')
-        .map(n => ({
-          ...n,
-          id: n.id || uid(),
-          kind: n.note ? 'remark' : (['marker', 'underline', 'remark'].includes(n.kind) ? n.kind : 'marker'),
-          chapter: Math.max(0, Number(n.chapter) || 0),
-          position: Number.isFinite(Number(n.position)) ? Number(n.position) : -1,
-          created: Number(n.created) || Date.now(),
-          updated: Number(n.updated) || Number(n.created) || Date.now()
-        }))
-    : []
+  if (typeof book.cover !== 'string' || !/^data:image\/(png|jpeg|jpg|gif|webp|svg\+xml);base64,/i.test(book.cover)) book.cover = null
+  book.notes = (Array.isArray(book.notes) ? book.notes : []).filter(note => note && typeof note.quote === 'string' && note.quote.trim()).map(note => ({
+    ...note, note: typeof note.note === 'string' ? note.note : '', id: typeof note.id === 'string' && note.id ? note.id : uid(),
+    kind: note.note ? 'remark' : (['marker', 'underline', 'remark'].includes(note.kind) ? note.kind : 'marker'),
+    chapter: Math.max(0, Math.floor(Number(note.chapter) || 0)),
+    position: Number.isFinite(Number(note.position)) ? Number(note.position) : -1,
+    created: Number(note.created) || Date.now(), updated: Number(note.updated) || Number(note.created) || Date.now()
+  }))
+  book.noteTombstones = Object.fromEntries(Object.entries(book.noteTombstones || {}).filter(([, time]) => Number.isFinite(+time) && +time > 0).map(([id, time]) => [id, +time]))
+  book.notes = mergeNotes({}, book).notes
   book.settings = book.settings && typeof book.settings === 'object' ? book.settings : {}
-  book.locator = book.locator && typeof book.locator === 'object' ? book.locator : { chapter: book.chapter || 0, offset: 0, ratio: Number.isFinite(book.page) ? 0 : book.progress || 0 }
-  if (!Number.isFinite(Number(book.lastRead))) book.lastRead = Number(book.added) || 0
-  book.size ||= book.data?.byteLength || 0
-  book.progress = Math.max(0, Math.min(1, +book.progress || 0))
-  book.revision = Math.max(0, Number(book.revision) || 0)
-  book.deletedAt = Number(book.deletedAt) || 0
+  book.locator = book.locator && typeof book.locator === 'object' ? { ...book.locator } : { chapter: book.chapter || 0, offset: 0, ratio: book.progress || 0 }
+  book.locator.chapter = Math.max(0, Math.floor(Number(book.locator.chapter) || 0))
+  book.locator.offset = Math.max(0, Number(book.locator.offset) || 0)
+  book.lastRead = Math.max(0, Number(book.lastRead) || 0)
+  book.size = Math.max(0, Number(book.size) || book.data?.byteLength || 0)
+  book.progress = Math.max(0, Math.min(1, Number(book.progress) || 0))
+  book.revision = Math.max(0, Math.floor(Number(book.revision) || 0))
+  book.metadataUpdatedAt = Number(book.metadataUpdatedAt) || Number(book.updatedAt) || Number(book.added) || 0
+  book.progressUpdatedAt = Number(book.progressUpdatedAt) || book.lastRead
+  book.deletedAt = Math.max(0, Number(book.deletedAt) || 0)
+  delete book.page; delete book.scrollTop; delete book.locatorAt
   return book
 }
-
-const channel = 'BroadcastChannel' in window ? new BroadcastChannel('local-reader-sync') : null
+// ==================== Persistent Library ====================
+const DB_VERSION = 1
+const SAVE_FIELDS = ['chapter', 'progress', 'locator', 'lastRead', 'progressUpdatedAt']
+const METADATA_FIELDS = ['title', 'author', 'cover', 'metadataUpdatedAt']
 const saveQueues = new Map()
+let lastTimestamp = 0
+const timestamp = (after = 0) => (lastTimestamp = Math.max(Date.now(), lastTimestamp + 1, Number(after) + 1))
 
-channel?.addEventListener('message', (e) => {
-  if (!e.data?.id) return
-  if (state.book?.id === e.data.id) {
-    state.externalChange = true
-    if (e.data.deleted) toast('这本书已在另一个窗口中删除，当前阅读位置将不再保存', 5000)
+function metadataOf(book) {
+  const metadata = { ...book }
+  delete metadata.data
+  return structuredClone(metadata)
+}
+
+function mergeNotes(a = {}, b = {}) {
+  const deleted = { ...(a.noteTombstones || {}) }
+  for (const [id, time] of Object.entries(b.noteTombstones || {})) deleted[id] = Math.max(deleted[id] || 0, Number(time) || 0)
+  const notes = new Map()
+  for (const note of [...(a.notes || []), ...(b.notes || [])]) {
+    if ((deleted[note.id] || 0) >= (note.updated || note.created || 0)) continue
+    const previous = notes.get(note.id)
+    if (!previous || (note.updated || note.created || 0) >= (previous.updated || previous.created || 0)) notes.set(note.id, note)
   }
-  else loadLibrary().catch(() => {})
+  return { notes: [...notes.values()], noteTombstones: deleted }
+}
+
+function mergeBookRecords(current, incoming) {
+  if (!current) return normalizeBook(incoming)
+  const merged = { ...current, ...mergeNotes(current, incoming) }
+  if ((incoming.metadataUpdatedAt || 0) > (current.metadataUpdatedAt || 0)) {
+    for (const key of METADATA_FIELDS) merged[key] = incoming[key]
+  }
+  if ((incoming.progressUpdatedAt || incoming.lastRead || 0) > (current.progressUpdatedAt || current.lastRead || 0)) {
+    for (const key of SAVE_FIELDS) merged[key] = incoming[key]
+  }
+  if ((incoming.settingsUpdatedAt || 0) > (current.settingsUpdatedAt || 0)) {
+    merged.settings = incoming.settings
+    merged.settingsUpdatedAt = incoming.settingsUpdatedAt
+  }
+  merged.hash ||= incoming.hash
+  merged.size ||= incoming.size
+  merged.updatedAt = Math.max(current.updatedAt || 0, incoming.updatedAt || 0)
+  return normalizeBook(merged)
+}
+
+function deleteNoteRecord(book, id) {
+  const note = book.notes.find(n => n.id === id)
+  book.noteTombstones ||= {}
+  book.noteTombstones[id] = timestamp(note?.updated || note?.created || 0)
+  book.notes = book.notes.filter(n => n.id !== id)
+}
+
+const dbp = new Promise((resolve, reject) => {
+  const request = indexedDB.open('local-reader-v5', DB_VERSION)
+  request.onupgradeneeded = () => {
+    const db = request.result
+    if (!db.objectStoreNames.contains('books')) {
+      const books = db.createObjectStore('books', { keyPath: 'id' })
+      books.createIndex('hash', 'hash')
+    }
+    if (!db.objectStoreNames.contains('bookFiles')) db.createObjectStore('bookFiles', { keyPath: 'id' })
+    if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'id' })
+  }
+  request.onblocked = () => toast('请关闭其他阅读器窗口后刷新，原有数据会保留', 8000)
+  request.onerror = () => reject(request.error)
+  request.onsuccess = () => {
+    const db = request.result
+    db.onversionchange = () => {
+      db.close()
+      toast('书库已在另一窗口升级，请刷新当前阅读器', 8000)
+    }
+    resolve(db)
+  }
 })
 
-function broadcastLibraryChange(id = '*', detail = {}) {
-  channel?.postMessage({ id, updatedAt: Date.now(), ...detail })
+async function readStore(name, operation) {
+  const db = await dbp
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(name, 'readonly')
+    const request = operation(tx.objectStore(name))
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () => reject(request.error)
+    tx.onabort = () => reject(tx.error || new Error('读取书库失败'))
+  })
 }
 
-async function saveCurrentBook() {
-  const book = state.book
-  if (!book) return
-  
-  const current = (await getBooks()).find(b => b.id === book.id)
-  if (current && state.externalChange) {
-    const ownNotes = book.notes || []
-    const currentNotes = current.notes || []
-    const notes = new Map(currentNotes.map(n => [n.id, n]))
-    
-    for (const note of ownNotes) {
-      const prior = notes.get(note.id)
-      if (!prior || (note.updated || note.created || 0) >= (prior.updated || prior.created || 0)) {
-        notes.set(note.id, note)
+// The legacy database is read-only; per-record markers make interrupted copying resumable.
+async function ensureLegacyMigration() {
+  if (state.migrationPromise) return state.migrationPromise
+  state.migrationPromise = (async () => {
+    if (await readStore('meta', store => store.get('legacyMigrationCompleted'))) return
+    if (indexedDB.databases) {
+      const databases = await indexedDB.databases().catch(() => null)
+      if (databases && !databases.some(database => database.name === 'local-reader')) return
+    }
+    const legacy = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('local-reader')
+      let absent = false
+      request.onupgradeneeded = () => { absent = true; request.transaction.abort() }
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => absent ? resolve(null) : reject(request.error)
+    })
+    if (!legacy) return
+    const read = (store, operation) => new Promise((resolve, reject) => {
+      const request = operation(legacy.transaction(store, 'readonly').objectStore(store))
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    state.migrating = true
+    syncImportState()
+    try {
+      if (!legacy.objectStoreNames.contains('books')) return
+      const keys = await read('books', store => store.getAllKeys())
+      let missing = 0
+      for (let index = 0; index < keys.length; index++) {
+        const key = `legacy:${String(keys[index])}`
+        if (await readStore('meta', store => store.get(key))) continue
+        const original = await read('books', store => store.get(keys[index]))
+        if (!original || original.deletedAt) continue
+        const data = original.data || (legacy.objectStoreNames.contains('bookFiles') ? (await read('bookFiles', store => store.get(original.id)))?.data : null)
+        if (!(data instanceof ArrayBuffer)) { missing++; continue }
+        toast(`正在复制旧书库 ${index + 1}/${keys.length}…`, 60000)
+        const book = normalizeBook({ ...original, data, hash: await fileHash(data), size: data.byteLength })
+        await writeImportedBooks([book], true, key)
       }
+      const db = await dbp
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction('meta', 'readwrite')
+        tx.objectStore('meta').put({ id: 'legacyMigrationCompleted', copiedAt: Date.now() })
+        tx.oncomplete = resolve
+        tx.onerror = tx.onabort = () => reject(tx.error)
+      })
+      if (keys.length) toast(missing ? `旧书库已复制，${missing} 本正文缺失；旧数据仍保留` : '旧书库已复制，原有数据仍保留', 5000)
+    } finally { legacy.close(); state.migrating = false; syncImportState() }
+  })().catch(error => { state.migrationPromise = null; throw error })
+  return state.migrationPromise
+}
+
+
+async function getBooks() {
+  return (await readStore('books', s => s.getAll())).filter(b => !b.deletedAt).map(normalizeBook).filter(Boolean)
+}
+const getBook = async id => normalizeBook(await readStore('books', s => s.get(id)))
+const getBookData = async id => (await readStore('bookFiles', s => s.get(id)))?.data
+
+async function mutateBook(id, change) {
+  const db = await dbp
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('books', 'readwrite')
+    const books = tx.objectStore('books')
+    let result = null
+    let failure = null
+    books.get(id).onsuccess = e => {
+      const current = e.target.result
+      if (!current || current.deletedAt) return
+      try {
+        result = change(normalizeBook(current))
+        result.revision = (current.revision || 0) + 1
+        result.updatedAt = timestamp(current.updatedAt || 0)
+        books.put(metadataOf(result))
+      } catch (error) { failure = error; tx.abort() }
     }
-    
-    book.notes = [...notes.values()]
-    
-    if ((current.lastRead || 0) > (book.lastRead || 0)) {
-      for (const key of ['chapter', 'page', 'scrollTop', 'progress', 'locator', 'lastRead']) {
-        book[key] = current[key]
-      }
-    }
-    
-    if ((current.settingsUpdatedAt || 0) > (book.settingsUpdatedAt || 0)) {
-      book.settings = current.settings
-      book.settingsUpdatedAt = current.settingsUpdatedAt
-    }
-    
-    state.externalChange = false
-  }
-  
-  book.updatedAt = Date.now()
-  book.revision = (book.revision || 0) + 1
-  const id = book.id
-  const previous = saveQueues.get(id) || Promise.resolve()
-  const next = previous.catch(() => {}).then(async () => {
-    const latest = (await getBooks()).find(b => b.id === id)
-    if (!latest || latest.deletedAt) return
-    await saveBook(book)
-    channel?.postMessage({ id, updatedAt: book.updatedAt, revision: book.revision })
-  })
-  saveQueues.set(id, next)
-  await next.finally(() => {
-    if (saveQueues.get(id) === next) saveQueues.delete(id)
+    tx.oncomplete = () => resolve(result)
+    tx.onerror = tx.onabort = () => reject(failure || tx.error || new Error('书库写入失败'))
   })
 }
+
+const saveBook = book => mutateBook(book.id, current => mergeBookRecords(current, normalizeBook(metadataOf(book))))
+
+async function removeBook(id) {
+  const db = await dbp
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(['books', 'bookFiles'], 'readwrite')
+    const books = tx.objectStore('books')
+    books.get(id).onsuccess = e => {
+      const book = e.target.result
+      if (!book) return
+      books.put({ id, hash: book.hash, deletedAt: timestamp(book.updatedAt || 0), revision: (book.revision || 0) + 1 })
+      tx.objectStore('bookFiles').delete(id)
+    }
+    tx.oncomplete = resolve
+    tx.onerror = tx.onabort = () => reject(tx.error || new Error('删除图书失败'))
+  })
+  broadcastLibraryChange(id, { deleted: true })
+}
+
+// All imports are validated before this transaction; hash checks and writes are atomic.
+async function writeImportedBooks(incoming, mergeExisting = false, migrationKey = null) {
+  const db = await dbp
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['books', 'bookFiles', 'meta'], 'readwrite')
+    const books = tx.objectStore('books'), files = tx.objectStore('bookFiles')
+    const counts = { added: 0, merged: 0, skipped: 0 }
+    let failure = null
+    const next = i => {
+      if (i >= incoming.length) return
+      const candidate = normalizeBook({ ...incoming[i], deletedAt: 0 })
+      books.index('hash').getAll(candidate.hash).onsuccess = e => {
+        try {
+          const same = e.target.result.find(book => !book.deletedAt)
+          if (same) {
+            if (mergeExisting) {
+              const merged = mergeBookRecords(normalizeBook(same), candidate)
+              merged.revision = (same.revision || 0) + 1
+              merged.updatedAt = timestamp(same.updatedAt || 0)
+              books.put(metadataOf(merged))
+              counts.merged++
+            } else counts.skipped++
+            next(i + 1)
+            return
+          }
+          books.get(candidate.id).onsuccess = event => {
+            try {
+              if (event.target.result) candidate.id = uid()
+              files.put({ id: candidate.id, data: candidate.data })
+              books.put(metadataOf(candidate))
+              counts.added++
+              next(i + 1)
+            } catch (error) { failure = error; tx.abort() }
+          }
+        } catch (error) { failure = error; tx.abort() }
+      }
+    }
+    if (migrationKey) tx.objectStore('meta').put({ id: migrationKey, copiedAt: Date.now() })
+    next(0)
+    tx.oncomplete = () => resolve(counts)
+    tx.onerror = tx.onabort = () => reject(failure || tx.error || new Error('本地存储空间不足或写入失败'))
+  })
+}
+
+const channel = 'BroadcastChannel' in window ? new BroadcastChannel('local-reader-v5-sync') : null
+function broadcastLibraryChange(id = '*', detail = {}) {
+  const message = { id, updatedAt: timestamp(), ...detail }
+  channel?.postMessage(message)
+  if (!channel) safeLocalSet('readerLibraryEventV5', JSON.stringify(message))
+}
+
+async function receiveLibraryChange(message) {
+  if (!message?.id) return
+  const reader = state.reader
+  if (reader && (message.id === reader.book.id || message.id === '*')) {
+    const latest = await getBook(reader.book.id)
+    if (!isActiveReader(reader)) return
+    if (!latest || latest.deletedAt) {
+      if (!reader.deleted) toast('这本书已在另一窗口删除，当前阅读内容可继续查看', 5000)
+      reader.deleted = true
+      return
+    }
+    const oldSettings = JSON.stringify(reader.book.settings), oldNotes = JSON.stringify(reader.book.notes)
+    Object.assign(reader.book, mergeBookRecords(reader.book, latest))
+    if (JSON.stringify(reader.book.notes) !== oldNotes) {
+      refreshHighlights()
+      renderNotes()
+    }
+    if (JSON.stringify(reader.book.settings) !== oldSettings) {
+      applyBookTheme()
+      syncSettings()
+      applyReaderAppearance()
+    }
+    if (message.reset) await renderChapter(0, '', 0, { locator: latest.locator })
+  } else await loadLibrary()
+}
+channel?.addEventListener('message', e => receiveLibraryChange(e.data).catch(reportError))
+window.addEventListener('storage', e => {
+  if (e.key !== 'readerLibraryEventV5' || !e.newValue) return
+  try { receiveLibraryChange(JSON.parse(e.newValue)).catch(reportError) } catch {}
+})
+
+async function saveCurrentBook() {
+  const reader = state.reader
+  if (!isActiveReader(reader) || reader.deleted) return null
+  const book = reader.book
+  const snapshot = normalizeBook(metadataOf(book))
+  const previous = saveQueues.get(book.id) || Promise.resolve()
+  const next = previous.catch(() => {}).then(() => saveBook(snapshot))
+  saveQueues.set(book.id, next)
+  try {
+    const saved = await next
+    if (!saved) { reader.deleted = true; return null }
+    if (isActiveReader(reader)) Object.assign(book, mergeBookRecords(book, saved))
+    broadcastLibraryChange(book.id)
+    return saved
+  } finally {
+    if (saveQueues.get(book.id) === next) saveQueues.delete(book.id)
+  }
+}
+
+function reportError(error) {
+  if (error?.name === 'AbortError') return
+  console.error(error)
+  toast(`操作未完成：${error?.message || '请重试'}`, 4500)
+}
+
 
 function safeLocalGet(key, fallback = '') {
   try { return localStorage.getItem(key) ?? fallback } catch { return fallback }
@@ -2163,10 +2275,12 @@ function fromBase64(s) {
 }
 
 function blobToData(blob) {
-  return new Promise((resolve) => {
-    const r = new FileReader()
-    r.onload = () => resolve(r.result)
-    r.readAsDataURL(blob)
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error || new Error('读取图片失败'))
+    reader.onabort = () => reject(abortError())
+    reader.readAsDataURL(blob)
   })
 }
 
@@ -2236,6 +2350,17 @@ const mime = (name) => ({
 }[name.split(/[?#]/)[0].split('.').pop().toLowerCase()] || 'application/octet-stream')
 
 // ==================== ZIP Reader ====================
+const CRC_TABLE = Uint32Array.from({ length: 256 }, (_, n) => {
+  let value = n
+  for (let bit = 0; bit < 8; bit++) value = value & 1 ? 0xedb88320 ^ value >>> 1 : value >>> 1
+  return value >>> 0
+})
+function crc32(bytes) {
+  let value = 0xffffffff
+  for (const byte of bytes) value = CRC_TABLE[(value ^ byte) & 255] ^ value >>> 8
+  return (value ^ 0xffffffff) >>> 0
+}
+
 class ZipReader {
   constructor(buffer) {
     this.data = new Uint8Array(buffer)
@@ -2255,18 +2380,21 @@ class ZipReader {
     if (this.data.length < 22) throw new Error('不是有效的 EPUB/ZIP 文件')
     let end = this.data.length - 22
     while (end >= Math.max(0, this.data.length - 65557) && this.u32(end) !== 0x06054b50) end--
-    if (end < 0) throw new Error('不是有效的 EPUB/ZIP 文件')
+    if (end < Math.max(0, this.data.length - 65557) || this.u32(end) !== 0x06054b50) throw new Error('不是有效的 EPUB/ZIP 文件')
     const directorySize = this.u32(end + 12)
     const total = this.u16(end + 10)
     const offset = this.u32(end + 16)
-    if (total > 100000 || offset > this.data.length || directorySize > this.data.length - offset || offset + directorySize > end) {
+    if (total > 20000 || offset > this.data.length || directorySize > this.data.length - offset || offset + directorySize > end) {
       throw new Error('EPUB ZIP 目录无效')
     }
-    let p = offset
+    let p = offset, totalRawSize = 0
     
     for (let i = 0; i < total; i++) {
       if (p < offset || p + 46 > offset + directorySize || p + 46 > this.data.length || this.u32(p) !== 0x02014b50) throw new Error('EPUB 目录损坏')
       
+      const flags = this.u16(p + 8)
+      if (flags & 1) throw new Error('不支持加密 ZIP 图书')
+      const checksum = this.u32(p + 16)
       const method = this.u16(p + 10)
       const size = this.u32(p + 20)
       const rawSize = this.u32(p + 24)
@@ -2274,15 +2402,17 @@ class ZipReader {
       const el = this.u16(p + 30)
       const cl = this.u16(p + 32)
       const local = this.u32(p + 42)
-      if (p + 46 + nl + el + cl > this.data.length || local + 30 > this.data.length) {
+      if (p + 46 + nl + el + cl > offset + directorySize || local + 30 > this.data.length) {
         throw new Error('EPUB ZIP 条目越界')
       }
       const name = dec.decode(this.data.slice(p + 46, p + 46 + nl + 0)).replace(/^\.\//, '')
-      if (size > 512 * 1024 * 1024 || rawSize > 512 * 1024 * 1024 || rawSize > size * 200 + 1024 * 1024) {
+      if (size > 512 * 1024 * 1024 || rawSize > 64 * 1024 * 1024 || rawSize > size * 200 + 1024 * 1024) {
         throw new Error('EPUB 资源大小或压缩比无效')
       }
       
-      this.files.set(name, { method, size, rawSize, local })
+      totalRawSize += rawSize
+      if (totalRawSize > 1024 * 1024 * 1024) throw new Error('EPUB 解压后总大小超过 1 GB')
+      this.files.set(name, { method, size, rawSize, local, checksum })
       p += 46 + nl + el + cl
     }
   }
@@ -2308,28 +2438,57 @@ class ZipReader {
     
     const nl = this.u16(f.local + 26)
     const el = this.u16(f.local + 28)
-    if (this.u32(f.local) !== 0x04034b50 || f.local + 30 + nl + el + f.size > this.data.length || f.rawSize > 512 * 1024 * 1024) {
+    if (this.u32(f.local) !== 0x04034b50 || f.local + 30 + nl + el + f.size > this.data.length || f.rawSize > 64 * 1024 * 1024) {
       throw new Error('EPUB 资源大小或偏移无效')
     }
     const body = this.data.slice(f.local + 30 + nl + el, f.local + 30 + nl + el + f.size)
     
-    if (f.method === 0) return body
+    if (f.method === 0) {
+      if (body.byteLength !== f.rawSize || crc32(body) !== f.checksum) throw new Error('EPUB 资源校验失败')
+      return body
+    }
     
     if (f.method !== 8 || !globalThis.DecompressionStream) {
       throw new Error('浏览器不支持此 EPUB 的压缩格式')
     }
     
     const stream = new Blob([body]).stream().pipeThrough(new DecompressionStream('deflate-raw'))
-    const output = new Uint8Array(await new Response(stream).arrayBuffer())
-    if (output.byteLength !== f.rawSize) throw new Error('EPUB 资源解压大小不匹配')
+    const reader = stream.getReader(), chunks = []
+    let length = 0
+    try {
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        length += value.byteLength
+        if (length > f.rawSize) { await reader.cancel(); throw new Error('EPUB 资源解压大小超过清单声明') }
+        chunks.push(value)
+      }
+    } finally { reader.releaseLock() }
+    if (length !== f.rawSize) throw new Error('EPUB 资源解压大小不匹配')
+    const output = new Uint8Array(length)
+    let cursor = 0
+    for (const chunk of chunks) { output.set(chunk, cursor); cursor += chunk.byteLength }
+    if (crc32(output) !== f.checksum) throw new Error('EPUB 资源校验失败')
     return output
   }
 
   async text(name) {
     const b = await this.bytes(name)
-    return b && dec.decode(b)
+    if (!b) return null
+    if (b[0] === 0xff && b[1] === 0xfe) return new TextDecoder('utf-16le').decode(b)
+    if (b[0] === 0xfe && b[1] === 0xff) return new TextDecoder('utf-16be').decode(b)
+    return dec.decode(b)
   }
 }
+function canonicalZipHref(zip, href) {
+  if (!href) return ''
+  const [path, fragment] = href.split('#')
+  let decoded = path
+  try { decoded = decodeURIComponent(path) } catch {}
+  const canonical = zip.files.has(decoded) ? decoded : [...zip.files.keys()].find(name => name.toLowerCase() === decoded.toLowerCase()) || path
+  return canonical + (fragment ? `#${fragment}` : '')
+}
+
 // ==================== EPUB Parser ====================
 async function parseEpub(buffer) {
   const zip = new ZipReader(buffer)
@@ -2378,9 +2537,10 @@ async function parseEpub(buffer) {
   })
   
   const spine = [...opf.querySelectorAll('spine itemref')]
+    .filter(item => item.getAttribute('linear') !== 'no')
     .map((n) => manifest.get(n.getAttribute('idref')))
     .filter(Boolean)
-    .map((x) => resolvePath(opfPath, x.href))
+    .map((x) => canonicalZipHref(zip, resolvePath(opfPath, x.href)))
 
   if (!spine.length) throw new Error('EPUB 没有可阅读的正文')
 
@@ -2401,7 +2561,7 @@ async function parseEpub(buffer) {
     toc = [...(tocNav?.querySelectorAll('a') || [])]
       .map((a) => ({
         label: a.textContent.trim(),
-        href: resolvePath(navPath, a.getAttribute('href'))
+        href: canonicalZipHref(zip, resolvePath(navPath, a.getAttribute('href')))
       }))
       .filter(x => x.label && x.href)
   } else {
@@ -2413,7 +2573,7 @@ async function parseEpub(buffer) {
       const ncx = new DOMParser().parseFromString(await zip.text(ncxPath), 'application/xml')
       toc = [...ncx.querySelectorAll('navPoint')].map((n) => ({
         label: n.querySelector('navLabel text')?.textContent.trim() || '章节',
-        href: resolvePath(ncxPath, n.querySelector('content')?.getAttribute('src'))
+        href: canonicalZipHref(zip, resolvePath(ncxPath, n.querySelector('content')?.getAttribute('src')))
       }))
     }
   }
@@ -2424,7 +2584,7 @@ async function parseEpub(buffer) {
   
   const coverMeta = opf.querySelector('meta[name="cover"]')?.getAttribute('content')
   const coverItem = manifest.get(coverMeta) || [...manifest.values()].find((x) => x.properties.includes('cover-image'))
-  const coverPath = coverItem && resolvePath(opfPath, coverItem.href)
+  const coverPath = coverItem && canonicalZipHref(zip, resolvePath(opfPath, coverItem.href))
   
   return {
     zip,
@@ -2442,7 +2602,7 @@ async function parseEpub(buffer) {
 }
 
 function sanitizeEpubDocument(doc) {
-  doc.querySelectorAll('script, iframe, form, object, embed, portal').forEach(el => el.remove())
+  doc.querySelectorAll('script, iframe, form, object, embed, portal,base,meta[http-equiv="refresh" i]').forEach(el => el.remove())
   doc.querySelectorAll('*').forEach(el => {
     for (const attr of [...el.attributes]) {
       if (/^on/i.test(attr.name) || attr.name === 'srcdoc') el.removeAttribute(attr.name)
@@ -2463,91 +2623,85 @@ function sanitizeEpubDocument(doc) {
 }
 
 
-function clearUrls() {
-  state.urls.forEach(URL.revokeObjectURL)
-  state.urls = []
-  state.assetCache.clear()
-}
-
-async function assetUrl(path) {
-  if (!path || /^(data:|blob:)/i.test(path)) return path
-  if (state.assetCache.has(path)) return state.assetCache.get(path)
-  
-  state.assetCache.set(path, null)
-  const bytes = await state.epub.zip.bytes(path)
-  if (!bytes) return null
-  
-  let data = bytes
-  let type = mime(path)
-  const encrypted = state.epub.encryption?.get(path)
-  
-  if (encrypted && /font|opentype|truetype|woff/i.test(type)) {
-    data = await deobfuscateFont(bytes, encrypted.algorithm, state.epub.uniqueIdentifier)
+// ==================== EPUB Resource Ownership ====================
+class BookResources {
+  constructor(epub) { this.epub = epub; this.entries = new Map(); this.disposed = false }
+  context(owner, chain = new Set()) { return { resources: this, owner, chain } }
+  async url(path, context) {
+    if (!path || /^(data:|blob:|#)/i.test(path)) return path
+    if (this.disposed || context.owner.released || context.chain.has(path)) return null
+    let entry = this.entries.get(path)
+    if (!entry) {
+      entry = { owners: new Set(), dependencies: new Set(), url: null, promise: null }
+      this.entries.set(path, entry)
+      const nestedContext = this.context(context.owner, new Set([...context.chain, path]))
+      entry.promise = this.create(path, nestedContext).then(url => {
+        if (this.disposed || !entry.owners.size) { if (url) URL.revokeObjectURL(url); return null }
+        entry.url = url
+        for (const owner of entry.owners) this.retain(path, owner)
+        return url
+      }).catch(error => { if (this.entries.get(path) === entry) this.entries.delete(path); throw error })
+    }
+    const parent = [...context.chain].at(-1)
+    if (parent && this.entries.has(parent)) this.entries.get(parent).dependencies.add(path)
+    this.retain(path, context.owner)
+    return entry.promise
   }
-  
-  if (type === 'image/svg+xml') {
-    const svg = new DOMParser().parseFromString(dec.decode(bytes), 'image/svg+xml')
-    if (!svg.querySelector('parsererror')) {
-      for (const el of [...svg.querySelectorAll('[href]')]) {
-        await rewriteResourceAttribute(el, 'href', path)
+  retain(path, owner, seen = new Set()) {
+    if (owner.released || seen.has(path)) return
+    seen.add(path)
+    const entry = this.entries.get(path)
+    if (!entry) return
+    entry.owners.add(owner)
+    for (const dependency of entry.dependencies) this.retain(dependency, owner, seen)
+  }
+  async create(path, context) {
+    let bytes = await this.epub.zip.bytes(path)
+    if (!bytes || this.disposed) return null
+    const type = mime(path), encrypted = this.epub.encryption?.get(path)
+    if (encrypted && /font|opentype|truetype|woff/i.test(type)) bytes = await deobfuscateFont(bytes, encrypted.algorithm, this.epub.uniqueIdentifier)
+    if (type === 'image/svg+xml') {
+      const doc = new DOMParser().parseFromString(dec.decode(bytes), 'image/svg+xml')
+      if (doc.querySelector('parsererror')) return null
+      sanitizeEpubDocument(doc)
+      await rewriteDocumentResources(doc, path, context)
+      bytes = enc.encode(new XMLSerializer().serializeToString(doc))
+    }
+    return this.disposed ? null : URL.createObjectURL(new Blob([bytes], { type }))
+  }
+  release(owner) {
+    owner.released = true
+    for (const [path, entry] of this.entries) {
+      entry.owners.delete(owner)
+      if (!entry.owners.size) {
+        if (entry.url) URL.revokeObjectURL(entry.url)
+        this.entries.delete(path)
       }
-      
-      for (const el of [...svg.querySelectorAll('image,use')]) {
-        if (el.hasAttributeNS('http://www.w3.org/1999/xlink', 'href')) {
-          const value = el.getAttributeNS('http://www.w3.org/1999/xlink', 'href')
-          if (value && !value.startsWith('#')) {
-            const [file, frag] = value.split('#')
-            const nested = await assetUrl(resolvePath(path, file))
-            if (nested) {
-              el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', nested + (frag ? `#${frag}` : ''))
-            } else {
-              el.remove()
-            }
-          }
-        }
-      }
-      
-      for (const el of [...svg.querySelectorAll('[style]')]) {
-        el.setAttribute('style', await rewriteCss(el.getAttribute('style'), path))
-      }
-      
-      for (const style of [...svg.querySelectorAll('style')]) {
-        style.textContent = await rewriteCss(style.textContent, path)
-      }
-      
-      data = new TextEncoder().encode(new XMLSerializer().serializeToString(svg))
     }
   }
-  
-  const url = URL.createObjectURL(new Blob([data], { type }))
-  state.urls.push(url)
-  state.assetCache.set(path, url)
-  return url
+  releaseExcept(owners) {
+    const keep = new Set(owners)
+    const all = new Set([...this.entries.values()].flatMap(entry => [...entry.owners]))
+    for (const owner of all) if (!keep.has(owner)) this.release(owner)
+  }
+  dispose() { this.disposed = true; this.releaseExcept([]) }
 }
 
 async function deobfuscateFont(bytes, algorithm, id) {
-  try {
-    let digest, limit
-    
-    if (/idpf/i.test(algorithm)) {
-      digest = new Uint8Array(await crypto.subtle.digest('SHA-1', enc.encode(id)))
-      limit = 1040
-    } else if (/adobe/i.test(algorithm)) {
-      const hex = id.replace(/^urn:uuid:/i, '').replace(/-/g, '')
-      digest = Uint8Array.from(hex.match(/../g) || [], x => parseInt(x, 16))
-      limit = 1024
-    } else {
-      return bytes
-    }
-    
-    const out = bytes.slice()
-    for (let i = 0; i < Math.min(limit, out.length); i++) {
-      out[i] ^= digest[i % digest.length]
-    }
-    return out
-  } catch {
-    return bytes
-  }
+  let digest, limit
+  if (/idpf/i.test(algorithm)) {
+    if (!crypto.subtle) throw new Error('浏览器无法解码本书的内嵌字体')
+    digest = new Uint8Array(await crypto.subtle.digest('SHA-1', enc.encode(id)))
+    limit = 1040
+  } else if (/adobe/i.test(algorithm)) {
+    const hex = id.replace(/^urn:uuid:/i, '').replace(/-/g, '')
+    if (!/^[a-f\d]{32}$/i.test(hex)) return bytes
+    digest = Uint8Array.from(hex.match(/../g), x => parseInt(x, 16))
+    limit = 1024
+  } else return bytes
+  const output = bytes.slice()
+  for (let i = 0; i < Math.min(limit, output.length); i++) output[i] ^= digest[i % digest.length]
+  return output
 }
 
 function removeBrokenMedia(el, attr) {
@@ -2555,243 +2709,261 @@ function removeBrokenMedia(el, attr) {
   if (el.matches('img,image,source,object,embed')) el.remove()
 }
 
-async function rewriteResourceAttribute(el, attr, base) {
-  const value = el.getAttribute(attr)
-  if (!value) return
-  if (value.startsWith('#')) return
-  if (/^(data:|blob:)/i.test(value)) return
-  
-  if (/^(https?:|\/\/)/i.test(value)) {
-    removeBrokenMedia(el, attr)
-    return
-  }
-  
-  const hash = value.indexOf('#')
-  const file = hash >= 0 ? value.slice(0, hash) : value
-  const fragment = hash >= 0 ? value.slice(hash) : ''
-  const url = await assetUrl(resolvePath(base, file))
-  
-  if (url) {
-    el.setAttribute(attr, url + fragment)
-  } else {
-    removeBrokenMedia(el, attr)
-  }
+async function rewriteResourceAttribute(el, attr, base, context, namespace = '') {
+  const value = namespace ? el.getAttributeNS(namespace, 'href') : el.getAttribute(attr)
+  if (!value || value.startsWith('#') || /^(data:|blob:)/i.test(value)) return
+  if (/^(?:[a-z]+:|\/\/)/i.test(value)) { removeBrokenMedia(el, attr); return }
+  const [file, fragment] = value.split('#')
+  const url = await context.resources.url(resolvePath(base, file), context)
+  if (!url) { removeBrokenMedia(el, attr); return }
+  const target = url + (fragment ? `#${fragment}` : '')
+  if (namespace) el.setAttributeNS(namespace, 'xlink:href', target)
+  else el.setAttribute(attr, target)
 }
 
-async function rewriteSrcset(el, base) {
+async function rewriteSrcset(el, base, context) {
   const value = el.getAttribute('srcset')
   if (!value) return
-  
+  if (/^\s*data:/i.test(value)) return
   const converted = []
   for (const item of value.split(',')) {
     const match = item.trim().match(/^(\S+)(\s+.+)?$/)
-    if (!match) continue
-    const url = await assetUrl(resolvePath(base, match[1]))
+    if (!match || /^(?:[a-z]+:|\/\/)/i.test(match[1])) continue
+    const url = await context.resources.url(resolvePath(base, match[1]), context)
     if (url) converted.push(`${url}${match[2] || ''}`)
   }
-  
-  if (converted.length) {
-    el.setAttribute('srcset', converted.join(', '))
-  } else {
-    el.removeAttribute('srcset')
-  }
+  if (converted.length) el.setAttribute('srcset', converted.join(', '))
+  else el.removeAttribute('srcset')
 }
 
-async function rewriteDocumentResources(doc, path) {
-  for (const el of [...doc.querySelectorAll('[src]')]) {
-    await rewriteResourceAttribute(el, 'src', path)
+async function rewriteDocumentResources(doc, path, context) {
+  for (const attr of ['src', 'poster']) {
+    for (const el of [...doc.querySelectorAll(`[${attr}]`)]) await rewriteResourceAttribute(el, attr, path, context)
   }
-  
-  for (const el of [...doc.querySelectorAll('[poster]')]) {
-    await rewriteResourceAttribute(el, 'poster', path)
+  for (const el of [...doc.querySelectorAll('[srcset]')]) await rewriteSrcset(el, path, context)
+  for (const el of [...doc.querySelectorAll('svg image[href],svg use[href],image[href],use[href]')]) await rewriteResourceAttribute(el, 'href', path, context)
+  const xlink = 'http://www.w3.org/1999/xlink'
+  for (const el of [...doc.querySelectorAll('image,use')]) {
+    if (el.hasAttributeNS(xlink, 'href')) await rewriteResourceAttribute(el, 'href', path, context, xlink)
   }
-  
-  for (const el of [...doc.querySelectorAll('[srcset]')]) {
-    await rewriteSrcset(el, path)
-  }
-  
-  for (const el of [...doc.querySelectorAll('svg image[href],svg use[href]')]) {
-    await rewriteResourceAttribute(el, 'href', path)
-  }
-  
-  for (const el of [...doc.querySelectorAll('svg image,svg use')]) {
-    if (el.hasAttributeNS('http://www.w3.org/1999/xlink', 'href')) {
-      const value = el.getAttributeNS('http://www.w3.org/1999/xlink', 'href')
-      if (!value || value.startsWith('#')) continue
-      
-      const [file, frag] = value.split('#')
-      const url = /^(data:|blob:)/i.test(value) ? value : await assetUrl(resolvePath(path, file))
-      
-      if (url) {
-        el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', url + (frag ? `#${frag}` : ''))
-      } else {
-        el.remove()
-      }
-    }
-  }
-  
-  for (const el of [...doc.querySelectorAll('object[data]')]) {
-    await rewriteResourceAttribute(el, 'data', path)
-  }
-  
   for (const el of [...doc.querySelectorAll('link[rel="stylesheet"]')]) {
     const cssPath = resolvePath(path, el.getAttribute('href'))
-    const css = await state.epub.zip.text(cssPath)
-    
-    if (css) {
-      const style = doc.createElement('style')
-      style.textContent = await rewriteCss(css, cssPath)
-      el.replaceWith(style)
-    } else {
-      el.remove()
-    }
+    const css = await context.resources.epub.zip.text(cssPath)
+    if (!css) { el.remove(); continue }
+    const style = doc.createElement('style')
+    style.textContent = await rewriteCss(css, cssPath, context)
+    style.dataset.resourcesReady = 'true'
+    el.replaceWith(style)
   }
-  
   for (const style of [...doc.querySelectorAll('style')]) {
-    style.textContent = await rewriteCss(style.textContent, path)
+    if (!style.dataset.resourcesReady) style.textContent = await rewriteCss(style.textContent, path, context)
+    delete style.dataset.resourcesReady
   }
-  
-  for (const el of [...doc.querySelectorAll('[style]')]) {
-    el.setAttribute('style', await rewriteCss(el.getAttribute('style'), path))
-  }
+  for (const el of [...doc.querySelectorAll('[style]')]) el.setAttribute('style', await rewriteCss(el.getAttribute('style'), path, context))
 }
 
-async function rewriteCss(css, base, seen = new Set()) {
+async function rewriteCss(css, base, context, seen = new Set()) {
   const key = base.split('#')[0]
-  if (seen.has(key) || seen.size > 32) return ''
-  const chain = new Set(seen)
-  chain.add(key)
-  const imports = [...css.matchAll(/@import\s+(?:url\()?['"]?([^'"\s\)]+)['"]?\)?\s*;/gi)]
-  
-  for (const m of imports) {
-    const importPath = resolvePath(base, m[1])
-    const nested = await state.epub.zip.text(importPath)
-    css = css.replace(m[0], nested ? await rewriteCss(nested, importPath, chain) : '')
+  if (seen.has(key) || seen.size >= 32) return ''
+  const chain = new Set([...seen, key])
+  const imports = [...css.matchAll(/@import\s+(?:url\(\s*(['"]?)(.*?)\1\s*\)|(['"])(.*?)\3)([^;]*);/gi)]
+  for (const match of imports) {
+    const href = match[2] || match[4], condition = match[5].trim()
+    const path = resolvePath(base, href)
+    const nested = /^(?:[a-z]+:|\/\/)/i.test(href) ? null : await context.resources.epub.zip.text(path)
+    let replacement = nested ? await rewriteCss(nested, path, context, chain) : ''
+    if (replacement && condition && !/^layer|supports/i.test(condition)) replacement = `@media ${condition}{${replacement}}`
+    css = css.replace(match[0], replacement)
   }
-  
-  const matches = [...css.matchAll(/url\((['"]?)(.*?)\1\)/g)]
-  
-  for (const m of matches) {
-    const value = m[2].trim()
-    if (!value || value.startsWith('#')) continue
-    
-    if (/^(https?:|\/\/)/i.test(value)) {
-      css = css.replace(m[0], 'url("")')
-      continue
-    }
-    
-    if (/^(data:|blob:)/i.test(value)) continue
-    
-    const [file, frag] = value.split('#')
-    const url = await assetUrl(resolvePath(base, file))
-    css = css.replace(m[0], url ? `url("${url}${frag ? `#${frag}` : ''}")` : 'url("")')
+  const matches = [...css.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/gi)]
+  for (const match of matches) {
+    const value = match[2].trim()
+    if (!value || value.startsWith('#') || /^(data:|blob:)/i.test(value)) continue
+    const [file, fragment] = value.split('#')
+    const url = /^(?:[a-z]+:|\/\/)/i.test(value) ? null : await context.resources.url(resolvePath(base, file), context)
+    css = css.replace(match[0], url ? `url("${url}${fragment ? `#${fragment}` : ''}")` : 'url("")')
   }
-  
   return css
 }
-// ==================== Book Import ====================
-async function importFiles(files) {
-  try {
-    await navigator.storage?.persist?.()
-  } catch {}
-  
-  let imported = 0
-  let skipped = 0
-  const failed = []
-  
-  for (const file of files) {
-    if (!file.name.toLowerCase().endsWith('.epub')) continue
-    
-    toast(`正在导入《${file.name}》…`)
-    
-    try {
-      const buffer = await file.arrayBuffer()
-      const hash = await fileHash(buffer)
-      const existing = (await getBooks()).find(b => 
-        b.hash === hash || 
-        (!b.hash && b.name === file.name && (b.size || b.data?.byteLength) === buffer.byteLength)
-      )
-      
-      if (existing) {
-        skipped++
-        continue
-      }
-      
-      const epub = await parseEpub(buffer)
-      let cover = null
-      
-      if (epub.coverPath) {
-        const bytes = await epub.zip.bytes(epub.coverPath)
-        if (bytes) {
-          cover = await blobToData(new Blob([bytes], { type: mime(epub.coverPath) }))
-        }
-      }
-      
-      const book = {
-        id: uid(),
-        hash,
-        name: file.name,
-        title: epub.title,
-        author: epub.author,
-        cover,
-        data: buffer,
-        size: buffer.byteLength,
-        chapter: 0,
-        progress: 0,
-        notes: [],
-        settings: {},
-        locator: { chapter: 0, offset: 0, ratio: 0 },
-        added: Date.now(),
-        lastRead: 0
-      }
-      
-      await saveBook(book)
-      imported++
-      broadcastLibraryChange(book.id)
-    } catch (e) {
-      const isQuota = /quota/i.test(e?.name || e?.message || '')
-      failed.push(`${file.name}：${isQuota ? '本地存储空间不足' : e.message}`)
+
+function scopeChapterCss(css, index) {
+  const scope = `[data-chapter-index="${index}"]`
+  const style = document.createElement('style')
+  style.media = 'not all'
+  style.textContent = css
+  document.head.append(style)
+  const splitSelectors = value => {
+    const selectors = []; let start = 0, depth = 0, quote = ''
+    for (let i = 0; i < value.length; i++) {
+      const char = value[i]
+      if (quote) { if (char === quote && value[i - 1] !== '\\') quote = ''; continue }
+      if (char === '"' || char === "'") quote = char
+      else if (char === '(' || char === '[') depth++
+      else if (char === ')' || char === ']') depth--
+      else if (char === ',' && depth === 0) { selectors.push(value.slice(start, i)); start = i + 1 }
     }
+    selectors.push(value.slice(start)); return selectors
   }
-  
-  await loadLibrary()
-  
-  const parts = []
-  if (imported) parts.push(`已导入 ${imported} 本`)
-  if (skipped) parts.push(`跳过 ${skipped} 本重复图书`)
-  if (failed.length) parts.push(`${failed.length} 本失败：${failed[0]}`)
-  
-  toast(parts.join(' · ') || '没有找到可导入的 EPUB', failed.length ? 5200 : 2800)
+  const serialize = rules => [...rules].map(rule => {
+    if (rule.type === CSSRule.STYLE_RULE) {
+      const selectors = splitSelectors(rule.selectorText).map(value => {
+        let selector = value.trim().replace(/:root\b|\bhtml\b|\bbody\b/g, scope)
+        selector = selector.split(`${scope} ${scope}`).join(scope)
+        return selector.includes(scope) ? selector : `${scope} ${selector}`
+      }).join(',')
+      return `${selectors}{${rule.style.cssText}${[...(rule.cssRules || [])].map(child => child.cssText).join('')}}`
+    }
+    if (rule.type === CSSRule.KEYFRAMES_RULE || rule.type === CSSRule.FONT_FACE_RULE) return rule.cssText
+    if (rule.cssRules) return `${rule.cssText.slice(0, rule.cssText.indexOf('{'))}{${serialize(rule.cssRules)}}`
+    return rule.type === CSSRule.PAGE_RULE ? '' : rule.cssText
+  }).join('\n')
+  try { return serialize(style.sheet.cssRules) } finally { style.remove() }
 }
+
+
+// ==================== Validated Import and Portable Backups ====================
+const MAX_IMPORT_BYTES = 256 * 1024 * 1024
+const BACKUP_VERSION = 5
+
+function parseChapterDocument(raw, path) {
+  if (!raw) throw new Error(`章节文件缺失：${path}`)
+  const doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
+  if (doc.querySelector('parsererror') || !doc.body) throw new Error(`章节格式无效：${path}`)
+  return doc
+}
+
+async function validateEpub(buffer) {
+  if (!(buffer instanceof ArrayBuffer) || !buffer.byteLength || buffer.byteLength > MAX_IMPORT_BYTES) throw new Error('EPUB 文件为空或超过 256 MB')
+  const epub = await parseEpub(buffer)
+  for (const path of epub.spine) parseChapterDocument(await epub.zip.text(path), path)
+  return epub
+}
+
+async function makeCover(epub) {
+  if (!epub.coverPath) return null
+  const bytes = await epub.zip.bytes(epub.coverPath)
+  if (!bytes || bytes.byteLength > 16 * 1024 * 1024) return null
+  const url = URL.createObjectURL(new Blob([bytes], { type: mime(epub.coverPath) }))
+  try {
+    const image = new Image(); image.src = url
+    await Promise.race([image.decode(), new Promise((_, reject) => setTimeout(() => reject(new Error('封面加载超时')), 3000))])
+    const scale = Math.min(1, 512 / image.naturalWidth, 768 / image.naturalHeight)
+    if (!Number.isFinite(scale) || scale <= 0) return null
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
+    canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height)
+    return canvas.toDataURL('image/webp', 0.84)
+  } catch { return null } finally { URL.revokeObjectURL(url) }
+}
+
+function syncImportState() {
+  const busy = !!state.importing || !!state.migrating
+  for (const button of $$('#heroImportBtn,#heroBackupBtn,#heroExportBtn,#heroEmptyImport')) button.disabled = busy
+  $('.hero-actions').setAttribute('aria-busy', String(busy))
+}
+
+async function withImportOperation(operation) {
+  if (state.importing) { toast('请等待当前导入完成'); return }
+  state.importing = true
+  syncImportState()
+  try { await operation() } catch (error) { reportError(error) }
+  finally { state.importing = false; syncImportState() }
+}
+
+async function importFiles(files) {
+  const selected = [...files]
+  await withImportOperation(async () => {
+    try { await navigator.storage?.persist?.() } catch {}
+    let imported = 0, skipped = 0
+    const failed = []
+    for (const file of selected) {
+      if (!file.name.toLowerCase().endsWith('.epub')) continue
+      toast(`正在验证《${file.name}》…`, 60000)
+      try {
+        if (file.size > MAX_IMPORT_BYTES) throw new Error('文件超过 256 MB')
+        const buffer = await file.arrayBuffer()
+        const hash = await fileHash(buffer)
+        const epub = await validateEpub(buffer)
+        const now = timestamp()
+        const book = normalizeBook({
+          id: uid(), hash, name: file.name, title: epub.title, author: epub.author,
+          cover: await makeCover(epub), data: buffer, size: buffer.byteLength,
+          chapter: 0, progress: 0, notes: [], noteTombstones: {}, settings: {},
+          locator: { chapter: 0, offset: 0, ratio: 0, version: 2 }, added: now, lastRead: 0, metadataUpdatedAt: now
+        })
+        const counts = await writeImportedBooks([book])
+        imported += counts.added; skipped += counts.skipped
+      } catch (error) { failed.push(`${file.name}：${/quota/i.test(error.name || '') ? '本地存储空间不足' : error.message}`) }
+    }
+    await loadLibrary()
+    if (imported) broadcastLibraryChange('*')
+    const parts = []
+    if (imported) parts.push(`已导入 ${imported} 本`)
+    if (skipped) parts.push(`跳过 ${skipped} 本重复图书`)
+    if (failed.length) parts.push(`${failed.length} 本失败：${failed[0]}`)
+    toast(parts.join(' · ') || '没有找到可导入的 EPUB', failed.length ? 6000 : 3000)
+  })
+}
+
+async function backupBook(book) {
+  const data = await getBookData(book.id)
+  if (!data) throw new Error(`《${book.title}》的正文缺失`)
+  return { ...metadataOf(book), data: toBase64(data) }
+}
+
+async function createBackupBlob(books) {
+  const header = JSON.stringify({ format: 'local-epub-reader-backup', version: BACKUP_VERSION, exportedAt: new Date().toISOString() }).slice(0, -1)
+  const parts = [header + ',"books":[']
+  for (let i = 0; i < books.length; i++) {
+    parts.push(new Blob([(i ? ',' : '') + JSON.stringify(await backupBook(books[i]))]))
+  }
+  parts.push(']}')
+  return new Blob(parts, { type: 'application/json' })
+}
+
+async function exportData() {
+  try {
+    await saveQueues.get(state.book?.id)
+    const books = await getBooks()
+    const date = new Date(), localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+    downloadBlob(`reader-backup-${localDate}.json`, await createBackupBlob(books))
+    toast(`已导出 ${books.length} 本图书的完整备份`)
+  } catch (error) { toast(`备份失败：${error.message}`, 5000) }
+}
+
+async function importBackup(file) {
+  await withImportOperation(async () => {
+    try {
+      if (file.size > MAX_IMPORT_BYTES * 2) throw new Error('备份超过 512 MB')
+      const data = JSON.parse(await file.text())
+      if (data?.format !== 'local-epub-reader-backup' || ![3, 4, 5].includes(+data.version) || !Array.isArray(data.books)) throw new Error('备份格式不受支持')
+      if (!data.books.length) { toast('这份备份不包含图书'); return }
+      const incoming = []
+      for (const raw of data.books) {
+        if (!raw || typeof raw !== 'object' || typeof raw.data !== 'string') throw new Error('备份中的图书记录无效')
+        toast(`正在验证《${raw.title || raw.name || '图书'}》…`, 60000)
+        const bytes = fromBase64(raw.data)
+        await validateEpub(bytes)
+        incoming.push(normalizeBook({ ...raw, id: typeof raw.id === 'string' && raw.id ? raw.id : uid(), data: bytes, size: bytes.byteLength, hash: await fileHash(bytes) }))
+      }
+      const counts = await writeImportedBooks(incoming, true)
+      await loadLibrary()
+      broadcastLibraryChange('*')
+      toast(`已恢复 ${counts.added} 本图书 · 合并 ${counts.merged} 本已有图书`, 4000)
+    } catch (error) { toast(`备份未写入：${error.message || '内容无效或已损坏'}`, 6000) }
+  })
+}
+
 
 // ==================== Library Management ====================
 async function loadLibrary() {
-  state.books = (await getBooks()).map(normalizeBook).filter(Boolean)
-  $('#libraryCount').textContent = `${state.books.length} 本书`
-  
+  const token = state.libraryToken = (state.libraryToken || 0) + 1
+  await ensureLegacyMigration()
+  const books = await getBooks()
+  if (token !== state.libraryToken) return
+  state.books = books
+  $('#libraryCount').textContent = `${books.length} 本书`
   renderLibrary()
-  scheduleLegacyHashUpgrade()
-}
-
-function scheduleLegacyHashUpgrade() {
-  const pending = state.books.filter(b => !b.hash && b.data instanceof ArrayBuffer)
-  if (!pending.length) return
-  
-  const run = async () => {
-    for (const book of pending) {
-      try {
-        book.hash = await fileHash(book.data)
-        book.size ||= book.data.byteLength
-        await saveBook(book)
-      } catch {}
-    }
-  }
-  
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => run(), { timeout: 4000 })
-  } else {
-    setTimeout(run, 800)
-  }
 }
 
 function coverFlowOffset(cardIndex, activeIndex, total) {
@@ -2958,10 +3130,11 @@ function renderCoverFlow() {
     state.coverFlowBooks = []
     state.coverFlowKey = ''
     const stage = $('#coverFlowStage')
-    stage.innerHTML = '<div class="cover-flow-empty"><span><span class="empty-icon"><svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><strong>书架还是空的</strong><small>从下方导入一本 EPUB，开始你的本地书库</small></span></div>'
+    stage.innerHTML = '<div class="cover-flow-empty"><span><button id="heroEmptyImport" type="button" class="empty-icon" aria-label="导入第一本 EPUB"><svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><strong>书架还是空的</strong><small>点击 + 或下方添加图书，开始你的本地书库</small></span></div>'
     $('#readingHeroCount').textContent = '0 本'
     $('#coverFlowInfo').classList.add('hidden')
     $('#coverFlowDots').innerHTML = ''
+    syncImportState()
     return
   }
   hero.classList.remove('hidden')
@@ -3071,6 +3244,7 @@ function bindCoverFlow() {
     }
   }
   stage.onpointerdown = e => {
+    if (e.target.closest('#heroEmptyImport')) return
     if (e.button !== 0 || pointerId !== null) return
     pointerId = e.pointerId
     startX = currentX = e.clientX
@@ -3112,8 +3286,8 @@ function bindCoverFlow() {
 
 function renderLibrary() {
   const q = $('#librarySearch').value.trim().toLowerCase()
-  const sort = $('#librarySort').value
-  const filter = $('#libraryFilter').value
+  const sort = state.librarySort
+  const filter = state.libraryFilter
   
   state.visibleBooks = state.books.filter(b => 
     (!q || `${b.title} ${b.author}`.toLowerCase().includes(q)) &&
@@ -3131,11 +3305,12 @@ function renderLibrary() {
   )
   
   $('#emptyState').classList.toggle('hidden', !!state.visibleBooks.length)
+  $('#emptyState').setAttribute('aria-label', state.books.length ? '清除搜索和筛选' : '导入第一本 EPUB')
   $('#emptyState').querySelector('.empty-title').textContent = state.books.length 
     ? '没有匹配的图书' 
     : '导入第一本 EPUB'
   $('#emptyState').querySelector('.empty-description').textContent = state.books.length 
-    ? '换一个关键词试试' 
+    ? '点击这里清除搜索和筛选' 
     : '点击这里，或把 EPUB 文件拖到书架'
   
   $('#bookGrid').innerHTML = ''
@@ -3151,8 +3326,8 @@ function renderLibrary() {
           <path d="m18 6-12 12M6 6l12 12"/>
         </svg>
       </button>
-      <div class="cover"></div>
-      <div class="card-title" title="${escapeHtml(book.title)}">${escapeHtml(book.title)}</div>
+      <button class="cover" type="button" aria-label="打开《${escapeHtml(book.title)}》"></button>
+      <button class="card-title" type="button" title="${escapeHtml(book.title)}">${escapeHtml(book.title)}</button>
     `
     const meta = document.createElement('div')
     meta.className = 'card-meta'
@@ -3184,7 +3359,7 @@ function renderLibrary() {
     card.querySelector('.delete-book').onclick = async () => {
       if (confirm(`从本地书架删除《${book.title}》？`)) {
         await removeBook(book.id)
-        loadLibrary()
+        await loadLibrary()
       }
     }
     
@@ -3192,122 +3367,14 @@ function renderLibrary() {
   }
 }
 
-// ==================== Backup & Export ====================
-function backupBook(book) {
-  const clean = normalizeBook({ ...book, data: toBase64(book.data) })
-  delete clean.locatorAt
-  return clean
-}
 
-async function exportData() {
-  try {
-    const books = await getBooks()
-    const now = new Date()
-    downloadText(
-      `reader-backup-${now.toISOString().slice(0, 10)}.json`,
-      JSON.stringify({
-        format: 'local-epub-reader-backup',
-        version: 4,
-        exportedAt: now.toISOString(),
-        books: books.map(backupBook)
-      }, null, 2),
-      'application/json'
-    )
-    toast(`已导出 ${books.length} 本图书的完整备份`)
-  } catch (e) {
-    toast(`备份失败：${e.message}`, 4500)
-  }
-}
-
-async function importBackup(file) {
-  try {
-    const data = JSON.parse(await file.text())
-    
-    if (data?.format !== 'local-epub-reader-backup' || 
-        ![3, 4].includes(+data.version) || 
-        !Array.isArray(data.books)) {
-      throw new Error('format')
-    }
-    
-    const incoming = []
-    
-    for (const raw of data.books) {
-      if (!raw || typeof raw !== 'object' || typeof raw.data !== 'string') continue
-      
-      const bytes = fromBase64(raw.data)
-      await parseEpub(bytes)
-      
-      const book = normalizeBook({ ...raw, data: bytes })
-      book.id ||= uid()
-      book.size ||= bytes.byteLength
-      book.hash ||= await fileHash(bytes)
-      incoming.push(book)
-    }
-    
-    if (!incoming.length) throw new Error('empty')
-    
-    const existing = await getBooks()
-    const db = await dbp
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction('books', 'readwrite')
-      const s = tx.objectStore('books')
-      for (const book of incoming) {
-        const same = existing.find(x => x.hash && book.hash && x.hash === book.hash)
-        if (same) {
-          const notes = new Map((same.notes || []).map(n => [n.id, n]))
-          for (const note of book.notes || []) {
-            const currentNote = notes.get(note.id)
-            if (!currentNote ||
-                (note.updated || note.created || 0) >=
-                (currentNote.updated || currentNote.created || 0)) {
-              notes.set(note.id, note)
-            }
-          }
-          const incomingIsNewer = (book.lastRead || 0) > (same.lastRead || 0)
-          const incomingSettingsAreNewer =
-            (book.settingsUpdatedAt || 0) > (same.settingsUpdatedAt || 0)
-          const merged = normalizeBook({
-            ...same,
-            ...book,
-            id: same.id,
-            chapter: incomingIsNewer ? book.chapter : same.chapter,
-            page: incomingIsNewer ? book.page : same.page,
-            scrollTop: incomingIsNewer ? book.scrollTop : same.scrollTop,
-            progress: incomingIsNewer ? book.progress : same.progress,
-            locator: incomingIsNewer ? book.locator : same.locator,
-            notes: [...notes.values()],
-            settings: incomingSettingsAreNewer ? book.settings : same.settings,
-            settingsUpdatedAt: Math.max(
-              same.settingsUpdatedAt || 0,
-              book.settingsUpdatedAt || 0
-            ),
-            lastRead: Math.max(same.lastRead || 0, book.lastRead || 0),
-            revision: Math.max(same.revision || 0, book.revision || 0) + 1
-          })
-          s.put(merged)
-        } else {
-          s.put(book)
-        }
-      }
-      tx.oncomplete = resolve
-      tx.onerror = () => reject(tx.error)
-      tx.onabort = () => reject(tx.error)
-    })
-    
-    await loadLibrary()
-    broadcastLibraryChange('*')
-    toast(`已验证并恢复 ${incoming.length} 本图书`)
-  } catch (e) {
-    toast('备份无效或内容已损坏，未写入任何数据', 4800)
-  }
-}
 
 // ==================== Book Manager ====================
 function openBookManager(id) {
   const book = state.books.find(b => b.id === id)
   if (!book) return
   
-  state.managedBook = book
+  state.managedBook = metadataOf(book)
   state.managedCover = book.cover || null
   
   $('#manageTitle').value = book.title || ''
@@ -3335,7 +3402,7 @@ async function saveManagedBook() {
   book.title = $('#manageTitle').value.trim() || book.title
   book.author = $('#manageAuthor').value.trim() || '未知作者'
   book.cover = state.managedCover || null
-  book.updatedAt = Date.now()
+  book.metadataUpdatedAt = timestamp(book.metadataUpdatedAt)
   state.coverPaletteCache?.delete(book.id)
   state.coverFlowBackdropBookId = ''
   
@@ -3346,47 +3413,32 @@ async function saveManagedBook() {
   toast('图书信息已保存')
 }
 
-function exportManagedBookBackup() {
+async function exportManagedBookBackup() {
   const book = state.managedBook
   if (!book) return
-  
-  downloadText(
-    `${safeFileName(book.title)}-完整备份.json`,
-    JSON.stringify({
-      format: 'local-epub-reader-backup',
-      version: 3,
-      exportedAt: new Date().toISOString(),
-      books: [backupBook(book)]
-    }, null, 2),
-    'application/json'
-  )
+  try { downloadBlob(`${safeFileName(book.title)}-完整备份.json`, await createBackupBlob([await getBook(book.id)])) }
+  catch (error) { reportError(error) }
 }
 
-function exportManagedOriginal() {
+async function exportManagedOriginal() {
   const book = state.managedBook
   if (!book) return
-  
-  const filename = book.name?.toLowerCase().endsWith('.epub') 
-    ? book.name 
-    : `${safeFileName(book.title)}.epub`
-  
-  downloadBlob(filename, new Blob([book.data], { type: 'application/epub+zip' }))
+  try {
+    const data = await getBookData(book.id)
+    if (!data) throw new Error('图书正文缺失')
+    const filename = book.name?.toLowerCase().endsWith('.epub') ? book.name : `${safeFileName(book.title)}.epub`
+    downloadBlob(filename, new Blob([data], { type: 'application/epub+zip' }))
+  } catch (error) { reportError(error) }
 }
 
 async function resetManagedProgress() {
   const book = state.managedBook
   if (!book || !confirm(`重置《${book.title}》的阅读进度？笔记和设置会保留。`)) return
-  
-  book.chapter = 0
-  book.page = 0
-  book.scrollTop = 0
-  book.progress = 0
-  book.locator = { chapter: 0, offset: 0, ratio: 0 }
-  book.lastRead = 0
-  book.locatorAt = 0
-  book.updatedAt = Date.now()
+  book.chapter = 0; book.progress = 0; book.lastRead = 0
+  book.locator = { chapter: 0, offset: 0, ratio: 0, version: 2 }
+  book.progressUpdatedAt = timestamp(book.progressUpdatedAt)
   await saveBook(book)
-  broadcastLibraryChange(book.id)
+  broadcastLibraryChange(book.id, { reset: true })
   $('#bookManageDialog').close()
   await loadLibrary()
   toast('阅读进度已重置')
@@ -3397,411 +3449,410 @@ async function deleteManagedBook() {
   if (!book || !confirm(`从本地书架删除《${book.title}》？此操作不可撤销，建议先导出备份。`)) return
   
   await removeBook(book.id)
-  broadcastLibraryChange(book.id, { deleted:true })
-  $('#bookManageDialog').close()
+    $('#bookManageDialog').close()
   await loadLibrary()
   toast('图书已删除')
 }
-// ==================== Reader Core ====================
-async function openBook(id) {
-  const openBookToken = ++state.openBookToken
-  try {
-    const book = state.books.find((b) => b.id === id) ||
-      (await getBooks()).find((b) => b.id === id)
-    if (openBookToken !== state.openBookToken) return
-    if (!book) throw new Error('找不到这本书')
-    const nextBook = normalizeBook({ ...book })
-    nextBook.lastRead = Date.now()
-    const nextEpub = await parseEpub(nextBook.data)
-    if (openBookToken !== state.openBookToken) return
-    
-    state.book = nextBook
-    state.epub = nextEpub
-    state.fixedViewport = null
-    state.renderToken = 0
-    state.externalChange = false
-    state.chapter = Math.max(0, Math.min(
-      state.book.locator?.chapter ?? state.book.chapter ?? 0,
-      state.epub.spine.length - 1
-    ))
-    state.page = state.book.page || 0
-    state.continuousStartChapter = state.chapter
-    state.continuousLastChapter = state.chapter
-    state.continuousLoading = false
-    state.searchIndex = null
+// ==================== Reader Lifecycle and Chapter Window ====================
+const TARGET_RESIDENT_CHAPTERS = 12
+const isActiveReader = reader => !!reader && state.reader === reader && !reader.disposed
+const abortError = () => new DOMException('阅读操作已取消', 'AbortError')
+
+function disposeReader(reader = state.reader) {
+  if (!reader || reader.disposed) return
+  reader.disposed = true
+  reader.abort.abort()
+  clearTimeout(reader.saveTimer)
+  clearTimeout(reader.wheelTimer)
+  clearTimeout(reader.resizeTimer)
+  clearTimeout(state.selectionTimer)
+  clearTimeout(state.settingsTimer)
+  clearTimeout(state.statusTimer)
+  cancelAnimationFrame(reader.scrollFrame)
+  cancelAnimationFrame(reader.fillFrame)
+  reader.resources.dispose()
+  reader.chapters.clear()
+  reader.pending.clear()
+  if (state.reader === reader) {
+    for (const id of ['remarkDialog', 'searchDialog', 'exportDialog', 'footnoteDialog']) if ($(`#${id}`).open) $(`#${id}`).close()
+    $('#searchResults').replaceChildren()
+    $('#footnoteContent').replaceChildren()
+    state.reader = null
+    state.book = null
+    state.epub = null
+    state.selection = ''
+    state.selectionLocator = null
+    state.selectionNoteId = ''
+    state.lastNoteAction = null
     state.returnLocator = null
-    state.chapterLoadGeneration = (state.chapterLoadGeneration || 0) + 1
-    
+    state.pendingNoteId = ''
+    state.navigating = false
+    state.searchToken = (state.searchToken || 0) + 1
+  }
+}
+
+async function initializeReaderFrame(reader) {
+  const frame = document.createElement('iframe')
+  frame.id = 'readerFrame'
+  frame.title = 'EPUB 内容'
+  frame.setAttribute('sandbox', 'allow-same-origin')
+  $('#readerFrame').replaceWith(frame)
+  reader.frame = frame
+  await new Promise((resolve, reject) => {
+    let settled = false
+    const finish = error => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      frame.removeEventListener('load', onLoad)
+      reader.abort.signal.removeEventListener('abort', onAbort)
+      error ? reject(error) : resolve()
+    }
+    const onAbort = () => finish(abortError())
+    const onLoad = () => {
+      if (!isActiveReader(reader) || !frame.contentDocument?.body) return finish(abortError())
+      reader.doc = frame.contentDocument
+      reader.win = frame.contentWindow
+      finish()
+    }
+    const timer = setTimeout(() => finish(new Error('阅读页面加载超时')), 15000)
+    frame.addEventListener('load', onLoad)
+    reader.abort.signal.addEventListener('abort', onAbort, { once: true })
+    frame.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; img-src blob: data:; style-src &#39;unsafe-inline&#39;; font-src blob: data:; media-src blob: data:"><style id="reader-runtime-style"></style></head><body></body></html>'
+  })
+  const doc = reader.doc, signal = reader.abort.signal
+  const listen = (type, handler, options = {}) => doc.addEventListener(type, event => {
+    if (isActiveReader(reader) && !reader.initializing) handler(event)
+  }, { ...options, signal })
+  listen('mouseup', () => { state.selectionNoteId = ''; captureSelection() })
+  listen('touchend', () => { state.selectionNoteId = ''; captureSelection(); ensureContinuousContent().catch(reportError) }, { passive: true })
+  listen('keydown', handleReadingKey)
+  listen('click', event => {
+    const link = event.target.closest('[data-epub-href]')
+    if (link) {
+      event.preventDefault()
+      const section = link.closest('[data-chapter-index]')
+      const chapter = Number(section?.dataset.chapterIndex)
+      if (link.dataset.epubType?.includes('noteref') || isFootnoteTarget(link.dataset.epubHref, doc, chapter)) showFootnote(link.dataset.epubHref).catch(reportError)
+      else goHref(link.dataset.epubHref).catch(reportError)
+      return
+    }
+    const media = event.target.closest('img,svg')
+    if (media && openImageViewer(media)) { event.preventDefault(); return }
+    if (!reader.win.getSelection().toString() && !event.target.closest('a,button,input,select,textarea')) handleReaderTap(event.clientX, frame.clientWidth)
+  })
+  listen('wheel', event => {
+    if (reader.epub.fixedLayout) {
+      if (Math.abs(event.deltaY) < 24) return
+      event.preventDefault()
+      clearTimeout(reader.wheelTimer)
+      reader.wheelTimer = setTimeout(() => {
+        if (isActiveReader(reader)) navigateReading(event.deltaY > 0 ? 1 : -1).catch(reportError)
+      }, 80)
+    } else ensureContinuousContent().catch(reportError)
+  }, { passive: false })
+  reader.win.addEventListener('scroll', () => onReaderScroll(reader), { passive: true, signal })
+  listen('error', event => {
+    const media = event.target
+    if (media.matches?.('img,video,audio,source')) media.remove()
+  }, { capture: true })
+}
+
+async function prepareChapter(reader, index) {
+  const path = reader.epub.spine[index]
+  const raw = await reader.epub.zip.text(path)
+  const doc = parseChapterDocument(raw, path)
+  sanitizeEpubDocument(doc)
+  const owner = { released: false }
+  try {
+    await rewriteDocumentResources(doc, path, reader.resources.context(owner))
+    if (reader.disposed) throw abortError()
+    for (const link of doc.querySelectorAll('a[href]')) {
+      const href = link.getAttribute('href')
+      if (!href || /^(?:[a-z]+:|\/\/)/i.test(href)) { link.removeAttribute('href'); continue }
+      link.dataset.epubHref = resolvePath(path, href)
+      link.dataset.epubType = link.getAttribute('epub:type') || link.getAttributeNS('http://www.idpf.org/2007/ops', 'type') || link.getAttribute('role') || ''
+      link.setAttribute('href', '#')
+    }
+    const styles = [...doc.querySelectorAll('style')].map(style => style.textContent)
+    doc.querySelectorAll('style,link').forEach(style => style.remove())
+    const section = document.createElement('section')
+    for (const attr of [...doc.body.attributes]) {
+      if (!/^on/i.test(attr.name) && attr.name !== 'id') section.setAttribute(attr.name, attr.value)
+    }
+    section.classList.add('continuous-chapter')
+    section.dataset.chapterIndex = String(index)
+    section.dataset.chapterPath = path
+    for (const child of [...doc.body.childNodes]) section.append(document.importNode(child, true))
+    const viewport = doc.querySelector('meta[name="viewport"]')?.getAttribute('content') || ''
+    const box = (section.querySelector('svg[viewBox]')?.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number)
+    return {
+      index, owner, node: section, css: styles.map(css => scopeChapterCss(css, index)).join('\n'), resident: true,
+      viewport: {
+        width: +(viewport.match(/\bwidth\s*=\s*([\d.]+)/i)?.[1] || 0) || box[2] || 800,
+        height: +(viewport.match(/\bheight\s*=\s*([\d.]+)/i)?.[1] || 0) || box[3] || 1200
+      }
+    }
+  } catch (error) { reader.resources.release(owner); throw error }
+}
+
+function addChapterStyle(reader, chapter) {
+  const style = reader.doc.createElement('style')
+  style.dataset.chapterStyle = String(chapter.index)
+  style.textContent = chapter.css
+  reader.doc.head.insertBefore(style, reader.doc.getElementById('reader-runtime-style'))
+  chapter.style = style
+  delete chapter.css
+}
+
+async function openBook(id) {
+  const token = ++state.openBookToken
+  let reader = null
+  try {
+    const book = await getBook(id)
+    if (!book || book.deletedAt) throw new Error('找不到这本书')
+    const data = await getBookData(id)
+    if (!data) throw new Error('图书正文缺失，请从备份恢复')
+    const epub = await parseEpub(data)
+    reader = {
+      book, epub, resources: new BookResources(epub), abort: new AbortController(), disposed: false, deleted: false,
+      chapters: new Map(), pending: new Map(), failed: new Set(), contentVersion: 0, navigationVersion: 0,
+      first: 0, last: 0, initializing: true, appearanceVersion: 0
+    }
+    const index = Math.max(0, Math.min(Number(book.locator?.chapter ?? book.chapter) || 0, epub.spine.length - 1))
+    const prepared = await prepareChapter(reader, index)
+    if (token !== state.openBookToken) { disposeReader(reader); return }
+    disposeReader()
+    state.reader = reader
+    state.book = book
+    state.epub = epub
+    state.chapter = index
     document.documentElement.classList.remove('library-mode')
     $('#libraryView').classList.add('hidden')
     $('#readerView').classList.remove('hidden')
-    
-    document.documentElement.classList.add('fullscreen-reading')
     applyBookTheme()
-    
+    await initializeReaderFrame(reader)
     renderToc()
     renderNotes()
-    
-    await renderChapter(state.chapter, '', state.page, { locator: state.book.locator })
-  } catch (e) {
-    if (openBookToken !== state.openBookToken) return
-    clearUrls()
-    state.book = null
-    state.epub = null
-    document.documentElement.classList.remove('fullscreen-reading')
+    await renderChapter(index, '', 0, { locator: book.locator, prepared })
+  } catch (error) {
+    if (reader && state.reader === reader) disposeReader(reader)
+    else if (reader) disposeReader(reader)
+    if (token !== state.openBookToken || error.name === 'AbortError') return
     document.documentElement.classList.add('library-mode')
     $('#readerView').classList.add('hidden')
     $('#libraryView').classList.remove('hidden')
-    toast(`图书打开失败：${e.message}`, 4500)
+    toast(`图书打开失败：${error.message}`, 5000)
   }
 }
 
-async function renderChapter(index, fragment = '', initialPage = 0, options = {}) {
-  if (!state.epub || index < 0 || index >= state.epub.spine.length) return
-  
-  const renderToken = ++state.renderToken
-  const chapterLoadGeneration = ++state.chapterLoadGeneration
-  const restoreScroll = index === state.book.chapter 
-    ? (state.book.scrollTop || 0) 
-    : (initialPage > 1000 ? Number.MAX_SAFE_INTEGER : 0)
-  
-  state.chapter = index
-  state.continuousStartChapter = index
-  state.continuousLastChapter = index
-  state.continuousLoading = false
-  state.page = Math.max(0, initialPage)
-  clearUrls()
-  
-  const path = state.epub.spine[index]
-  const text = await state.epub.zip.text(path)
-  if (!text) throw new Error('章节文件缺失')
-  
-  const doc = new DOMParser().parseFromString(text, 'application/xhtml+xml')
-  if (doc.querySelector('parsererror') || !doc.body) {
-    throw new Error('章节内容损坏或格式不受支持')
-  }
-  sanitizeEpubDocument(doc)
-  
-  state.chapterDirection = (
-    doc.body.getAttribute('dir') || 
-    doc.documentElement.getAttribute('dir') || 
-    ''
-  ).toLowerCase()
-  
-  if (state.epub.fixedLayout) {
-    const content = doc.querySelector('meta[name="viewport"]')?.getAttribute('content') || ''
-    const width = +(content.match(/(?:^|[,;\s])width\s*=\s*([\d.]+)/i)?.[1] || 0)
-    const height = +(content.match(/(?:^|[,;\s])height\s*=\s*([\d.]+)/i)?.[1] || 0)
-    const viewBox = (doc.querySelector('svg[viewBox]')?.getAttribute('viewBox') || '')
-      .trim()
-      .split(/[\s,]+/)
-      .map(Number)
-    
-    state.fixedViewport = {
-      width: width || (viewBox.length === 4 && viewBox[2]) || 800,
-      height: height || (viewBox.length === 4 && viewBox[3]) || 1200
-    }
-  }
-  
-  await rewriteDocumentResources(doc, path)
-  if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) return
-
-  const chapterMarker = doc.createElement('div')
-  chapterMarker.className = 'continuous-chapter'
-  chapterMarker.dataset.chapterIndex = String(index)
-  chapterMarker.dataset.chapterPath = path
-  doc.body.prepend(chapterMarker)
-  
-  for (const el of [...doc.querySelectorAll('a[href]')]) {
-    const href = el.getAttribute('href')
-    if (!href || /^(https?:|mailto:)/i.test(href)) {
-      el.removeAttribute('href')
-      continue
-    }
-    
-    const target = resolvePath(path, href)
-    const type = el.getAttribute('epub:type') || 
-                 el.getAttributeNS('http://www.idpf.org/2007/ops', 'type') || 
-                 el.getAttribute('role') || ''
-    
-    el.setAttribute('href', '#')
-    el.setAttribute('data-epub-href', target)
-    el.setAttribute('data-epub-type', type)
-  }
-  
-  const settings = getSettings()
-  const injected = doc.createElement('style')
-  injected.id = 'reader-runtime-style'
-  injected.textContent = buildReaderCss(settings)
-  doc.head?.append(injected)
-  
-  const frame = $('#readerFrame')
-  const source = new XMLSerializer().serializeToString(doc)
-  await new Promise((resolve, reject) => {
-    let settled = false
-    const finish = (error) => {
-      if (settled) return
-      settled = true
-      clearTimeout(timeout)
-      frame.removeEventListener('load', handleLoad)
-      frame.removeEventListener('error', handleError)
-      error ? reject(error) : resolve()
-    }
-    const timeout = setTimeout(() => finish(new Error('章节页面加载超时')), 15000)
-    const handleError = () => {
-      finish(new Error('章节页面加载失败'))
-    }
-    const handleLoad = () => (async () => {
-      if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
-        finish()
-        return
-      }
-      
-      const idoc = frame.contentDocument
-      const win = frame.contentWindow
-      if (!idoc?.body || !win) {
-        finish(new Error('章节页面未能建立可访问的正文文档'))
-        return
-      }
-      
-      idoc.addEventListener('mouseup', (e) => {
-        state.selectionNoteId = ''
-        captureSelection(e)
-      })
-      
-      idoc.addEventListener('touchend', (e) => {
-        state.selectionNoteId = ''
-        captureSelection(e)
-      })
-      
-      idoc.addEventListener('keydown', handleReadingKey)
-      
-      idoc.addEventListener('click', (e) => {
-        const a = e.target.closest('[data-epub-href]')
-        if (a) {
-          e.preventDefault()
-          if (a.dataset.epubType?.includes('noteref') || 
-              isFootnoteTarget(a.dataset.epubHref, idoc)) {
-            showFootnote(a.dataset.epubHref)
-          } else {
-            goHref(a.dataset.epubHref)
-          }
-          return
-        }
-        
-        const img = e.target.closest('img,svg')
-        if (img && openImageViewer(img)) {
-          e.preventDefault()
-          return
-        }
-        
-        if (!win.getSelection().toString() && 
-            !e.target.closest('a,button,input,select,textarea')) {
-          handleReaderTap(e.clientX, frame.clientWidth)
-        }
-      })
-      
-      idoc.addEventListener('touchend', (e) => {
-        if (state.epub.fixedLayout) return
-        // Reflowable books use the browser's native vertical scroll. Do not turn
-        // horizontal gestures into chapter jumps on phones.
-        ensureContinuousContent().catch(() => {})
-      }, { passive: true })
-      
-      idoc.addEventListener('wheel', (e) => {
-        if (Math.abs(e.deltaY) < 24) return
-        
-        if (state.epub.fixedLayout) {
-          e.preventDefault()
-          clearTimeout(state.wheelTimer)
-          state.wheelTimer = setTimeout(() => {
-            navigateReading(e.deltaY > 0 ? 1 : -1).catch(error => toast(`翻页失败：${error.message}`, 3500))
-          }, 80)
-          return
-        }
-        
-        if (isScrollMode() && e.deltaY > 0) {
-          ensureContinuousContent().catch(() => {})
-        }
-      }, { passive: false })
-      
-      for (const media of idoc.querySelectorAll('img,video,audio,object,embed')) {
-        media.addEventListener('error', () => media.remove(), { once: true })
-        if (media.tagName === 'IMG' && media.complete && media.naturalWidth === 0) {
-          media.remove()
-        }
-      }
-      
-      applyHighlights(idoc)
-      
-      try {
-        await idoc.fonts?.ready
-      } catch {}
-      
-      await waitForDocumentImages(idoc)
-      if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
-        finish()
-        return
-      }
-      
-      requestAnimationFrame(() => {
-        if (renderToken !== state.renderToken || chapterLoadGeneration !== state.chapterLoadGeneration) {
-          finish()
-          return
-        }
-        
-        const fragmentTarget = fragment ? idoc.getElementById(fragment) : null
-        
-        if (state.epub.fixedLayout) {
-          state.pageCount = 1
-          state.page = 0
-          win.scrollTo(0, 0)
-        } else {
-          state.pageCount = 1
-          if (fragmentTarget) {
-            fragmentTarget.scrollIntoView({ block: 'start' })
-          } else if (options.locator && options.locator.chapter === index) {
-            scrollToLocator(idoc, options.locator)
-          } else {
-            win.scrollTo(0, restoreScroll)
-          }
-          state.book.scrollTop = win.scrollY
-          win.addEventListener('scroll', handleReaderScroll, { passive: true })
-        }
-        
-        state.autoChapterReadyAt = Date.now() + 500
-        updateReadingProgress()
-        saveCurrentBook()
-        focusPendingNote()
-        state.navigating = false
-        
-        finish()
-      })
-    })().catch(error => finish(error instanceof Error ? error : new Error(String(error))))
-    frame.addEventListener('error', handleError)
-    frame.addEventListener('load', handleLoad)
-    frame.srcdoc = source
-  })
-  
-  state.book.chapter = index
-  state.book.page = state.page
-  await saveCurrentBook()
-  markToc()
-}
-
-function handleReaderScroll() {
-  const win = $('#readerFrame').contentWindow
-  state.book.scrollTop = win.scrollY
-  updateContinuousChapter()
-  updateReadingProgress()
-  ensureContinuousContent().catch(e => toast(`下一章加载失败：${e.message}`, 3500))
-
-  clearTimeout(handleReaderScroll.timer)
-  handleReaderScroll.timer = setTimeout(() => {
-    state.book.locator = captureReadingLocator()
-    saveCurrentBook()
-  }, 250)
-}
-function currentContinuousChapter(doc = $('#readerFrame').contentDocument) {
-  const win = $('#readerFrame').contentWindow
-  const markers = [...doc.querySelectorAll('[data-chapter-index]')]
-  const y = (win?.scrollY || 0) + Math.max(24, $('#readerFrame').clientHeight * 0.18)
-  let current = state.continuousStartChapter ?? state.chapter
-  for (const marker of markers) {
-    if (marker.offsetTop <= y) current = Number(marker.dataset.chapterIndex) || current
-  }
-  return Math.max(0, Math.min(state.epub.spine.length - 1, current))
-}
-
-async function appendNextChapter() {
-  if (!state.epub || state.epub.fixedLayout || state.continuousLoading) return false
-  const loadedCount = $('#readerFrame').contentDocument?.querySelectorAll('[data-chapter-index]').length || 0
-  if (loadedCount >= 24) return false
-  const nextIndex = (state.continuousLastChapter ?? state.chapter) + 1
-  if (nextIndex >= state.epub.spine.length) return false
-
-  state.continuousLoading = true
-  const generation = state.chapterLoadGeneration
+async function renderChapter(index, fragment = '', endPosition = 0, options = {}) {
+  const reader = state.reader
+  if (!isActiveReader(reader) || index < 0 || index >= reader.epub.spine.length) return false
+  const navigation = ++reader.navigationVersion
+  state.navigating = true
+  let prepared = options.prepared
   try {
-    const path = state.epub.spine[nextIndex]
-    const text = await state.epub.zip.text(path)
-    if (!text) throw new Error('章节文件缺失')
-    const doc = new DOMParser().parseFromString(text, 'application/xhtml+xml')
-    if (doc.querySelector('parsererror') || !doc.body) throw new Error('章节内容损坏')
-    sanitizeEpubDocument(doc)
-    await rewriteDocumentResources(doc, path)
-    if (generation !== state.chapterLoadGeneration) return false
-    for (const el of [...doc.querySelectorAll('a[href]')]) {
-      const href = el.getAttribute('href')
-      if (!href || /^(https?:|mailto:)/i.test(href)) {
-        el.removeAttribute('href')
-        continue
-      }
-      el.setAttribute('href', '#')
-      el.setAttribute('data-epub-href', resolvePath(path, href))
-      el.setAttribute('data-epub-type', el.getAttribute('epub:type') || el.getAttribute('role') || '')
+    if (!reader.initializing) await saveReadingPosition()
+    prepared ||= await prepareChapter(reader, index)
+    if (!isActiveReader(reader) || navigation !== reader.navigationVersion) {
+      reader.resources.release(prepared.owner)
+      return false
     }
-
-    const idoc = $('#readerFrame').contentDocument
-    for (const sourceStyle of doc.head?.querySelectorAll('style') || []) {
-      const style = idoc.createElement('style')
-      style.textContent = sourceStyle.textContent
-      idoc.head.append(style)
-    }
-    const section = idoc.createElement('section')
-    section.className = 'continuous-chapter'
-    section.dataset.chapterIndex = String(nextIndex)
-    section.dataset.chapterPath = path
-    for (const child of [...doc.body.childNodes]) {
-      section.append(idoc.importNode(child, true))
-    }
-    idoc.body.append(section)
-    applyNotesToSection(section, nextIndex)
-    state.continuousLastChapter = nextIndex
+    reader.initializing = true
+    reader.restoring = false
+    reader.contentVersion++
+    clearTimeout(reader.saveTimer)
+    reader.resources.releaseExcept([prepared.owner])
+    reader.doc.querySelectorAll('[data-chapter-style]').forEach(style => style.remove())
+    reader.chapters.clear()
+    reader.failed.clear()
+    reader.doc.body.replaceChildren(reader.doc.importNode(prepared.node, true))
+    prepared.node = reader.doc.body.firstElementChild
+    addChapterStyle(reader, prepared)
+    reader.chapters.set(index, prepared)
+    reader.first = reader.last = index
+    reader.fixedViewport = prepared.viewport
+    state.chapter = index
+    reader.doc.getElementById('reader-runtime-style').textContent = buildReaderCss()
+    applyNotesToSection(prepared.node, index)
+    await waitForDocumentImages(prepared.node)
+    await Promise.race([reader.doc.fonts?.ready || Promise.resolve(), new Promise(resolve => setTimeout(resolve, 1800))])
+    if (!isActiveReader(reader) || navigation !== reader.navigationVersion) return false
+    prepared.height = prepared.node.offsetHeight
+    if (reader.epub.fixedLayout) reader.win.scrollTo({ top: 0, behavior: 'instant' })
+    else if (fragment) scrollToFragment(prepared.node, fragment)
+    else if (options.locator?.chapter === index) scrollToLocator(reader.doc, options.locator)
+    else if (endPosition > 1000) reader.win.scrollTo({ top: reader.doc.documentElement.scrollHeight, behavior: 'instant' })
+    else reader.win.scrollTo({ top: 0, behavior: 'instant' })
+    hideSelectionTools()
+    reader.initializing = false
+    updateReadingProgress()
+    markToc()
+    focusPendingNote()
+    await saveCurrentBook()
+    ensureContinuousContent().catch(reportError)
     return true
+  } catch (error) {
+    if (prepared && !reader.chapters.has(index)) reader.resources.release(prepared.owner)
+    if (isActiveReader(reader) && navigation === reader.navigationVersion) {
+      reader.initializing = false
+      toast(`章节打开失败：${error.message}`, 4500)
+    }
+    if (!reader.chapters.size) throw error
+    return false
   } finally {
-    state.continuousLoading = false
+    if (isActiveReader(reader) && navigation === reader.navigationVersion) state.navigating = false
+  }
+}
+
+function onReaderScroll(reader) {
+  if (!isActiveReader(reader) || reader.initializing || reader.restoring) return
+  cancelAnimationFrame(reader.scrollFrame)
+  reader.scrollFrame = requestAnimationFrame(() => {
+    if (!isActiveReader(reader) || reader.initializing) return
+    updateReadingProgress()
+    markToc()
+    ensureContinuousContent().catch(reportError)
+    clearTimeout(reader.saveTimer)
+    reader.saveTimer = setTimeout(() => { if (isActiveReader(reader)) saveReadingPosition().catch(reportError) }, 300)
+  })
+}
+
+function chapterRoot(index = state.chapter) {
+  return state.reader?.chapters.get(index)?.resident ? state.reader.chapters.get(index).node : null
+}
+
+function currentContinuousChapter() {
+  const reader = state.reader
+  if (!isActiveReader(reader) || !reader.doc?.body) return state.chapter
+  const y = reader.frame.clientHeight * 0.08
+  let current = reader.first
+  for (const chapter of reader.chapters.values()) {
+    if (chapter.node.getBoundingClientRect().top <= y) current = chapter.index
+    else break
+  }
+  return Math.max(0, Math.min(reader.epub.spine.length - 1, current))
+}
+
+function captureViewportAnchor(reader) {
+  const viewportY = reader.frame.clientHeight * 0.08
+  const chapter = [...reader.chapters.values()].find(entry => {
+    const rect = entry.node.getBoundingClientRect()
+    return rect.top <= viewportY && rect.bottom > viewportY
+  })
+  if (!chapter || chapter.resident) return { locator: captureReadingLocator() }
+  const rect = chapter.node.getBoundingClientRect()
+  return { chapter: chapter.index, ratio: (viewportY - rect.top) / Math.max(1, rect.height), viewportY }
+}
+
+function restoreViewportAnchor(reader, anchor) {
+  if (anchor.locator) return scrollToLocator(reader.doc, anchor.locator)
+  const chapter = reader.chapters.get(anchor.chapter)
+  if (!chapter) return false
+  const rect = chapter.node.getBoundingClientRect()
+  reader.win.scrollTo({ top: Math.max(0, reader.win.scrollY + rect.top + rect.height * anchor.ratio - anchor.viewportY), behavior: 'instant' })
+  return true
+}
+
+async function loadWindowChapter(reader, index) {
+  if (!isActiveReader(reader) || index < 0 || index >= reader.epub.spine.length || reader.failed.has(index)) return false
+  if (reader.chapters.get(index)?.resident) return false
+  if (reader.pending.has(index)) return reader.pending.get(index)
+  const version = reader.contentVersion, navigation = reader.navigationVersion
+  const task = (async () => {
+    const prepared = await prepareChapter(reader, index)
+    if (!isActiveReader(reader) || version !== reader.contentVersion || navigation !== reader.navigationVersion) { reader.resources.release(prepared.owner); return false }
+    const anchor = captureViewportAnchor(reader)
+    const previous = reader.chapters.get(index)
+    prepared.node = reader.doc.importNode(prepared.node, true)
+    if (previous) previous.node.replaceWith(prepared.node)
+    else if (index < reader.first) reader.doc.body.prepend(prepared.node)
+    else reader.doc.body.append(prepared.node)
+    addChapterStyle(reader, prepared)
+    applyNotesToSection(prepared.node, index)
+    reader.chapters.set(index, prepared)
+    reader.chapters = new Map([...reader.chapters].sort(([a], [b]) => a - b))
+    reader.first = Math.min(reader.first, index)
+    reader.last = Math.max(reader.last, index)
+    await waitForDocumentImages(prepared.node)
+    if (!isActiveReader(reader) || version !== reader.contentVersion) return false
+    prepared.height = prepared.node.offsetHeight
+    if (index < (anchor.locator?.chapter ?? anchor.chapter) || previous) restoreViewportAnchor(reader, anchor)
+    trimChapterWindow(reader)
+    return true
+  })().catch(error => {
+    if (isActiveReader(reader) && version === reader.contentVersion && error.name !== 'AbortError') {
+      reader.failed.add(index)
+      toast(`章节 ${index + 1} 加载失败：${error.message}，可通过目录重试`, 5000)
+    }
+    return false
+  }).finally(() => { if (reader.pending.get(index) === task) reader.pending.delete(index) })
+  reader.pending.set(index, task)
+  return task
+}
+
+function trimChapterWindow(reader) {
+  const resident = [...reader.chapters.values()].filter(chapter => chapter.resident)
+  if (resident.length <= TARGET_RESIDENT_CHAPTERS) return
+  const height = reader.frame.clientHeight
+  const selected = Number(state.selectionChapter)
+  const candidates = resident.filter(chapter => {
+    if (chapter.index === state.chapter || state.selection && chapter.index === selected) return false
+    const rect = chapter.node.getBoundingClientRect()
+    return rect.bottom < -height * 0.6 || rect.top > height * 1.6
+  }).sort((a, b) => Math.abs(b.index - state.chapter) - Math.abs(a.index - state.chapter))
+  let remaining = resident.length
+  for (const chapter of candidates) {
+    if (remaining <= TARGET_RESIDENT_CHAPTERS) break
+    const placeholder = reader.doc.createElement('div')
+    placeholder.className = 'chapter-placeholder'
+    placeholder.dataset.chapterIndex = String(chapter.index)
+    placeholder.style.height = `${chapter.node.offsetHeight}px`
+    chapter.node.replaceWith(placeholder)
+    chapter.style.remove()
+    reader.resources.release(chapter.owner)
+    reader.chapters.set(chapter.index, { index: chapter.index, node: placeholder, resident: false })
+    remaining--
   }
 }
 
 async function ensureContinuousContent() {
-  if (!state.epub || state.epub.fixedLayout) return
-  const frame = $('#readerFrame')
-  const win = frame.contentWindow
-  const doc = frame.contentDocument
-  const max = Math.max(0, doc.documentElement.scrollHeight - frame.clientHeight)
-  if (win.scrollY >= max - Math.max(180, frame.clientHeight * 0.7)) {
-    await appendNextChapter()
-  }
+  const reader = state.reader
+  if (!isActiveReader(reader) || reader.initializing || reader.epub.fixedLayout || state.navigating) return
+  if (reader.filling) return reader.filling
+  const version = reader.contentVersion
+  reader.filling = (async () => {
+    let changed = false
+    for (let round = 0; round < 6 && isActiveReader(reader) && version === reader.contentVersion && !state.navigating; round++) {
+      const height = reader.frame.clientHeight
+      const placeholder = [...reader.chapters.values()].find(chapter => {
+        const rect = chapter.node.getBoundingClientRect()
+        return !chapter.resident && rect.bottom > -height * 0.5 && rect.top < height * 1.5
+      })
+      let index = placeholder?.index
+      const first = reader.chapters.get(reader.first)?.node.getBoundingClientRect()
+      const last = reader.chapters.get(reader.last)?.node.getBoundingClientRect()
+      if (index == null && first?.top > -height * 0.5 && reader.first > 0) index = reader.first - 1
+      if (index == null && last?.bottom < height * 1.7 && reader.last < reader.epub.spine.length - 1) index = reader.last + 1
+      if (index == null || !await loadWindowChapter(reader, index)) break
+      changed = true
+    }
+    if (isActiveReader(reader) && version === reader.contentVersion) {
+      trimChapterWindow(reader)
+      if (changed) {
+        updateReadingProgress()
+        cancelAnimationFrame(reader.fillFrame)
+        reader.fillFrame = requestAnimationFrame(() => { if (isActiveReader(reader)) ensureContinuousContent().catch(reportError) })
+      }
+    }
+  })().finally(() => { reader.filling = null })
+  return reader.filling
 }
 
-function continuousChapterRatio() {
-  if (!state.epub || state.epub.fixedLayout) return chapterRatio()
-  const doc = $('#readerFrame').contentDocument
-  const win = $('#readerFrame').contentWindow
-  const markers = [...doc.querySelectorAll('[data-chapter-index]')]
-  const current = state.chapter
-  const marker = markers.find(el => Number(el.dataset.chapterIndex) === current)
-  const next = markers.find(el => Number(el.dataset.chapterIndex) === current + 1)
-  if (!marker) return chapterRatio()
-  const start = marker.offsetTop
-  const end = next ? next.offsetTop : doc.documentElement.scrollHeight
-  return Math.max(0, Math.min(1, ((win.scrollY || 0) - start) / Math.max(1, end - start - $('#readerFrame').clientHeight)))
-}
-
-function updateContinuousChapter() {
-  if (!state.epub || state.epub.fixedLayout) return
-  state.chapter = currentContinuousChapter()
-  state.book.chapter = state.chapter
-  state.book.progress = Math.min(1, (state.chapter + continuousChapterRatio()) / state.epub.spine.length)
-  state.book.lastRead = Date.now()
-  markToc()
-}
-
-async function waitForDocumentImages(doc) {
-  const images = [...doc.images].filter(img => !img.complete)
+async function waitForDocumentImages(root) {
+  const images = [...root.querySelectorAll('img')].filter(img => !img.complete)
   if (!images.length) return
-  
   await Promise.race([
     Promise.all(images.map(img => new Promise(resolve => {
       img.addEventListener('load', resolve, { once: true })
@@ -3812,209 +3863,168 @@ async function waitForDocumentImages(doc) {
 }
 
 function chapterRatio() {
-  const frame = $('#readerFrame')
-  if (state.epub?.fixedLayout) {
-    return state.chapter === state.epub.spine.length - 1 ? 1 : 0
-  }
-  
-  const doc = frame.contentDocument
-  const max = Math.max(1, doc?.documentElement.scrollHeight - frame.clientHeight)
-  return Math.min(1, (frame.contentWindow?.scrollY || 0) / max)
+  const reader = state.reader
+  if (!isActiveReader(reader)) return 0
+  if (reader.epub.fixedLayout) return state.chapter === reader.epub.spine.length - 1 ? 1 : 0
+  const root = chapterRoot()
+  if (!root) return 0
+  const rect = root.getBoundingClientRect(), height = reader.frame.clientHeight
+  return Math.max(0, Math.min(1, (height * 0.08 - rect.top) / Math.max(1, rect.height)))
 }
 
 function updateReadingProgress() {
-  if (!state.book || !state.epub) return
-  
-  const ratio = state.epub.fixedLayout ? chapterRatio() : continuousChapterRatio()
-  const total = state.epub.spine.length
-  state.book.progress = Math.min(1, (state.chapter + ratio) / total)
-  
-  if (state.epub.fixedLayout && state.chapter === total - 1) {
-    state.book.progress = 1
-  }
-  
-  state.book.chapter = state.chapter
-  state.book.page = state.page
-  
-  if (!state.book.locator || 
-      !state.book.locatorAt || 
-      Date.now() - state.book.locatorAt > 260) {
-    state.book.locator = captureReadingLocator()
-    state.book.locatorAt = Date.now()
-  }
-  
-  state.book.lastRead = Date.now()
-  
+  const reader = state.reader
+  if (!isActiveReader(reader) || reader.initializing || !reader.doc?.body) return
+  if (!reader.epub.fixedLayout) state.chapter = currentContinuousChapter()
+  if (!chapterRoot() && !reader.epub.fixedLayout) return
+  const book = reader.book, total = reader.epub.spine.length
+  let progress = Math.min(1, (state.chapter + chapterRatio()) / total)
+  const max = Math.max(0, reader.doc.documentElement.scrollHeight - reader.frame.clientHeight)
+  if (reader.last === total - 1 && (reader.epub.fixedLayout || reader.win.scrollY >= max - 2)) progress = 1
+  book.chapter = state.chapter
+  book.progress = progress
+  book.locator = captureReadingLocator()
+  book.lastRead = timestamp(book.progressUpdatedAt || 0)
+  book.progressUpdatedAt = book.lastRead
 }
 
 function showReadingStatus(ms = 1250) {
   if (!state.book || !state.epub) return
-  
   $('#readingStatusChapter').textContent = chapterLabel(state.chapter)
-  $('#readingStatusPage').textContent = '滚动阅读'
+  $('#readingStatusPage').textContent = state.epub.fixedLayout ? '固定版式' : '滚动阅读'
   $('#readingStatusProgress').textContent = `全书 ${Math.round((state.book.progress || 0) * 100)}%`
-  
-  const box = $('#readingStatus')
-  box.classList.add('visible')
-  
+  $('#readingStatus').classList.add('visible')
   clearTimeout(state.statusTimer)
-  state.statusTimer = setTimeout(() => box.classList.remove('visible'), ms)
+  state.statusTimer = setTimeout(() => $('#readingStatus').classList.remove('visible'), ms)
 }
 
 async function navigateReading(delta) {
-  if (state.navigating || !state.book || !state.epub) return
-  
-  const frame = $('#readerFrame')
-  const win = frame.contentWindow
-  
-  if (!state.epub.fixedLayout) {
-    await ensureContinuousContent()
-    const doc = frame.contentDocument
-    const step = frame.clientHeight * 0.82
-    const max = doc.documentElement.scrollHeight - frame.clientHeight
-    const target = win.scrollY + delta * step
-    if (target >= 0 && target <= max + 5) {
-      win.scrollTo({ top: Math.max(0, target), behavior: 'smooth' })
-      return true
-    }
-    if (delta < 0 && state.chapter > 0) {
-      state.navigating = true
-      try {
-        await renderChapter(state.chapter - 1, '', 99999)
-        showReadingStatus(1500)
-        return true
-      } catch (error) {
-        state.navigating = false
-        toast(`上一章打开失败：${error.message}`, 3500)
-      }
-    }
-    return false
+  const reader = state.reader
+  if (!isActiveReader(reader) || state.navigating) return false
+  if (reader.epub.fixedLayout) {
+    const changed = await renderChapter(state.chapter + delta)
+    if (changed) showReadingStatus()
+    return changed
   }
-  
-  const chapter = state.chapter + delta
-  if (chapter >= 0 && chapter < state.epub.spine.length) {
-    state.navigating = true
-    try {
-      await renderChapter(chapter, '', delta < 0 ? 99999 : 0)
-      showReadingStatus(1500)
-    } catch (e) {
-      state.navigating = false
-      toast(`章节打开失败：${e.message}`)
-    }
-  }
+  await ensureContinuousContent()
+  if (!isActiveReader(reader)) return false
+  const max = Math.max(0, reader.doc.documentElement.scrollHeight - reader.frame.clientHeight)
+  const target = Math.max(0, Math.min(max, reader.win.scrollY + delta * reader.frame.clientHeight * 0.82))
+  reader.win.scrollTo({ top: target, behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth' })
+  return true
 }
 
-function isScrollMode() {
-  return !!state.epub && !state.epub.fixedLayout && getSettings().mode === 'scroll'
-}
-
-function saveReadingPosition() {
-  if (!state.book || !state.epub) return
-  state.book.locator = captureReadingLocator()
-  state.book.lastRead = Date.now()
+async function saveReadingPosition() {
+  const reader = state.reader
+  if (!isActiveReader(reader) || reader.initializing) return null
+  clearTimeout(reader.saveTimer)
+  if (!reader.epub.fixedLayout && !chapterRoot(currentContinuousChapter())) await loadWindowChapter(reader, currentContinuousChapter())
+  if (!isActiveReader(reader)) return null
+  updateReadingProgress()
   return saveCurrentBook()
 }
-// ==================== Locator System ====================
+
+
+// ==================== Chapter-Relative Text Locations ====================
 function textMap(root) {
   const doc = root.ownerDocument
-  const walker = doc.createTreeWalker(root, doc.defaultView.NodeFilter.SHOW_TEXT)
-  let node
-  let total = 0
-  const nodes = []
-  
-  while (node = walker.nextNode()) {
+  const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  const nodes = []; let node, total = 0
+  while ((node = walker.nextNode())) {
+    if (node.parentElement?.closest('script,style')) continue
     nodes.push({ node, start: total, end: total + node.data.length })
     total += node.data.length
   }
-  
-  return { nodes, total }
+  return { nodes, total, text: nodes.map(item => item.node.data).join('') }
 }
 
 function captureReadingLocator() {
-  const frame = $('#readerFrame')
-  const doc = frame.contentDocument
-  
-  if (!doc?.body) {
-    return state.book?.locator || { chapter: state.chapter, offset: 0, ratio: chapterRatio() }
-  }
-  
-  const map = textMap(doc.body)
-  const viewportX = Math.max(12, frame.clientWidth * 0.08)
-  const viewportY = Math.max(12, frame.clientHeight * 0.08)
-  let best = null
-  
-  for (const item of map.nodes) {
-    if (!item.node.data.trim()) continue
-    
-    const range = doc.createRange()
-    range.selectNodeContents(item.node)
-    const rect = [...range.getClientRects()].find(r => 
-      r.bottom > viewportY && r.top < frame.clientHeight - viewportY
-    )
-    
-    if (rect) {
-      best = item
-      break
+  const reader = state.reader
+  if (!isActiveReader(reader) || !reader.doc?.body) return state.book?.locator || { chapter: state.chapter, offset: 0, ratio: 0, version: 2 }
+  if (reader.epub.fixedLayout) return { chapter: state.chapter, offset: 0, ratio: 0, version: 2 }
+  const viewportY = Math.max(12, reader.frame.clientHeight * 0.08)
+  for (const chapter of reader.chapters.values()) {
+    if (!chapter.resident) continue
+    const bounds = chapter.node.getBoundingClientRect()
+    if (bounds.bottom <= viewportY || bounds.top >= reader.frame.clientHeight) continue
+    const map = textMap(chapter.node)
+    for (const item of map.nodes) {
+      if (!item.node.data.trim()) continue
+      const range = reader.doc.createRange()
+      range.selectNodeContents(item.node)
+      if (![...range.getClientRects()].some(rect => rect.bottom > viewportY && rect.top < reader.frame.clientHeight)) continue
+      let low = 0, high = Math.max(0, item.node.data.length - 1)
+      while (low < high) {
+        const mid = Math.floor((low + high) / 2)
+        range.setStart(item.node, mid); range.setEnd(item.node, mid + 1)
+        if (range.getBoundingClientRect().bottom <= viewportY) low = mid + 1
+        else high = mid
+      }
+      range.setStart(item.node, low); range.setEnd(item.node, Math.min(low + 1, item.node.data.length))
+      const offset = item.start + low, rect = range.getBoundingClientRect()
+      return {
+        version: 2, chapter: chapter.index, offset,
+        ratio: Math.max(0, Math.min(1, (viewportY - bounds.top) / Math.max(1, bounds.height))),
+        before: map.text.slice(Math.max(0, offset - 32), offset), after: map.text.slice(offset, offset + 64),
+        viewportOffset: rect.top
+      }
     }
   }
-  
-  const offset = best?.start ?? Math.round(map.total * chapterRatio())
-  const text = doc.body.textContent || ''
-  
-  return {
-    chapter: state.chapter,
-    offset,
-    ratio: chapterRatio(),
-    before: text.slice(Math.max(0, offset - 32), offset),
-    after: text.slice(offset, offset + 64),
-    scrollTop: frame.contentWindow?.scrollY || 0
-  }
+  return { ...(reader.book.locator || {}), version: 2 }
 }
 
-function resolveLocatorOffset(doc, locator) {
-  const text = doc.body?.textContent || ''
-  
+function resolveLocatorOffset(root, locator) {
+  const text = textMap(root).text
+  const expected = Math.max(0, Math.min(text.length, Number(locator?.offset) || 0))
   if (locator?.after) {
-    const candidates = []
-    let from = 0
-    
-    while ((from = text.indexOf(locator.after, from)) >= 0) {
-      candidates.push(from)
-      from += Math.max(1, locator.after.length)
-    }
-    
-    if (candidates.length) {
-      const expected = Number.isFinite(locator.offset) 
-        ? locator.offset 
-        : Math.round((locator.ratio || 0) * text.length)
-      return candidates.sort((a, b) => Math.abs(a - expected) - Math.abs(b - expected))[0]
-    }
-    
+    const candidates = []; let from = 0
+    while ((from = text.indexOf(locator.after, from)) >= 0) { candidates.push(from); from += Math.max(1, locator.after.length) }
+    if (candidates.length) return candidates.sort((a, b) => Math.abs(a - expected) - Math.abs(b - expected))[0]
     if (locator.before) {
-      const b = text.lastIndexOf(
-        locator.before, 
-        Math.max(0, (locator.offset || 0) + locator.before.length + 256)
-      )
-      if (b >= 0) return b + locator.before.length
+      const before = text.lastIndexOf(locator.before, Math.min(text.length, expected + 288))
+      if (before >= 0) return before + locator.before.length
     }
   }
-  
-  return Math.max(0, Math.min(text.length, locator?.offset || 0))
+  return expected
 }
 
-function nodeAtTextOffset(doc, offset) {
-  const map = textMap(doc.body)
-  return map.nodes.find(x => x.end >= offset) || map.nodes.at(-1)
+function nodeAtTextOffset(root, offset) {
+  const map = textMap(root)
+  return map.nodes.find(item => item.end > offset) || map.nodes.at(-1)
 }
 
 function scrollToLocator(doc, locator) {
-  const item = nodeAtTextOffset(doc, resolveLocatorOffset(doc, locator))
-  if (item?.node.parentElement) {
-    item.node.parentElement.scrollIntoView({ block: 'start' })
-  } else {
-    doc.defaultView.scrollTo(0, locator?.scrollTop || 0)
-  }
+  const root = doc.querySelector(`.continuous-chapter[data-chapter-index="${Number(locator?.chapter) || 0}"]`)
+  if (!root) return false
+  const offset = resolveLocatorOffset(root, locator), item = nodeAtTextOffset(root, offset)
+  if (!item) return false
+  const local = Math.max(0, Math.min(item.node.data.length, offset - item.start))
+  const range = doc.createRange()
+  range.setStart(item.node, local); range.setEnd(item.node, Math.min(local + 1, item.node.data.length))
+  const rect = range.getBoundingClientRect()
+  const viewportOffset = Number.isFinite(locator?.viewportOffset) ? locator.viewportOffset : 24
+  doc.defaultView.scrollTo({ top: Math.max(0, doc.defaultView.scrollY + rect.top - viewportOffset), behavior: 'instant' })
+  return true
 }
+
+function scrollToFragment(root, fragment) {
+  let decoded = fragment
+  try { decoded = decodeURIComponent(fragment) } catch {}
+  const target = root.id === decoded ? root : [...root.querySelectorAll('[id]')].find(el => el.id === decoded)
+  if (target) root.ownerDocument.defaultView.scrollTo({ top: root.ownerDocument.defaultView.scrollY + target.getBoundingClientRect().top - 24, behavior: 'instant' })
+  return !!target
+}
+
+function selectedChapterRoot() {
+  const selection = state.reader?.win?.getSelection()
+  if (!selection?.rangeCount) return null
+  const range = selection.getRangeAt(0)
+  const element = node => node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement
+  const start = element(range.startContainer)?.closest('.continuous-chapter')
+  const end = element(range.endContainer)?.closest('.continuous-chapter')
+  return start && start === end ? start : null
+}
+
 
 // ==================== Navigation ====================
 function renderToc() {
@@ -4042,83 +4052,47 @@ function markToc() {
 }
 
 async function goHref(href) {
-  const [path, frag] = href.split('#')
-  let i = state.epub.spine.indexOf(path)
-  
-  if (i < 0) {
-    i = state.epub.spine.findIndex((p) => p.endsWith(path))
-  }
-  
-  if (i >= 0) {
-    state.navigating = true
-    try {
-      await renderChapter(i, frag)
-    } catch (error) {
-      state.navigating = false
-      toast(`章节打开失败：${error.message}`, 3500)
-    }
-  }
+  if (!state.epub) return
+  const [path, fragment] = href.split('#')
+  const index = state.epub.spine.indexOf(path)
+  if (index < 0) { toast('目标内容不在本书正文目录中'); return }
+  await renderChapter(index, fragment)
 }
 
-function isFootnoteTarget(href, doc) {
-  const [path, frag] = href.split('#')
-  if (!frag || path !== state.epub.spine[state.chapter]) return false
-  
-  let el = doc.getElementById(frag)
-  while (el) {
-    const type = el.getAttribute?.('epub:type') || 
-                 el.getAttributeNS?.('http://www.idpf.org/2007/ops', 'type') || ''
-    
-    if (type.split(/\s+/).includes('footnote') || 
-        el.getAttribute?.('role') === 'doc-footnote' || 
-        el.tagName?.toLowerCase() === 'aside') {
-      return true
-    }
-    
+function isFootnoteTarget(href, doc, chapter = state.chapter) {
+  const [path, fragment] = href.split('#')
+  if (!fragment || path !== state.epub?.spine[chapter]) return false
+  const root = doc.querySelector(`.continuous-chapter[data-chapter-index="${chapter}"]`)
+  let el = root && [...root.querySelectorAll('[id]')].find(node => node.id === fragment)
+  while (el && el !== root) {
+    const type = el.getAttribute('epub:type') || el.getAttributeNS('http://www.idpf.org/2007/ops', 'type') || ''
+    if (type.split(/\s+/).includes('footnote') || el.getAttribute('role') === 'doc-footnote' || el.localName === 'aside') return true
     el = el.parentElement
   }
-  
   return false
 }
 
 async function showFootnote(href) {
-  const [path, frag] = href.split('#')
-  let doc
-  
-  if (path === state.epub.spine[state.chapter]) {
-    doc = $('#readerFrame').contentDocument
-  } else {
-    const raw = await state.epub.zip.text(path)
-    if (!raw) {
-      await goHref(href)
-      return
-    }
-    doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
-    if (doc.body) await rewriteDocumentResources(doc, path)
-  }
-  
-  const target = frag && doc?.getElementById(frag)
-  if (!target) {
-    await goHref(href)
-    return
-  }
-  
+  const reader = state.reader
+  if (!isActiveReader(reader)) return
+  const [path, fragment] = href.split('#')
+  const raw = await reader.epub.zip.text(path)
+  if (!isActiveReader(reader)) return
+  if (!raw) return goHref(href)
+  const doc = parseChapterDocument(raw, path)
+  sanitizeEpubDocument(doc)
+  if (reader.footnoteOwner) reader.resources.release(reader.footnoteOwner)
+  const owner = reader.footnoteOwner = { released: false }
+  await rewriteDocumentResources(doc, path, reader.resources.context(owner))
+  if (!isActiveReader(reader) || reader.footnoteOwner !== owner || owner.released) return
+  let decoded = fragment
+  try { decoded = decodeURIComponent(fragment) } catch {}
+  const target = decoded && doc.getElementById(decoded)
+  if (!target) { reader.resources.release(owner); reader.footnoteOwner = null; return goHref(href) }
   const clone = target.cloneNode(true)
-  clone.querySelectorAll('script,style,link,iframe,form,input,button,object,embed,audio,video')
-    .forEach(el => el.remove())
-  
-  for (const el of [clone, ...clone.querySelectorAll('*')]) {
-    for (const attr of [...el.attributes]) {
-      if (/^on/i.test(attr.name) || attr.name === 'srcdoc') {
-        el.removeAttribute(attr.name)
-      }
-    }
-  }
-  
-  clone.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes))
-  
-  const box = $('#footnoteContent')
-  box.replaceChildren(...clone.childNodes)
+  clone.querySelectorAll('script,style,link,iframe,form,input,button,object,embed,audio,video').forEach(el => el.remove())
+  clone.querySelectorAll('a').forEach(link => link.replaceWith(...link.childNodes))
+  $('#footnoteContent').replaceChildren(...clone.childNodes)
   $('#footnoteDialog').showModal()
 }
 
@@ -4185,36 +4159,23 @@ function closeImageViewer() {
 
 async function home() {
   state.openBookToken++
-  if (state.book) {
-    try {
-      await saveReadingPosition()
-    } catch {
-      toast('阅读位置保存失败，但仍可返回书架', 4000)
-    }
-  }
-  
-  clearUrls()
+  const reader = state.reader
+  try { if (isActiveReader(reader)) await saveReadingPosition() }
+  catch (error) { toast(`阅读位置保存失败：${error.message}`, 5000) }
+  if (reader && state.reader !== reader) return
+  disposeReader(reader)
   closeImageViewer()
   closeReaderDrawer()
-  
-  state.book = null
-  state.epub = null
-  state.renderToken++
-  state.chapterLoadGeneration = (state.chapterLoadGeneration || 0) + 1
-  state.searchToken = (state.searchToken || 0) + 1
-  state.searchIndex = null
-  state.fixedViewport = null
-  state.returnLocator = null
-  
-  document.documentElement.classList.remove('fullscreen-reading')
+  $('#selectionBar').classList.add('hidden')
+  const emptyFrame = document.createElement('iframe')
+  emptyFrame.id = 'readerFrame'; emptyFrame.title = 'EPUB 内容'; emptyFrame.setAttribute('sandbox', 'allow-same-origin')
+  $('#readerFrame').replaceWith(emptyFrame)
   document.documentElement.classList.add('library-mode')
   document.documentElement.dataset.theme = normalizeSettings(legacySettings()).theme
-  
   $('#readerView').classList.add('hidden')
   $('#libraryView').classList.remove('hidden')
   $('#libraryView').scrollTop = 0
-  
-  loadLibrary()
+  await loadLibrary()
 }
 
 function openSidebar(panel) {
@@ -4259,16 +4220,16 @@ function handleReadingKey(e) {
       return
     }
 
-    if (key === 'z' && state.book) {
+    if (key === 'z' && state.book && !isTyping && !$('dialog[open]')) {
       e.preventDefault()
-      undoLastNoteAction()
+      undoLastNoteAction().catch(reportError)
       return
     }
   }
 
   if (e.key === 'Enter' && state.selection && !isTyping && !e.ctrlKey && !e.metaKey) {
     e.preventDefault()
-    addNote('marker')
+    addNote('marker').catch(reportError)
     return
   }
 
@@ -4322,17 +4283,30 @@ function handleReadingKey(e) {
 }
 // ==================== Notes & Highlights ====================
 function captureSelection() {
+  const reader = state.reader
+  if (!isActiveReader(reader)) return
   clearTimeout(state.selectionTimer)
   state.selectionTimer = setTimeout(() => {
+    if (!isActiveReader(reader)) return
     const frame = $('#readerFrame')
     const sel = frame.contentWindow.getSelection()
     const text = sel?.toString().trim()
     const bar = $('#selectionBar')
     
+    const root = selectedChapterRoot()
+    if (text && !root) { hideSelectionTools(); toast('请在同一章节内选择文字'); return }
+    state.selectionChapter = Number(root?.dataset.chapterIndex ?? state.chapter)
     state.selection = text || ''
+    state.selectionLocator = null
     bar.classList.toggle('hidden', !text)
     
     if (!text || !sel.rangeCount) return
+
+    const range = sel.getRangeAt(0), chapterText = textMap(root).text
+    const offset = textOffset(root, range.startContainer, range.startOffset) + sel.toString().length - sel.toString().trimStart().length
+    if (offset < 0 || chapterText.slice(offset, offset + text.length) !== text) { hideSelectionTools(); return }
+    state.selectionLocator = { bookId: reader.book.id, chapter: state.selectionChapter, position: offset, quote: text,
+      before: chapterText.slice(Math.max(0, offset - 32), offset), after: chapterText.slice(offset + text.length, offset + text.length + 32) }
     
     const rect = sel.getRangeAt(0).getBoundingClientRect()
     const frameRect = frame.getBoundingClientRect()
@@ -4368,27 +4342,17 @@ function captureSelection() {
 }
 
 function selectedTextPosition() {
-  const sel = $('#readerFrame').contentWindow?.getSelection()
-  return sel?.rangeCount 
-    ? textOffset(
-        $('#readerFrame').contentDocument.body,
-        sel.getRangeAt(0).startContainer,
-        sel.getRangeAt(0).startOffset
-      )
-    : -1
+  return state.selectionLocator?.position ?? -1
 }
 
 function textOffset(root, node, offset) {
-  const doc = root.ownerDocument
-  const range = doc.createRange()
-  
-  try {
-    range.selectNodeContents(root)
-    range.setEnd(node, offset)
-    return range.toString().length
-  } catch {
-    return -1
+  let total = 0
+  for (const item of textMap(root).nodes) {
+    if (item.node === node) return total + Math.max(0, Math.min(offset, node.data.length))
+    total = item.end
   }
+  const range = root.ownerDocument.createRange()
+  try { range.selectNodeContents(root); range.setEnd(node, offset); return range.toString().length } catch { return -1 }
 }
 
 function matchingNotes(kind, quote = state.selection) {
@@ -4400,7 +4364,7 @@ function matchingNotes(kind, quote = state.selection) {
   
   const position = selectedTextPosition()
   return notes.filter(n => 
-    n.chapter === state.chapter &&
+    n.chapter === (state.selectionChapter ?? state.chapter) &&
     (n.kind || 'marker') === kind &&
     n.quote === quote &&
     (position < 0 || n.position < 0 || Math.abs(n.position - position) <= 1)
@@ -4425,346 +4389,211 @@ function addRemark() {
   requestAnimationFrame(() => $('#remarkInput').focus())
 }
 
+// ==================== Atomic Note Editing and Highlight Rendering ====================
+async function commitNoteChange(reader, change) {
+  if (!isActiveReader(reader) || reader.noteBusy || reader.deleted) return false
+  reader.noteBusy = true
+  const before = structuredClone({ notes: reader.book.notes, noteTombstones: reader.book.noteTombstones })
+  try {
+    change(reader.book)
+    const saved = await saveCurrentBook()
+    if (!saved) throw new Error('本书已删除，笔记未保存')
+    if (!isActiveReader(reader)) return false
+    refreshHighlights()
+    renderNotes()
+    return true
+  } catch (error) {
+    if (isActiveReader(reader)) {
+      Object.assign(reader.book, before)
+      refreshHighlights()
+      renderNotes()
+      toast(`笔记未保存：${error.message}`, 5000)
+    }
+    return false
+  } finally { reader.noteBusy = false }
+}
+
 async function saveRemark() {
-  const value = $('#remarkInput').value.trim()
-  if (!value) return toast('请先输入备注内容')
-  await addNote('remark', value)
-  $('#remarkDialog').close()
+  const reader = state.reader, text = $('#remarkInput').value.trim()
+  if (!text) return toast('请先输入备注内容')
+  if (await addNote('remark', text) && isActiveReader(reader)) $('#remarkDialog').close()
 }
 
 async function addNote(kind = 'marker', noteText = '') {
-  if (!state.selection) return
+  const reader = state.reader, locator = state.selectionLocator
+  if (!isActiveReader(reader) || !locator || locator.bookId !== reader.book.id || !state.selection) return false
+  const root = chapterRoot(locator.chapter)
+  if (!root) return false
+  if (reader.deleted) { toast('本书已删除，无法保存新的笔记'); return false }
   const existing = matchingNotes(kind)
   if (existing.length) {
-    const ids = new Set(existing.map(n => n.id))
-    state.book.notes = state.book.notes.filter(n => !ids.has(n.id))
-    await saveCurrentBook()
-    for (const id of ids) {
-      const marked = $('#readerFrame').contentDocument.querySelectorAll(`[data-note="${CSS.escape(id)}"]`)
-      for (const el of marked) el.replaceWith(...el.childNodes)
-    }
-    $('#readerFrame').contentWindow.getSelection()?.removeAllRanges()
-    state.selection = ''
-    state.selectionNoteId = ''
-    $('#selectionBar').classList.add('hidden')
-    renderNotes()
-    toast('已删除笔记')
-    return
+    const changed = await commitNoteChange(reader, book => { for (const note of existing) deleteNoteRecord(book, note.id) })
+    if (changed) { state.lastNoteAction = null; hideSelectionTools(); toast('已删除笔记') }
+    return changed
   }
-
-  const selectedRange = (() => {
-    const sel = $('#readerFrame').contentWindow?.getSelection()
-    return sel?.rangeCount ? sel.getRangeAt(0).cloneRange() : null
-  })()
-  const position = selectedTextPosition()
-  const bodyText = $('#readerFrame').contentDocument.body.textContent || ''
+  const text = textMap(root).text, now = timestamp()
+  const position = locateNoteText(text, locator)
   const item = {
-    id: uid(), chapter: state.chapter, quote: state.selection, note: noteText,
-    kind, position,
-    before: bodyText.slice(Math.max(0, position - 32), position),
-    after: bodyText.slice(position + state.selection.length, position + state.selection.length + 32),
-    color: getSettings().highlightColor || 'yellow', created: Date.now(), updated: Date.now()
+    id: uid(), chapter: Number(root.dataset.chapterIndex), quote: state.selection, note: noteText, kind, position,
+    before: text.slice(Math.max(0, position - 32), position), after: text.slice(position + state.selection.length, position + state.selection.length + 32),
+    color: getSettings().highlightColor || 'yellow', created: now, updated: now, locatorVersion: 2
   }
-  state.book.notes ||= []
-  state.book.notes.push(item)
-  state.lastNoteAction = { type: 'add', id: item.id }
-  const highlighted = highlightSelectionRange(selectedRange, item.id, item)
-  if (highlighted === 0) {
-    const fallback = highlightFirst($('#readerFrame').contentDocument.body, item.quote, item.id, item.kind, item.position, item)
-    if (!fallback) {
-      state.book.notes = state.book.notes.filter(n => n.id !== item.id)
-      state.lastNoteAction = null
-      renderNotes()
-      toast('笔记未能标注，请重新选择文字', 3500)
-      return
-    }
+  if (text.slice(position, position + item.quote.length) !== item.quote) { toast('请重新选择要标注的文字'); return false }
+  const changed = await commitNoteChange(reader, book => book.notes.push(item))
+  if (changed) {
+    state.lastNoteAction = { type: 'add', id: item.id, bookId: reader.book.id }
+    hideSelectionTools()
+    toast(noteText ? '备注已保存' : '笔记已保存')
   }
-  try {
-    await saveCurrentBook()
-  } catch (error) {
-    $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(item.id)}"]`).forEach(el => el.replaceWith(...el.childNodes))
-    state.book.notes = state.book.notes.filter(n => n.id !== item.id)
-    state.lastNoteAction = null
-    toast('笔记保存失败，请重试', 3500)
-    return
-  }
-  state.selection = ''
-  state.selectionNoteId = ''
-  $('#selectionBar').classList.add('hidden')
-  renderNotes()
-  toast(noteText ? '备注已保存' : '笔记已保存')
+  return changed
 }
 
 async function undoLastNoteAction() {
-  const action = state.lastNoteAction
-  if (!action || action.type !== 'add' || !state.book) {
-    toast('没有可撤销的笔记或备注')
-    return
+  const reader = state.reader, action = state.lastNoteAction
+  if (!isActiveReader(reader) || !action || action.bookId !== reader.book.id) { toast('没有可撤销的笔记或备注'); return }
+  const note = reader.book.notes.find(item => item.id === action.id)
+  if (!note) { state.lastNoteAction = null; return }
+  if (await commitNoteChange(reader, book => deleteNoteRecord(book, note.id))) {
+    state.lastNoteAction = null
+    hideSelectionTools()
+    toast(note.note ? '已撤销备注' : '已撤销笔记')
   }
-  const note = state.book.notes?.find(n => n.id === action.id)
-  if (!note) return
-  state.book.notes = state.book.notes.filter(n => n.id !== action.id)
-  await saveCurrentBook()
-  $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(action.id)}"]`).forEach(el => el.replaceWith(...el.childNodes))
-  state.lastNoteAction = null
-  renderNotes()
-  hideSelectionTools()
-  toast(note.note ? '已撤销备注' : '已撤销笔记')
 }
 
 function hideSelectionTools() {
-  const sel = $('#readerFrame').contentWindow?.getSelection()
-  sel?.removeAllRanges()
+  clearTimeout(state.selectionTimer)
+  state.reader?.win?.getSelection()?.removeAllRanges()
   state.selection = ''
+  state.selectionLocator = null
   state.selectionNoteId = ''
   $('#selectionBar').classList.add('hidden')
 }
 
-function applyNotesToSection(section, chapter) {
-  const notes = (state.book.notes || []).filter(n => n.chapter === chapter)
-  for (const note of notes) {
-    highlightFirst(section, note.quote, note.id, note.kind || 'marker', note.position, note)
+function locateNoteText(text, note) {
+  if (note.position >= 0 && text.slice(note.position, note.position + note.quote.length) === note.quote) return note.position
+  const matches = []; let from = 0
+  while ((from = text.indexOf(note.quote, from)) >= 0) {
+    const before = text.slice(Math.max(0, from - (note.before || '').length), from)
+    const after = text.slice(from + note.quote.length, from + note.quote.length + (note.after || '').length)
+    if ((!note.before || before.endsWith(note.before)) && (!note.after || after.startsWith(note.after))) matches.push(from)
+    from += Math.max(1, note.quote.length)
   }
-}
-function applyHighlights(doc) {
-  applyNotesToSection(doc.body, state.chapter)
+  if (matches.length) return matches.sort((a, b) => Math.abs(a - Math.max(0, note.position)) - Math.abs(b - Math.max(0, note.position)))[0]
+  return text.indexOf(note.quote)
 }
 
-function locateNoteText(all, note) {
-  if (note.position >= 0 && 
-      all.slice(note.position, note.position + note.quote.length) === note.quote) {
-    return note.position
-  }
-  
-  if (note.before || note.after) {
-    let from = 0
-    while ((from = all.indexOf(note.quote, from)) >= 0) {
-      const before = all.slice(
-        Math.max(0, from - (note.before || '').length),
-        from
-      )
-      const after = all.slice(
-        from + note.quote.length,
-        from + note.quote.length + (note.after || '').length
-      )
-      
-      if ((!note.before || before.endsWith(note.before)) &&
-          (!note.after || after.startsWith(note.after))) {
-        return from
-      }
-      
-      from += note.quote.length
+function applyNotesToSection(section, chapter) {
+  const map = textMap(section), doc = section.ownerDocument
+  const placements = (state.book?.notes || []).filter(note => note.chapter === chapter).map(note => ({ note, start: locateNoteText(map.text, note) })).filter(item => item.start >= 0).map(item => ({ ...item, end: item.start + item.note.quote.length }))
+  for (const item of [...map.nodes].reverse()) {
+    const notes = placements.filter(placement => placement.start < item.end && placement.end > item.start)
+    if (!notes.length) continue
+    const cuts = [...new Set([0, item.node.data.length, ...notes.flatMap(placement => [Math.max(0, placement.start - item.start), Math.min(item.node.data.length, placement.end - item.start)])])].sort((a, b) => a - b)
+    for (let i = cuts.length - 2; i >= 0; i--) {
+      const from = cuts[i], to = cuts[i + 1]
+      const active = notes.filter(placement => placement.start < item.start + to && placement.end > item.start + from).map(placement => placement.note)
+      if (!active.length || from === to) continue
+      const mark = doc.createElement('span'), range = doc.createRange()
+      const colored = active.find(note => note.kind === 'marker') || active.find(note => note.kind !== 'underline')
+      mark.className = [colored ? 'reader-highlight' : '', active.some(note => note.kind === 'underline') ? 'reader-underline' : ''].filter(Boolean).join(' ')
+      mark.dataset.note = (colored || active[0]).id
+      mark.dataset.notes = active.map(note => note.id).join(' ')
+      if (colored) mark.dataset.color = colored.color || 'yellow'
+      range.setStart(item.node, from); range.setEnd(item.node, to); range.surroundContents(mark)
     }
   }
-  
-  return all.indexOf(note.quote)
 }
 
-function highlightSelectionRange(range, id, note = {}) {
-  if (!range || range.collapsed) return 0
-  const doc = range.startContainer.ownerDocument
-  const root = range.commonAncestorContainer.nodeType === Node.TEXT_NODE
-    ? range.commonAncestorContainer.parentElement
-    : range.commonAncestorContainer
-  if (!root) return 0
-
-  const start = textOffset(root, range.startContainer, range.startOffset)
-  const end = textOffset(root, range.endContainer, range.endOffset)
-  if (start < 0 || end <= start) return 0
-
-  const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT)
-  const parts = []
-  let node
-  let cursor = 0
-  while (node = walker.nextNode()) {
-    const nodeStart = cursor
-    const nodeEnd = cursor + node.data.length
-    cursor = nodeEnd
-    if (node.parentElement?.closest('script,style,.reader-highlight,.reader-underline')) continue
-    const from = Math.max(0, start - nodeStart)
-    const to = Math.min(node.data.length, end - nodeStart)
-    if (from < to) parts.push({ node, from, to })
-  }
-
-  let applied = 0
-  for (const part of parts.reverse()) {
-    try {
-      const mark = doc.createElement('span')
-      mark.className = 'reader-highlight'
-      mark.dataset.note = id
-      mark.dataset.color = note.color || 'yellow'
-      const piece = doc.createRange()
-      piece.setStart(part.node, part.from)
-      piece.setEnd(part.node, part.to)
-      piece.surroundContents(mark)
-      applied++
-    } catch {}
-  }
-  return applied
-}
-function highlightFirst(root, quote, id, kind = 'marker', position = -1, note = {}) {
-  const doc = root.ownerDocument
-  const walker = doc.createTreeWalker(root, doc.defaultView.NodeFilter.SHOW_TEXT)
-  let node
-  let all = ''
-  const nodes = []
-  while (node = walker.nextNode()) {
-    if (node.parentElement?.closest('script,style,.reader-highlight,.reader-underline')) continue
-    nodes.push({ node, start: all.length, end: all.length + node.data.length })
-    all += node.data
-  }
-  const at = locateNoteText(all, { ...note, quote, position })
-  if (at < 0) return
-  const end = at + quote.length
-  const relevant = nodes.filter(x => x.end > at && x.start < end)
-  let applied = 0
-  for (const part of relevant.reverse()) {
-    const from = Math.max(0, at - part.start)
-    const to = Math.min(part.node.data.length, end - part.start)
-    if (from >= to) continue
-    try {
-      const range = doc.createRange()
-      const mark = doc.createElement('span')
-      range.setStart(part.node, from)
-      range.setEnd(part.node, to)
-      mark.className = kind === 'underline' ? 'reader-underline' : 'reader-highlight'
-      mark.dataset.note = id
-      if (kind !== 'underline') mark.dataset.color = note.color || 'yellow'
-      range.surroundContents(mark)
-      applied++
-    } catch {}
-  }
-  return applied > 0
+function refreshHighlights() {
+  const reader = state.reader
+  if (!isActiveReader(reader) || !reader.doc?.body) return
+  reader.doc.querySelectorAll('.reader-highlight,.reader-underline').forEach(el => el.replaceWith(...el.childNodes))
+  reader.doc.body.normalize()
+  for (const chapter of reader.chapters.values()) if (chapter.resident) applyNotesToSection(chapter.node, chapter.index)
 }
 
 function focusPendingNote() {
-  if (!state.pendingNoteId) return
-  
-  const id = state.pendingNoteId
+  const reader = state.reader, id = state.pendingNoteId
   state.pendingNoteId = ''
-  
+  if (!id || !isActiveReader(reader)) return
   requestAnimationFrame(() => {
-    const doc = $('#readerFrame').contentDocument
-    const marks = [...doc.querySelectorAll(`[data-note="${CSS.escape(id)}"]`)]
-    const el = marks[0]
-    
-    if (!el) return
-    
-    const frame = $('#readerFrame')
-    const note = state.book.notes.find(n => n.id === id)
-    
-    if (!state.epub.fixedLayout) {
-      el.scrollIntoView({ block: 'center' })
-    }
-    
-    const range = doc.createRange()
-    range.setStart(el, 0)
-    range.setEnd(marks.at(-1), marks.at(-1).childNodes.length)
-    
-    const sel = frame.contentWindow.getSelection()
-    sel.removeAllRanges()
-    sel.addRange(range)
-    
+    if (!isActiveReader(reader)) return
+    const note = reader.book.notes.find(item => item.id === id), root = note && chapterRoot(note.chapter)
+    if (!root) return
+    const map = textMap(root), at = locateNoteText(map.text, note)
+    if (at < 0) return
+    const first = map.nodes.find(item => item.end > at), last = map.nodes.find(item => item.end >= at + note.quote.length)
+    if (!first || !last) return
+    const range = reader.doc.createRange()
+    range.setStart(first.node, at - first.start); range.setEnd(last.node, at + note.quote.length - last.start)
+    if (!reader.epub.fixedLayout) reader.win.scrollTo({ top: reader.win.scrollY + range.getBoundingClientRect().top - reader.frame.clientHeight * 0.3, behavior: 'instant' })
+    const selection = reader.win.getSelection(); selection.removeAllRanges(); selection.addRange(range)
     state.selectionNoteId = id
     updateReadingProgress()
     captureSelection()
   })
 }
 
-function noteKindLabel(kind) {
-  return kind === 'remark' ? '备注' : kind === 'underline' ? '下划线' : '笔记'
-}
+function noteKindLabel(kind) { return kind === 'remark' ? '备注' : kind === 'underline' ? '下划线' : '笔记' }
 
 function renderNotes() {
-  const p = $('#notesPanel')
-  
-  p.innerHTML = `
-    <div class="note-filters">${state.returnLocator ? '<button data-return-reading>返回原位置</button>' : ''}</div>
-  `
-  
-  p.querySelector('[data-return-reading]')?.addEventListener('click', () => {
-    const locator = state.returnLocator
-    state.returnLocator = null
-    renderChapter(locator.chapter, '', 0, { locator })
-    renderNotes()
-  })
-  
-  const notes = [...(state.book.notes || [])]
-    .sort((a, b) => (a.chapter - b.chapter) || (a.position - b.position))
-  
-  for (const n of notes) {
-    const d = document.createElement('div')
-    d.className = 'note-item'
-    
-    const kind = document.createElement('span')
-    kind.className = 'note-kind'
-    kind.textContent = noteKindLabel(n.kind)
-    d.append(kind)
-    const quote = document.createElement('span')
-    quote.textContent = `"${n.quote.slice(0, 90)}"`
-    d.append(quote)
-    if (n.note) {
-      const small = document.createElement('small')
-      small.textContent = n.note
-      d.append(small)
+  const reader = state.reader, panel = $('#notesPanel')
+  panel.replaceChildren()
+  if (!isActiveReader(reader)) return
+  if (state.returnLocator) {
+    const back = document.createElement('button')
+    back.className = 'note-filters'; back.textContent = '返回原位置'
+    back.onclick = async () => {
+      if (!isActiveReader(reader)) return
+      const locator = state.returnLocator; state.returnLocator = null
+      await renderChapter(locator.chapter, '', 0, { locator })
+      if (isActiveReader(reader)) renderNotes()
     }
-    const actions = document.createElement('div')
-    actions.className = 'note-actions'
-    actions.innerHTML = '<button data-action="locate">定位</button><button data-action="edit">编辑</button><button data-action="delete">删除</button>'
-    d.append(actions)
-    
-    d.querySelector('[data-action="locate"]').onclick = () => {
-      state.returnLocator = captureReadingLocator()
-      state.pendingNoteId = n.id
-      renderChapter(n.chapter)
+    panel.append(back)
+  }
+  const notes = [...reader.book.notes].sort((a, b) => a.chapter - b.chapter || a.position - b.position)
+  for (const note of notes) {
+    const item = document.createElement('div'); item.className = 'note-item'
+    const kind = document.createElement('span'); kind.className = 'note-kind'; kind.textContent = noteKindLabel(note.kind)
+    const quote = document.createElement('span'); quote.textContent = `“${note.quote.slice(0, 90)}”`
+    item.append(kind, quote)
+    if (note.note) { const text = document.createElement('small'); text.textContent = note.note; item.append(text) }
+    const actions = document.createElement('div'); actions.className = 'note-actions'
+    const action = (name, label, handler) => {
+      const button = document.createElement('button'); button.type = 'button'; button.dataset.action = name; button.textContent = label
+      button.onclick = () => { if (isActiveReader(reader)) Promise.resolve(handler()).catch(reportError) }
+      actions.append(button)
     }
-    
-    const edit = d.querySelector('[data-action="edit"]')
-    if (edit) {
-      edit.onclick = async () => {
-        if ((n.kind || 'marker') === 'marker') {
-          const colors = ['yellow', 'green', 'blue', 'pink']
-          n.color = colors[(colors.indexOf(n.color || 'yellow') + 1) % colors.length]
-          n.updated = Date.now()
-          await saveCurrentBook()
-          
-          if (n.chapter === state.chapter) {
-            renderChapter(state.chapter, '', state.page, { locator: captureReadingLocator() })
-          }
-        } else if ((n.kind || 'marker') === 'remark') {
-          const value = prompt('编辑想法：', n.note || '')
-          if (value === null) return
-          const text = value.trim()
-          if (!text) return toast('备注内容不能为空')
-          n.note = text
-          n.updated = Date.now()
-          await saveCurrentBook()
-        } else {
-          toast('该标注类型暂不支持编辑')
-        }
-        renderNotes()
+    action('locate', '定位', async () => {
+      state.returnLocator = captureReadingLocator(); state.pendingNoteId = note.id
+      if (!await renderChapter(note.chapter)) state.pendingNoteId = ''
+      if (isActiveReader(reader)) renderNotes()
+    })
+    if (note.kind !== 'underline') action('edit', '编辑', async () => {
+      let text = note.note
+      if (note.kind === 'remark') {
+        text = prompt('编辑想法：', note.note || '')
+        if (text === null) return
+        text = text.trim()
+        if (!text) return toast('备注内容不能为空')
       }
-    }
-    
-    d.querySelector('[data-action="delete"]').onclick = async () => {
+      await commitNoteChange(reader, book => {
+        const current = book.notes.find(entry => entry.id === note.id)
+        if (!current) return
+        if (current.kind === 'marker') { const colors = ['yellow', 'green', 'blue', 'pink']; current.color = colors[(colors.indexOf(current.color || 'yellow') + 1) % colors.length] }
+        else current.note = text
+        current.updated = timestamp(current.updated)
+      })
+    })
+    action('delete', '删除', async () => {
       if (!confirm('删除这条笔记？')) return
-      
-      state.book.notes = state.book.notes.filter(x => x.id !== n.id)
-      await saveCurrentBook()
-      renderNotes()
-      
-      if (n.chapter === state.chapter) {
-        renderChapter(state.chapter, '', state.page, { locator: captureReadingLocator() })
-      }
-    }
-    
-    p.append(d)
+      await commitNoteChange(reader, book => deleteNoteRecord(book, note.id))
+    })
+    item.append(actions); panel.append(item)
   }
-  
-  if (!notes.length) {
-    p.insertAdjacentHTML('beforeend', '<p class="card-meta">还没有笔记。</p>')
-  }
+  if (!notes.length) { const empty = document.createElement('p'); empty.className = 'card-meta'; empty.textContent = '还没有笔记。'; panel.append(empty) }
 }
+
 
 // ==================== Export Notes ====================
 function exportCurrentNotes(format = 'txt') {
@@ -4857,99 +4686,62 @@ function exportCurrentNotes(format = 'txt') {
   )
   toast(`已导出 ${notes.length} 条笔记`)
 }
-// ==================== Search ====================
+// ==================== Bounded, Cancellable Book Search ====================
 async function searchBook() {
-  const q = $('#searchInput').value.trim().toLocaleLowerCase()
-  const out = $('#searchResults')
+  const reader = state.reader, query = $('#searchInput').value.trim(), out = $('#searchResults')
+  if (!isActiveReader(reader)) return
   const token = state.searchToken = (state.searchToken || 0) + 1
-  
-  out.innerHTML = ''
-  if (!q) return
-  
-  out.innerHTML = '<p class="card-meta">正在建立本地搜索索引…</p>'
-  
+  out.replaceChildren()
+  if (!query) return
+  const status = document.createElement('p'); status.className = 'card-meta'; status.textContent = '正在搜索本书…'; out.append(status)
+  const found = [], expression = new RegExp(escapeRegExp(query), 'giu')
   try {
-    if (!state.searchIndex) {
-      const index = []
-      for (let i = 0; i < state.epub.spine.length; i++) {
-        const raw = await state.epub.zip.text(state.epub.spine[i])
-        if (token !== state.searchToken || !state.book) return
-        if (!raw) {
-          index.push({ i, text:'', lower:'' })
-          continue
-        }
-        const doc = new DOMParser().parseFromString(raw, 'application/xhtml+xml')
-        const text = doc.body?.textContent || ''
-        index.push({ i, text, lower: text.toLocaleLowerCase() })
-      }
-      state.searchIndex = index
-    }
-  
-    const found = []
-    for (const chapter of state.searchIndex) {
-      let from = 0
-      let count = 0
-    
-      while ((from = chapter.lower.indexOf(q, from)) >= 0 && count < 20) {
-        found.push({
-          i: chapter.i,
-          position: from,
-          text: chapter.text.slice(Math.max(0, from - 55), from + q.length + 90)
-        })
-        from += q.length
+    for (let chapter = 0; chapter < reader.epub.spine.length && found.length < 200; chapter++) {
+      const raw = await reader.epub.zip.text(reader.epub.spine[chapter])
+      if (!isActiveReader(reader) || token !== state.searchToken) return
+      const text = textMap(parseChapterDocument(raw, reader.epub.spine[chapter]).body).text
+      expression.lastIndex = 0
+      let match, count = 0
+      while ((match = expression.exec(text)) && count < 20 && found.length < 200) {
+        const position = match.index
+        found.push({ chapter, preview: text.slice(Math.max(0, position - 55), position + match[0].length + 90), locator: {
+          chapter, offset: position, ratio: position / Math.max(1, text.length), version: 2,
+          before: text.slice(Math.max(0, position - 32), position), after: text.slice(position, position + 64), viewportOffset: 24
+        } })
         count++
       }
+      if (chapter % 4 === 3) await new Promise(resolve => setTimeout(resolve, 0))
     }
-  
-    out.innerHTML = ''
-    if (token !== state.searchToken || !state.book) return
-  
-    for (const r of found.slice(0, 200)) {
-    const d = document.createElement('div')
-    d.className = 'search-result'
-    
-    const preview = r.text.replace(/\s+/g, ' ').trim()
-    const marked = escapeHtml(preview).replace(
-      new RegExp(escapeRegExp(q), 'ig'),
-      m => `<mark>${m}</mark>`
-    )
-    
-    d.innerHTML = `
-      <b>${escapeHtml(chapterLabel(r.i))}</b>
-      <p>${marked}</p>
-    `
-    
-    d.onclick = async () => {
-      const raw = state.searchIndex[r.i].text
-      state.book.locator = {
-        chapter: r.i,
-        offset: r.position,
-        ratio: raw.length ? r.position / raw.length : 0,
-        before: raw.slice(Math.max(0, r.position - 32), r.position),
-        after: raw.slice(r.position, r.position + 64)
+    if (!isActiveReader(reader) || token !== state.searchToken) return
+    out.replaceChildren()
+    status.textContent = found.length === 200 ? '显示前 200 条匹配内容，每章最多 20 条' : found.length ? `找到 ${found.length} 条匹配内容，每章最多 20 条` : '没有找到匹配内容。'
+    out.append(status)
+    for (const result of found) {
+      const item = document.createElement('button'); item.type = 'button'; item.className = 'search-result'
+      const title = document.createElement('b'); title.textContent = chapterLabel(result.chapter)
+      const preview = document.createElement('p'), text = result.preview.replace(/\s+/g, ' ').trim()
+      const marker = new RegExp(escapeRegExp(query), 'giu'); let match, from = 0
+      while ((match = marker.exec(text))) {
+        preview.append(document.createTextNode(text.slice(from, match.index)))
+        const mark = document.createElement('mark'); mark.textContent = match[0]; preview.append(mark)
+        from = match.index + match[0].length
       }
-      $('#searchDialog').close()
-      state.navigating = true
-      try {
-        await renderChapter(r.i, '', 0, { locator: state.book.locator })
-      } catch (error) {
-        state.navigating = false
-        toast(`搜索结果打开失败：${error.message}`, 3500)
+      preview.append(document.createTextNode(text.slice(from)))
+      item.append(title, preview)
+      item.onclick = async () => {
+        if (!isActiveReader(reader)) return
+        $('#searchDialog').close()
+        await renderChapter(result.chapter, '', 0, { locator: result.locator })
       }
-    }
-    
-      out.append(d)
-    }
-  
-    if (!found.length) {
-      out.innerHTML = '<p class="card-meta">没有找到匹配内容。</p>'
+      out.append(item)
     }
   } catch (error) {
-    if (token !== state.searchToken) return
-    out.innerHTML = '<p class="card-meta">搜索索引建立失败，请重试。</p>'
-    toast(`搜索失败：${error.message}`, 3500)
+    if (!isActiveReader(reader) || token !== state.searchToken) return
+    status.textContent = `搜索未完成：${error.message}`
+    out.replaceChildren(status)
   }
 }
+
 
 // ==================== Settings Management ====================
 function legacySettings() {
@@ -4960,7 +4752,6 @@ function legacySettings() {
       paragraph: +safeLocalGet('readerParagraph', '') || 1,
       width: +safeLocalGet('readerWidth', '') || 800,
       font: safeLocalGet('readerFont', '') || DEFAULT_SETTINGS.font,
-      mode: safeLocalGet('readerMode', '') || 'scroll',
       typography: safeLocalGet('readerTypography', '') || 'book',
       theme: safeLocalGet('readerTheme', '') || 'light'
     }
@@ -4990,7 +4781,6 @@ function normalizeSettings(raw = {}) {
     paragraph: clampSetting(raw.paragraph, 0.4, 2, DEFAULT_SETTINGS.paragraph),
     width: clampSetting(raw.width, 560, 1080, DEFAULT_SETTINGS.width),
     font: pick(raw.font, fontOptions, DEFAULT_SETTINGS.font),
-    mode: pick(raw.mode, ['scroll'], DEFAULT_SETTINGS.mode),
     typography: pick(raw.typography, ['book', 'custom'], DEFAULT_SETTINGS.typography),
     theme: pick(raw.theme, ['light', 'eink', 'dark'], DEFAULT_SETTINGS.theme),
     align: pick(raw.align, ['book', 'justify', 'left'], DEFAULT_SETTINGS.align),
@@ -5015,15 +4805,17 @@ function getSettings() {
 }
 
 async function persistBookSettings(patch) {
-  if (!state.book) return
-  
-  state.book.settings = normalizeSettings({ ...getSettings(), ...patch })
-  state.book.settingsUpdatedAt = Date.now()
-  await saveCurrentBook()
+  const reader = state.reader
+  if (!isActiveReader(reader)) return null
+  reader.book.settings = normalizeSettings({ ...getSettings(), ...patch })
+  reader.book.settingsUpdatedAt = timestamp(reader.book.settingsUpdatedAt)
+  return saveCurrentBook()
 }
 
-function setSettings(changedId = '') {
-  const locator = state.book ? captureReadingLocator() : null
+async function setSettings(changedId = '') {
+  const reader = state.reader
+  if (!isActiveReader(reader)) return
+  const locator = captureReadingLocator()
   const current = getSettings()
   
   const patch = {
@@ -5055,7 +4847,8 @@ function setSettings(changedId = '') {
     patch.typography = 'custom'
   }
   
-  persistBookSettings(patch)
+  await persistBookSettings(patch)
+  if (!isActiveReader(reader)) return
   syncTypographyUI()
   applyReaderAppearance({ locator })
 }
@@ -5081,13 +4874,12 @@ function syncTypographyUI() {
   }
 }
 
-function setTypography(mode) {
-  if (state.epub?.fixedLayout || 
-      mode === getSettings().typography || 
-      !['book', 'custom'].includes(mode)) return
-  
+async function setTypography(mode) {
+  const reader = state.reader
+  if (!isActiveReader(reader) || reader.epub.fixedLayout || mode === getSettings().typography || !['book', 'custom'].includes(mode)) return
   const locator = captureReadingLocator()
-  persistBookSettings({ typography: mode })
+  await persistBookSettings({ typography: mode })
+  if (!isActiveReader(reader)) return
   syncTypographyUI()
   applyReaderAppearance({ locator })
 }
@@ -5110,21 +4902,18 @@ function syncSettings() {
   syncThemeUI()
 }
 
-function setSelectionColor(color) {
-  if (!state.book || !['yellow', 'green', 'blue', 'pink'].includes(color)) return
+async function setSelectionColor(color) {
+  const reader = state.reader
+  if (!isActiveReader(reader) || !['yellow', 'green', 'blue', 'pink'].includes(color)) return
   const note = matchingNote('marker')
-  if (note) {
-    note.color = color
-    note.updated = Date.now()
-    saveCurrentBook()
-    $('#readerFrame').contentDocument?.querySelectorAll(`[data-note="${CSS.escape(note.id)}"]`).forEach(el => el.dataset.color = color)
-  } else {
-    persistBookSettings({ highlightColor: color })
-  }
+  if (note) await commitNoteChange(reader, book => {
+    const current = book.notes.find(item => item.id === note.id)
+    if (current) { current.color = color; current.updated = timestamp(current.updated) }
+  })
+  else await persistBookSettings({ highlightColor: color })
+  if (!isActiveReader(reader)) return
   $('.selection-color-dot').style.background = getHighlightColorValue(color)
   $('#selectionColorMenu').classList.add('hidden')
-  syncSelectionActions()
-  renderNotes()
 }
 
 function getHighlightColorValue(color) {
@@ -5136,20 +4925,15 @@ function applyBookTheme() {
   document.documentElement.dataset.theme = getSettings().theme
 }
 
-function setTheme(theme) {
+async function setTheme(theme) {
   if (!['light', 'eink', 'dark'].includes(theme)) return
-  
-  const locator = state.book ? captureReadingLocator() : null
+  const reader = state.reader, locator = reader ? captureReadingLocator() : null
+  if (reader) await persistBookSettings({ theme })
+  else safeLocalSet('readerTheme', theme)
+  if (reader && !isActiveReader(reader)) return
   document.documentElement.dataset.theme = theme
-  
-  if (state.book) {
-    persistBookSettings({ theme })
-  } else {
-    safeLocalSet('readerTheme', theme)
-  }
-  
   syncThemeUI()
-  if (state.book) applyReaderAppearance({ locator })
+  if (reader) applyReaderAppearance({ locator })
 }
 
 function syncThemeUI() {
@@ -5165,14 +4949,7 @@ function syncThemeUI() {
   )
 }
 
-function cycleTheme() {
-  const themes = ['light', 'eink', 'dark']
-  const current = themes.includes(document.documentElement.dataset.theme) 
-    ? document.documentElement.dataset.theme 
-    : 'light'
-  const next = themes[(themes.indexOf(current) + 1) % themes.length]
-  setTheme(next)
-}
+
 
 // ==================== Reader CSS Builder ====================
 function themeInk() {
@@ -5194,7 +4971,7 @@ function buildReaderCss(settings = getSettings()) {
   const fixed = !!state.epub?.fixedLayout
   const canvasBackground = fixed ? 'transparent' : paper
   
-  const fixedViewport = state.fixedViewport || { width: 800, height: 1200 }
+  const fixedViewport = state.reader?.fixedViewport || { width: 800, height: 1200 }
   const fixedScale = Math.min(
     frameWidth / fixedViewport.width,
     frameHeight / fixedViewport.height
@@ -5202,7 +4979,7 @@ function buildReaderCss(settings = getSettings()) {
   
   const readingLayout = fixed
     ? `html{height:100%;overflow:hidden!important}body{position:absolute!important;left:50%!important;top:50%!important;width:${fixedViewport.width}px!important;height:${fixedViewport.height}px!important;min-width:${fixedViewport.width}px!important;min-height:${fixedViewport.height}px!important;margin:0!important;overflow:hidden!important;transform:translate(-50%,-50%) scale(${fixedScale})!important;transform-origin:center!important;}`
-    : `html{height:100%;overflow:auto!important;scrollbar-width:auto!important}body{width:min(${settings.width}px,calc(100vw - ${outer * 2}px))!important;max-width:none!important;margin:0 auto!important;padding:52px ${Math.max(24, Math.round(outer * 0.45))}px 110px!important;transform:none!important;zoom:1!important;}`
+    : `html{height:100%;overflow:auto!important}body{width:min(${settings.width}px,calc(100vw - ${outer * 2}px))!important;max-width:none!important;margin:0 auto!important;padding:52px ${Math.max(24, Math.round(outer * 0.45))}px 110px!important;transform:none!important;zoom:1!important;}`
   
   const align = settings.align === 'justify' 
     ? 'text-align:justify!important;' 
@@ -5215,153 +4992,143 @@ function buildReaderCss(settings = getSettings()) {
     : ''
   
   const typography = !fixed && settings.typography === 'custom'
-    ? `body,body p,body div,body li,body blockquote,body dd,body dt,body td,body th,body section,body article{font-family:${settings.font}!important;font-size:${settings.size}px!important;font-weight:${+settings.weight || 400}!important;font-stretch:normal!important;font-kerning:normal;text-rendering:optimizeLegibility;line-height:${settings.line}!important}body p span:not(sup):not(sub):not(rt){font-family:inherit!important;font-size:inherit!important;font-stretch:normal!important;line-height:inherit!important}body p{margin-top:${settings.paragraph}em!important;margin-bottom:${settings.paragraph}em!important;${align}${indent}}`
+    ? `body .continuous-chapter,body .continuous-chapter p,body .continuous-chapter div,body .continuous-chapter li,body .continuous-chapter blockquote,body .continuous-chapter dd,body .continuous-chapter dt,body .continuous-chapter td,body .continuous-chapter th,body .continuous-chapter section,body .continuous-chapter article{font-family:${settings.font}!important;font-size:${settings.size}px!important;font-weight:${+settings.weight || 400}!important;font-stretch:normal!important;font-kerning:normal;text-rendering:optimizeLegibility;line-height:${settings.line}!important}body .continuous-chapter p span:not(sup):not(sub):not(rt){font-family:inherit!important;font-size:inherit!important;font-stretch:normal!important;line-height:inherit!important}body .continuous-chapter p{margin-top:${settings.paragraph}em!important;margin-bottom:${settings.paragraph}em!important;${align}${indent}}`
     : ''
   
   const media = fixed 
     ? '' 
-    : `img,svg,video,object{max-width:${Math.max(40, Math.min(100, +settings.imageWidth || 100))}%!important;height:auto!important;break-inside:avoid}`
+    : `body .continuous-chapter img,body .continuous-chapter svg,body .continuous-chapter video{max-width:${Math.max(40, Math.min(100, +settings.imageWidth || 100))}%!important;height:auto!important;break-inside:avoid}`
   
   const themeOverride = !fixed && (settings.theme === 'dark' || settings.theme === 'eink')
-    ? `body,body *:not(#reader-theme-sentinel):not(.reader-highlight){color:${themeInk()}!important}`
+    ? `body,body .continuous-chapter *:not(#reader-theme-sentinel):not(.reader-highlight){color:${themeInk()}!important}`
     : ''
   
-  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
+  return `*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}html{background:${canvasBackground}!important;scroll-behavior:auto;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{${fixed ? '' : `color:${themeInk()};`}background:${canvasBackground}!important;box-sizing:border-box} .continuous-chapter{display:flow-root;position:relative;min-height:1px;margin:0!important;${fixed ? 'width:100%;height:100%;' : ''}}.chapter-placeholder{display:block;margin:0;padding:0;overflow:hidden}${typography}${media}${themeOverride}img:not([src]),source:not([srcset]){display:none!important}table,pre{max-width:100%!important;overflow-wrap:anywhere;word-break:break-word}td,th{overflow-wrap:anywhere;word-break:break-word}ruby{ruby-position:over}h1,h2,h3,h4{break-after:avoid}body .reader-highlight{background:#fef08a!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;border-radius:2px}body .reader-highlight[data-color="green"]{background:#86efac!important;color:#052e16!important;-webkit-text-fill-color:#052e16!important}body .reader-highlight[data-color="blue"]{background:#7dd3fc!important;color:#082f49!important;-webkit-text-fill-color:#082f49!important}body .reader-highlight[data-color="pink"]{background:#f9a8d4!important;color:#500724!important;-webkit-text-fill-color:#500724!important}.reader-underline{background:transparent!important;color:inherit!important;text-decoration:underline 2px currentColor;text-underline-offset:3px}${readingLayout}`
 }
 
-function applyReaderAppearance({ ratio, locator } = {}) {
-  if (!state.book) return
-  
-  const frame = $('#readerFrame')
-  const doc = frame.contentDocument
-  const win = frame.contentWindow
-  const style = doc?.getElementById('reader-runtime-style')
-  
-  if (!style || !win) return
-  
+function applyReaderAppearance({ locator } = {}) {
+  const reader = state.reader
+  if (!isActiveReader(reader) || !reader.doc?.body || reader.initializing) return
+  const version = ++reader.appearanceVersion, contentVersion = reader.contentVersion
   const anchor = locator || captureReadingLocator()
-  const position = Number.isFinite(ratio) ? ratio : chapterRatio()
-  const settings = getSettings()
-  
-  win.removeEventListener('scroll', handleReaderScroll)
-  
-  style.textContent = buildReaderCss(settings)
-  frame.style.background = 'var(--paper)'
-  
+  reader.restoring = true
+  reader.doc.getElementById('reader-runtime-style').textContent = buildReaderCss()
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    if (state.epub.fixedLayout) {
-      state.pageCount = 1
-      state.page = 0
-      win.scrollTo(0, 0)
-    } else {
-      state.pageCount = 1
-      state.page = 0
-      const max = Math.max(0, doc.documentElement.scrollHeight - frame.clientHeight)
-      
-      if (anchor) {
-        scrollToLocator(doc, anchor)
-      } else {
-        win.scrollTo({ left: 0, top: position * max })
-      }
-      
-      state.book.scrollTop = win.scrollY
-      win.addEventListener('scroll', handleReaderScroll, { passive: true })
-    }
-    
+    if (!isActiveReader(reader) || version !== reader.appearanceVersion || contentVersion !== reader.contentVersion) return
+    if (reader.epub.fixedLayout) reader.win.scrollTo({ top: 0, behavior: 'instant' })
+    else scrollToLocator(reader.doc, anchor)
+    reader.restoring = false
     updateReadingProgress()
     showReadingStatus()
-    saveCurrentBook()
+    saveCurrentBook().catch(reportError)
+    ensureContinuousContent().catch(reportError)
   }))
 }
+
 // ==================== Event Handlers ====================
 
 // Library events
-$('#heroFileInput').onchange = async (e) => {
-  await importFiles(e.target.files)
-  e.target.value = ''
+$('#heroFileInput').onchange = async event => {
+  try { await importFiles(event.target.files) } finally { event.target.value = '' }
 }
-
-$('#heroBackupInput').onchange = async (e) => {
-  if (e.target.files[0]) await importBackup(e.target.files[0])
-  e.target.value = ''
+$('#heroBackupInput').onchange = async event => {
+  try { if (event.target.files[0]) await importBackup(event.target.files[0]) } finally { event.target.value = '' }
 }
-
+$('#heroImportBtn').onclick = () => $('#heroFileInput').click()
+$('#heroBackupBtn').onclick = () => $('#heroBackupInput').click()
 $('#heroExportBtn').onclick = exportData
+$('#coverFlowStage').addEventListener('click', event => {
+  if (event.target.closest('#heroEmptyImport') && !state.importing) $('#heroFileInput').click()
+})
 
 const heroActions = $('.hero-actions')
-heroActions?.addEventListener('pointermove', (e) => {
+heroActions.addEventListener('pointermove', event => {
   const rect = heroActions.getBoundingClientRect()
-  heroActions.style.setProperty('--glass-x', `${((e.clientX - rect.left) / rect.width) * 100}%`)
-  heroActions.style.setProperty('--glass-y', `${((e.clientY - rect.top) / rect.height) * 100}%`)
+  heroActions.style.setProperty('--glass-x', `${(event.clientX - rect.left) / rect.width * 100}%`)
+  heroActions.style.setProperty('--glass-y', `${(event.clientY - rect.top) / rect.height * 100}%`)
 })
-heroActions?.addEventListener('pointerleave', () => {
+heroActions.addEventListener('pointerleave', () => {
   heroActions.style.setProperty('--glass-x', '50%')
   heroActions.style.setProperty('--glass-y', '30%')
 })
-
 $('#librarySearch').oninput = renderLibrary
 
 function closeLibrarySelects(except = null) {
   $$('.library-select.open').forEach(select => {
-    if (select !== except) {
-      select.classList.remove('open')
-      select.querySelector('.library-select-trigger')?.setAttribute('aria-expanded', 'false')
-    }
+    if (select === except) return
+    select.classList.remove('open')
+    select.querySelector('.library-select-trigger').setAttribute('aria-expanded', 'false')
   })
+}
+
+function setLibrarySelect(key, value, render = true) {
+  const select = $(`.library-select[data-select="${key}"]`)
+  const option = [...select.querySelectorAll('.library-select-option')].find(item => item.dataset.value === value)
+  if (!option) return
+  state[key] = value
+  select.querySelector('.library-select-trigger').textContent = option.textContent
+  select.querySelectorAll('.library-select-option').forEach(item => {
+    const selected = item === option
+    item.classList.toggle('active', selected)
+    item.setAttribute('aria-selected', String(selected))
+    item.tabIndex = selected ? 0 : -1
+  })
+  closeLibrarySelects()
+  if (render) renderLibrary()
 }
 
 $$('.library-select').forEach(select => {
-  const key = select.dataset.select
-  const native = $('#' + key)
   const trigger = select.querySelector('.library-select-trigger')
-  trigger.onclick = (e) => {
-    e.stopPropagation()
-    const open = select.classList.contains('open')
+  const options = [...select.querySelectorAll('.library-select-option')]
+  const open = () => {
     closeLibrarySelects(select)
-    select.classList.toggle('open', !open)
-    trigger.setAttribute('aria-expanded', String(!open))
+    select.classList.add('open')
+    trigger.setAttribute('aria-expanded', 'true')
+    select.querySelector('.library-select-option.active').focus()
   }
-  select.querySelectorAll('.library-select-option').forEach(option => {
-    option.onclick = () => {
-      native.value = option.dataset.value
-      trigger.textContent = option.textContent
-      select.querySelectorAll('.library-select-option').forEach(x => x.classList.toggle('active', x === option))
-      select.classList.remove('open')
-      trigger.setAttribute('aria-expanded', 'false')
-      renderLibrary()
+  trigger.onclick = () => select.classList.contains('open') ? closeLibrarySelects() : open()
+  trigger.onkeydown = event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open() }
+    if (event.key === 'Escape') closeLibrarySelects()
+  }
+  options.forEach((option, index) => {
+    option.setAttribute('role', 'option')
+    option.onclick = () => { setLibrarySelect(select.dataset.select, option.dataset.value); trigger.focus() }
+    option.onkeydown = event => {
+      if (event.key === 'Escape') { event.preventDefault(); closeLibrarySelects(); trigger.focus(); return }
+      let next = index
+      if (event.key === 'ArrowDown') next = (index + 1) % options.length
+      else if (event.key === 'ArrowUp') next = (index + options.length - 1) % options.length
+      else if (event.key === 'Home') next = 0
+      else if (event.key === 'End') next = options.length - 1
+      else return
+      event.preventDefault(); options[next].focus()
     }
   })
+  select.addEventListener('focusout', () => queueMicrotask(() => {
+    if (!select.contains(document.activeElement)) closeLibrarySelects()
+  }))
+  setLibrarySelect(select.dataset.select, state[select.dataset.select], false)
 })
 
-$('#dropZone').ondragover = (e) => {
-  e.preventDefault()
-  e.currentTarget.classList.add('drag')
+$('#dropZone').ondragover = event => { event.preventDefault(); event.currentTarget.classList.add('drag') }
+$('#dropZone').ondragleave = event => event.currentTarget.classList.remove('drag')
+$('#dropZone').ondrop = event => {
+  event.preventDefault(); event.currentTarget.classList.remove('drag')
+  importFiles(event.dataTransfer.files).catch(reportError)
 }
-
-$('#dropZone').ondragleave = (e) => {
-  e.currentTarget.classList.remove('drag')
-}
-
-$('#dropZone').ondrop = (e) => {
-  e.preventDefault()
-  e.currentTarget.classList.remove('drag')
-  importFiles(e.dataTransfer.files)
-}
-
 $('#emptyState').onclick = () => {
-  if (!state.books.length) {
-    $('#heroFileInput').click()
-  } else {
+  if (!state.books.length) $('#heroFileInput').click()
+  else {
     $('#librarySearch').value = ''
-    $('#libraryFilter').value = 'all'
+    setLibrarySelect('libraryFilter', 'all', false)
     renderLibrary()
   }
 }
-
 bindCoverFlow()
 
 // Reader events
-$('#readerHomeBtn').onclick = home
+$('#readerHomeBtn').onclick = () => home().catch(reportError)
 $('#drawerBackdrop').onclick = closeReaderDrawer
 $('#tocBtn')?.addEventListener('click', () => openSidebar('tocPanel'))
 $('#closeSidebar').onclick = closeReaderDrawer
@@ -5369,11 +5136,11 @@ $('#closeSidebar').onclick = closeReaderDrawer
 $$('.tab').forEach(t => t.onclick = () => openSidebar(t.dataset.panel))
 
 // Selection events
-$('#noteBtn').onclick = () => addNote('marker')
+$('#noteBtn').onclick = () => addNote('marker').catch(reportError)
 $('#remarkBtn').onclick = addRemark
 $('#highlightColorBtn').onclick = () => $('#selectionColorMenu').classList.toggle('hidden')
 $$('[data-selection-color]').forEach(b => {
-  b.onclick = () => setSelectionColor(b.dataset.selectionColor)
+  b.onclick = () => setSelectionColor(b.dataset.selectionColor).catch(reportError)
 })
 
 // Settings events
@@ -5387,31 +5154,33 @@ $$('[data-selection-color]').forEach(b => {
 ].forEach(id => {
   $('#' + id).oninput = () => {
     clearTimeout(state.settingsTimer)
-    state.settingsTimer = setTimeout(() => setSettings(id), 80)
+    const reader = state.reader
+    state.settingsTimer = setTimeout(() => { if (isActiveReader(reader)) setSettings(id).catch(reportError) }, 80)
   }
 })
 
 ;['fontFamily', 'textAlign', 'textIndent', 'fontWeight'].forEach(id => {
-  $('#' + id).onchange = () => setSettings(id)
+  $('#' + id).onchange = () => setSettings(id).catch(reportError)
 })
 
-$('#bookTypography').onclick = () => setTypography('book')
-$('#customTypography').onclick = () => setTypography('custom')
+$('#bookTypography').onclick = () => setTypography('book').catch(reportError)
+$('#customTypography').onclick = () => setTypography('custom').catch(reportError)
 
 $$('[data-theme-value]').forEach(b => {
-  b.onclick = () => setTheme(b.dataset.themeValue)
+  b.onclick = () => setTheme(b.dataset.themeValue).catch(reportError)
 })
 
 $('#closeRemark').onclick = () => $('#remarkDialog').close()
 $('#cancelRemark').onclick = () => $('#remarkDialog').close()
-$('#saveRemark').onclick = saveRemark
+$('#saveRemark').onclick = () => saveRemark().catch(reportError)
 $('#remarkInput').onkeydown = (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'enter') saveRemark()
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'enter') saveRemark().catch(reportError)
 }
 
 
 $('#drawerSearchBtn').onclick = () => state.book && $('#searchDialog').showModal()
 $('#closeSearch').onclick = () => $('#searchDialog').close()
+$('#searchDialog').addEventListener('close', () => { state.searchToken = (state.searchToken || 0) + 1 })
 $('#runSearch').onclick = searchBook
 $('#searchInput').onkeydown = (e) => e.key === 'Enter' && searchBook()
 
@@ -5428,6 +5197,11 @@ $$('[data-export-format]').forEach(b => {
 
 // Footnote events
 $('#closeFootnote').onclick = () => $('#footnoteDialog').close()
+$('#footnoteDialog').addEventListener('close', () => {
+  const reader = state.reader
+  if (reader?.footnoteOwner) { reader.resources.release(reader.footnoteOwner); reader.footnoteOwner = null }
+  $('#footnoteContent').replaceChildren()
+})
 
 // Book manage events
 $('#closeBookManage').onclick = () => $('#bookManageDialog').close()
@@ -5453,15 +5227,15 @@ $('#resetManageCover').onclick = () => {
   syncManagedCover()
 }
 
-$('#saveBookManage').onclick = saveManagedBook
+$('#saveBookManage').onclick = () => saveManagedBook().catch(reportError)
 $('#exportOriginalBook').onclick = exportManagedOriginal
 $('#exportSingleBackup').onclick = exportManagedBookBackup
-$('#resetBookProgress').onclick = resetManagedProgress
-$('#deleteManagedBook').onclick = deleteManagedBook
+$('#resetBookProgress').onclick = () => resetManagedProgress().catch(reportError)
+$('#deleteManagedBook').onclick = () => deleteManagedBook().catch(reportError)
 
 // Image viewer events
 $('#imageViewer').onclick = closeImageViewer
-$('#imageViewerImg').onclick = (e) => e.stopPropagation()
+$('#imageViewerImg').onclick = event => event.stopPropagation()
 
 // Global events
 document.addEventListener('keydown', handleReadingKey)
@@ -5472,17 +5246,17 @@ document.addEventListener('click', (e) => {
 })
 
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) saveReadingPosition()
+  if (document.hidden) saveReadingPosition().catch(reportError)
+  else if (state.reader) receiveLibraryChange({ id: state.reader.book.id }).catch(reportError)
+  else loadLibrary().catch(reportError)
 })
-
-window.addEventListener('pagehide', saveReadingPosition)
-
+window.addEventListener('pagehide', () => { saveReadingPosition().catch(reportError) })
 window.addEventListener('resize', () => {
-  if (!state.book) return
-  
-  clearTimeout(state.resizeTimer)
+  const reader = state.reader
+  if (!isActiveReader(reader)) return
   const locator = captureReadingLocator()
-  state.resizeTimer = setTimeout(() => applyReaderAppearance({ locator }), 120)
+  clearTimeout(reader.resizeTimer)
+  reader.resizeTimer = setTimeout(() => { if (isActiveReader(reader)) applyReaderAppearance({ locator }) }, 120)
 })
 
 // ==================== Initialization ====================
