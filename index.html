@@ -3,18 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="color-scheme" content="only light" />
+    <meta name="color-scheme" content="light dark" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' blob:; img-src 'self' blob: data:; font-src 'self' blob: data:; media-src 'self' blob: data:; connect-src https: http:; object-src 'none'; base-uri 'none'" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiByeD0iMTQ0IiBmaWxsPSIjMjAyMTI0Ii8+CjxwYXRoIGQ9Ik0xMTEuMTExIDU0Mi44NDVDMTExLjExMSA1NjYuNDE5IDEyMC40NzYgNTg5LjAyOSAxMzcuMTQ2IDYwNS42OThDMTUzLjgxNiA2MjIuMzY4IDE3Ni40MjUgNjMxLjczMyAyMDAgNjMxLjczM0gzNzkuMzc4VjMxMS4xMTFDMzc5LjM3OCAyNzUuNzQ5IDM2NS4zMyAyNDEuODM1IDM0MC4zMjUgMjE2LjgzQzMxNS4zMiAxOTEuODI1IDI4MS40MDcgMTc3Ljc3OCAyNDYuMDQ0IDE3Ny43NzhIMjAwQzE3Ni40MjUgMTc3Ljc3OCAxNTMuODE2IDE4Ny4xNDMgMTM3LjE0NiAyMDMuODEzQzEyMC40NzYgMjIwLjQ4MyAxMTEuMTExIDI0My4wOTIgMTExLjExMSAyNjYuNjY3VjU0Mi44NDVaTTQyMC42MjIgNjMxLjczM0g2MDBDNjIzLjU3NSA2MzEuNzMzIDY0Ni4xODQgNjIyLjM2OCA2NjIuODU0IDYwNS42OThDNjc5LjUyNCA1ODkuMDI5IDY4OC44ODkgNTY2LjQxOSA2ODguODg5IDU0Mi44NDVWMjY2LjY2N0M2ODguODg5IDI0My4wOTIgNjc5LjUyNCAyMjAuNDgzIDY2Mi44NTQgMjAzLjgxM0M2NDYuMTg0IDE4Ny4xNDMgNjIzLjU3NSAxNzcuNzc4IDYwMCAxNzcuNzc4SDU1My45NTZDNTE4LjU5MyAxNzcuNzc4IDQ4NC42NzkgMTkxLjgyNSA0NTkuNjc1IDIxNi44M0M0MzQuNjcgMjQxLjgzNSA0MjAuNjIyIDI3NS43NDkgNDIwLjYyMiAzMTEuMTExVjYzMS43MzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" />
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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" />
     <link id="readerManifest" rel="manifest" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="阅读器" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#141922" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#202124" />
     <title>本地阅读器</title>
     <meta name="reader-version" content="5.3.0-optimized.4" />
-    <script>(function(){var t=localStorage.getItem('readerTheme');if(t==='dark'||t==='eink')document.documentElement.dataset.theme=t;})()</script>
     <style>
 /* Hallmark v2 · app refinement; Impeccable · Operate/Read. Preserve content and data wiring. */
 :root{--font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans","Helvetica Neue",Arial,sans-serif;--tone-1:#f7f8fc;--tone-2:#141922;--tone-3:rgb(12 16 24/.18);--tone-4:rgb(10 14 21/.68);--tone-5:rgb(9 12 18/.93);--tone-6:rgba(7,10,16,.56);--tone-7:rgba(7,10,16,.08);--tone-8:rgba(7,10,16,.5);--tone-9:rgba(255,255,255,.15);--tone-10:rgba(240,243,251,.7);--tone-11:rgba(8,12,19,.2);--tone-12:rgba(0,0,0,.5);--tone-13:#fff;--tone-14:#1b2030;--tone-15:rgba(0,0,0,.32);--tone-16:rgba(255,255,255,.1);--tone-17:rgba(255,255,255,.21);--tone-18:rgba(255,255,255,.07);--tone-19:rgba(0,0,0,.48);--tone-20:rgba(255,255,255,.25);--tone-21:#6876d8;--tone-22:#26345d;--tone-23:#101522;--tone-24:rgba(245,247,252,.76);--tone-25:rgba(255,255,255,.78);--tone-26:rgba(255,255,255,.14);--tone-27:rgba(255,255,255,.16);--tone-28:rgba(235,239,249,.64);--tone-29:#f8f9fc;--tone-30:rgba(0,0,0,.42);--tone-31:rgba(235,239,249,.66);--tone-32:rgba(255,255,255,.84);--tone-33:rgba(235,239,249,.72);--tone-34:rgba(255,255,255,.35);--tone-35:rgba(255,255,255,.8);--tone-36:rgba(255,255,255,.86);--tone-37:rgba(239,242,249,.8);--tone-38:rgba(222,235,255,.16);--tone-39:rgba(54,64,81,.38);--tone-40:rgba(17,24,36,.38);--tone-41:rgba(0,0,0,.24);--tone-42:rgba(255,255,255,.11);--tone-43:rgba(49,59,75,.94);--tone-44:rgba(25,32,45,.94);--tone-45:rgba(240,246,255,.9);--tone-46:rgba(249,250,253,.84);--tone-47:rgba(0,0,0,.22);--tone-48:rgba(255,255,255,.13);--tone-49:rgba(0,0,0,.08);--tone-50:rgba(255,255,255,.08);--tone-51:rgba(255,255,255,.055);--tone-52:rgba(255,255,255,.105);--tone-53:rgba(255,255,255,.045);--tone-54:rgba(0,0,0,.1);--tone-55:rgba(0,0,0,.09);--tone-56:#525252;--tone-57:#262626;--tone-58:rgba(0,0,0,0.6);--tone-59:rgba(0,0,0,0.8);--tone-60:rgba(0,0,0,0.4);--tone-61:rgba(0,0,0,.06);--tone-62:#ffffff;--tone-63:#e5e5e5;--tone-64:#f0f0f0;--tone-65:#d0d0d0;--tone-66:#1a1a1a;--tone-67:#fef08a;--tone-68:#86efac;--tone-69:#7dd3fc;--tone-70:#f9a8d4;--tone-71:rgba(255,255,255,.18);--tone-72:rgba(255,255,255,.75);--tone-73:rgba(255,255,255,.28);--tone-74:#dc2626;--tone-75:rgba(0,0,0,0.9);--tone-76:#333;--bg:#ffffff;--surface:#fafafa;--paper:#ffffff;--ink:#1a1a1a;--muted:#737373;--line:#e5e5e5;--accent:#1a1a1a;--accent-hover:#404040;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.1);--shadow-lg:0 8px 24px rgba(0,0,0,0.12)}
@@ -38,19 +37,19 @@ main{height:100%;overflow:hidden}
 .library-view{height:100%;overflow:hidden;padding:0;overscroll-behavior:none;overflow-anchor:none;position:relative}
 .library-pages{height:100%;transform:translateY(0);transition:transform .42s cubic-bezier(.2,.8,.2,1)}
 .library-view.show-books .library-pages{transform:translateY(-100%)}
-.bookcase{height:100%;overflow-y:auto;overflow-x:clip;padding:max(32px,env(safe-area-inset-top)) 0 max(64px,calc(env(safe-area-inset-bottom) + 32px));overscroll-behavior:contain;scrollbar-gutter:stable}
+.bookcase{height:100%;overflow-y:auto;overflow-x:clip;padding:32px 0 64px;overscroll-behavior:contain;scrollbar-gutter:stable}
 .library-return{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 8px;border-radius:8px;color:var(--muted)}
 html.library-mode .library-view{padding:0}
 .primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:40px;padding:8px 16px;background:var(--accent);color:var(--paper);border-radius:8px;font-weight:500;line-height:24px;transition:background-color .15s;white-space:nowrap}
 .primary-btn:hover{background:var(--accent-hover)}
-.reading-hero{position:relative;width:100%;height:100%;min-height:0;margin:0;padding:max(24px,4vh,env(safe-area-inset-top)) 24px max(22px,env(safe-area-inset-bottom));display:grid;grid-template-rows:minmax(300px,1fr) auto auto;color:var(--tone-1);background:var(--tone-2);overflow:hidden;isolation:isolate;overflow-anchor:none}
+.reading-hero{position:relative;width:100%;height:100%;min-height:0;margin:0;padding:max(24px,4vh) 24px max(22px,env(safe-area-inset-bottom));display:grid;grid-template-rows:minmax(300px,1fr) auto auto;color:var(--tone-1);background:var(--tone-2);overflow:hidden;isolation:isolate;overflow-anchor:none}
 .cover-flow-backdrop{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--tone-2);pointer-events:none}
 .cover-flow-bg{position:absolute;inset:-76px;opacity:0;overflow:hidden;transform:translate3d(var(--drift,0px),0,0) scale(1.1);transition:opacity 800ms ease,transform 1100ms cubic-bezier(.2,.75,.2,1);will-change:opacity,transform}
 .cover-flow-bg.is-active{opacity:1;transform:translate3d(0,0,0) scale(1.06)}
 .cover-flow-bg img{position:absolute;inset:-5%;width:110%;height:110%;object-fit:cover;opacity:.22;filter:blur(76px) saturate(.82) brightness(.7);transform:scale(1.14)}
 .cover-flow-bg::before{content:'';position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 28% 28%,rgb(var(--ambient-a,76 88 112)/.72),transparent 46%),radial-gradient(circle at 76% 58%,rgb(var(--ambient-b,58 77 96)/.58),transparent 49%),linear-gradient(180deg,var(--tone-3),var(--tone-4) 76%,var(--tone-5))}
 .cover-flow-vignette{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,var(--tone-6),transparent 25%,transparent 75%,var(--tone-6)),linear-gradient(180deg,var(--tone-7),transparent 48%,var(--tone-8))}
-.reading-hero-count{position:absolute;top:max(22px,env(safe-area-inset-top));right:clamp(20px,4vw,52px);z-index:12;padding:7px 11px;border:1px solid var(--tone-9);border-radius:999px;color:var(--tone-10);background:var(--tone-11);backdrop-filter:blur(16px) saturate(1.35);font-size:11px;white-space:nowrap}
+.reading-hero-count{position:absolute;top:max(22px,4vh);right:clamp(20px,4vw,52px);z-index:12;padding:7px 11px;border:1px solid var(--tone-9);border-radius:999px;color:var(--tone-10);background:var(--tone-11);backdrop-filter:blur(16px) saturate(1.35);font-size:11px;white-space:nowrap}
 .cover-flow{position:relative;min-height:0;touch-action:none;user-select:none}
 .cover-flow::before{content:'';position:absolute;z-index:2;left:50%;bottom:5%;width:min(620px,64vw);height:74px;transform:translateX(-50%);background:radial-gradient(ellipse,var(--tone-12),transparent 68%);filter:blur(19px);pointer-events:none}
 .cover-flow-stage{position:absolute;inset:0;z-index:5;overflow:hidden;outline:0;perspective:1450px;transform-style:preserve-3d;cursor:grab}
@@ -848,7 +847,7 @@ html[data-theme=dark] .ai-panel,html[data-theme=dark] .ai-settings{color-scheme:
 
     <script>
 const appURL = location.href.split(/[?#]/)[0]
-const appManifest = {name:'本地阅读器',short_name:'阅读器',id:appURL,start_url:appURL,display:'standalone',background_color:'#141922',theme_color:'#141922',icons:[
+const appManifest = {name:'本地阅读器',short_name:'阅读器',id:appURL,start_url:appURL,display:'standalone',background_color:'#ffffff',theme_color:'#202124',icons:[
   {src:document.querySelector('link[rel="icon"]').href,sizes:'any',type:'image/svg+xml',purpose:'any'},
   {src:document.querySelector('link[rel="apple-touch-icon"]').href,sizes:'180x180',type:'image/png',purpose:'any'}
 ]}
@@ -3104,7 +3103,6 @@ async function home() {
   document.documentElement.dataset.theme = normalizeSettings(legacySettings()).theme
   $('#readerView').classList.add('hidden')
   $('#libraryView').classList.remove('hidden')
-  updateChromeColor()
   await loadLibrary()
   $('#bookcase').scrollTop = state.libraryScroll || 0
   showLibraryPage(state.libraryPage || 'hero', false)
@@ -4104,17 +4102,6 @@ function getHighlightColorValue(color) {
 }
 function applyBookTheme() {
   document.documentElement.dataset.theme = getSettings().theme
-  updateChromeColor()
-}
-// Keep the iOS status-bar / browser chrome color in sync with the active view.
-// Library hero sits on a dark navy surface; the reader sits on the paper color.
-function updateChromeColor() {
-  const inReader = !document.documentElement.classList.contains('library-mode')
-  const target = inReader
-    ? getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
-    : getComputedStyle(document.documentElement).getPropertyValue('--tone-2').trim()
-  const meta = document.querySelector('meta[name="theme-color"]')
-  if (meta && target) meta.setAttribute('content', target)
 }
 async function setTheme(theme) {
   if (!['light', 'eink', 'dark'].includes(theme)) return
@@ -4124,7 +4111,6 @@ async function setTheme(theme) {
   if (reader && !isActiveReader(reader)) return
   document.documentElement.dataset.theme = theme
   syncThemeUI()
-  updateChromeColor()
   if (reader) applyReaderAppearance({ locator })
 }
 function syncThemeUI() {
@@ -5297,7 +5283,6 @@ document.documentElement.dataset.theme = ['light', 'eink', 'dark'].includes(
   ? safeLocalGet('readerTheme', '')
   : 'light'
 syncThemeUI()
-updateChromeColor()
 loadLibrary().catch(e => {
   toast('无法打开本地书库，请检查浏览器是否允许本地存储', 6000)
 })
